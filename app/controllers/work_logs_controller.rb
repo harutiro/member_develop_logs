@@ -1,4 +1,6 @@
 class WorkLogsController < ApplicationController
+  before_action :set_work_log, only: [:edit, :update, :destroy]
+  
   def index
     @members = Member.all
     @selected_member = Member.find_by(id: params[:member_id]) || @members.first
@@ -90,7 +92,30 @@ class WorkLogsController < ApplicationController
     end
   end
   
+  def edit
+    @members = Member.all
+  end
+  
+  def update
+    if @work_log.update(work_log_params)
+      redirect_to work_logs_path(member_id: @work_log.member_id), notice: '作業ログを更新しました'
+    else
+      @members = Member.all
+      render :edit, status: :unprocessable_entity
+    end
+  end
+  
+  def destroy
+    member_id = @work_log.member_id
+    @work_log.destroy
+    redirect_to work_logs_path(member_id: member_id), notice: '作業ログを削除しました'
+  end
+  
   private
+  
+  def set_work_log
+    @work_log = WorkLog.find(params[:id])
+  end
   
   def work_log_params
     params.require(:work_log).permit(:member_id, :start_time, :end_time)

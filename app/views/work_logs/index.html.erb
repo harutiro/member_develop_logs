@@ -73,6 +73,7 @@
               <th>開始時間</th>
               <th>終了時間</th>
               <th>作業時間</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -81,6 +82,17 @@
                 <td><%= log.start_time.strftime("%Y年%m月%d日 %H:%M") %></td>
                 <td><%= log.end_time&.strftime("%H:%M") || "作業中" %></td>
                 <td><%= log.duration %>時間</td>
+                <td>
+                  <% unless log.active? %>
+                    <div class="flex gap-2">
+                      <%= link_to "編集", edit_work_log_path(log), class: "btn btn-info btn-sm" %>
+                      <%= button_to "削除", work_log_path(log), 
+                          method: :delete, 
+                          form: { data: { turbo_confirm: "この作業ログを削除してもよろしいですか？" } },
+                          class: "btn btn-danger btn-sm" %>
+                    </div>
+                  <% end %>
+                </td>
               </tr>
             <% end %>
           </tbody>
