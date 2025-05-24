@@ -3,7 +3,15 @@ class WorkLogsController < ApplicationController
   
   def index
     @members = Member.all
-    @selected_member = Member.find_by(id: params[:member_id]) || @members.first
+    
+    # セッションから選択されたメンバーIDを取得、またはURLパラメータから取得
+    selected_member_id = params[:member_id] || session[:selected_member_id]
+    
+    # メンバーを取得（存在しない場合は最初のメンバーを使用）
+    @selected_member = Member.find_by(id: selected_member_id) || @members.first
+    
+    # 選択されたメンバーIDをセッションに保存
+    session[:selected_member_id] = @selected_member.id
     
     # 作業中のログを取得
     @active_work_log = WorkLog.find_by(member: @selected_member, end_time: nil) if @selected_member
