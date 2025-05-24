@@ -50,6 +50,11 @@ rails db:migrate
 rails server
 ```
 
+デプロイの時はこちら
+```bash
+rails s -b 0.0.0.0
+```
+
 5. ブラウザでアクセス
 ```
 http://localhost:3000
