@@ -8,6 +8,7 @@
         <%= select_tag :member_id, 
             options_from_collection_for_select(@members, :id, :name, @selected_member&.id),
             class: "form-control",
+            prompt: "ユーザーを選択してください",
             onchange: "this.form.submit()" %>
       </div>
     <% end %>
@@ -52,6 +53,13 @@
             <% end %>
           </div>
         <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="card">
+      <div class="text-center py-8">
+        <p class="text-lg text-gray-600 mb-4">メンバーを選択してください</p>
+        <p class="text-sm text-gray-500">メンバーを選択すると、作業時間の記録や確認ができます</p>
       </div>
     </div>
   <% end %>

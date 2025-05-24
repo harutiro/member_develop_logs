@@ -13,11 +13,13 @@ class WorkLogsController < ApplicationController
     # セッションから選択されたメンバーIDを取得、またはURLパラメータから取得
     selected_member_id = params[:member_id] || session[:selected_member_id]
     
-    # メンバーを取得（存在しない場合は最初のメンバーを使用）
-    @selected_member = Member.find_by(id: selected_member_id) || @members.first
+    # メンバーを取得（存在しない場合はnilを設定）
+    @selected_member = Member.find_by(id: selected_member_id)
     
-    # 選択されたメンバーIDをセッションに保存
-    session[:selected_member_id] = @selected_member.id
+    # メンバーが選択されている場合のみセッションに保存
+    if @selected_member
+      session[:selected_member_id] = @selected_member.id
+    end
     
     # 作業中のログを取得
     @active_work_log = WorkLog.find_by(member: @selected_member, end_time: nil) if @selected_member
