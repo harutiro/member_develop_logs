@@ -58,7 +58,9 @@
   
   <div class="card mb-8">
     <h2 class="text-xl font-semibold mb-4">全員の日次作業時間グラフ</h2>
-    <canvas id="dailyChart" width="800" height="400"></canvas>
+    <div style="height: 400px; position: relative;">
+      <canvas id="dailyChart"></canvas>
+    </div>
   </div>
   
   <% if @selected_member %>
@@ -97,7 +99,7 @@
 </div>
 
 <% if @daily_data.present? %>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const chartElement = document.getElementById('dailyChart');
@@ -138,6 +140,7 @@
           },
           options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
               x: {
                 stacked: false,
@@ -180,29 +183,12 @@
           }
         });
       }
-
-      // 作業時間の自動更新
-      const currentDurationElement = document.getElementById('current-duration');
-      if (currentDurationElement) {
-        const startTime = <%= @active_work_log&.start_time ? "new Date('#{@active_work_log.start_time.in_time_zone('Asia/Tokyo').strftime('%Y-%m-%dT%H:%M:%S+09:00')}')" : "null" %>;
-        
-        function updateDuration() {
-          if (!startTime) return;
-          const now = new Date();
-          const duration = (now - startTime) / 3600000; // 時間に変換
-          currentDurationElement.textContent = duration.toFixed(1) + '時間';
-        }
-        
-        // 1秒ごとに更新
-        setInterval(updateDuration, 1000);
-        updateDuration(); // 初回実行
-      }
     });
   </script>
 <% end %>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('turbo:load', function() {
   const workStatus = document.getElementById('work-status');
   
   if (workStatus) {

@@ -1,0 +1,35 @@
+<div class="container">
+  <h1 class="text-2xl font-bold mb-6">メンバー一覧</h1>
+
+  <div class="mb-4">
+    <%= link_to '新規メンバー追加', new_member_path, class: 'btn' %>
+  </div>
+
+  <div class="card">
+    <% if @members.any? %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>名前</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @members.each do |member| %>
+            <tr>
+              <td><%= member.id %></td>
+              <td><%= member.name %></td>
+              <td>
+                <%= link_to '編集', edit_member_path(member), class: 'btn btn-info' %>
+                <%= link_to '削除', member_path(member), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="text-center text-gray-500 py-4">メンバーがいません</div>
+    <% end %>
+  </div>
+</div> 

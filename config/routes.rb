@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root 'work_logs#index'
+  resources :members
   resources :work_logs do
     collection do
       post :start_work
