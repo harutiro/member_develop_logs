@@ -184,9 +184,10 @@
       // 作業時間の自動更新
       const currentDurationElement = document.getElementById('current-duration');
       if (currentDurationElement) {
-        const startTime = new Date('<%= @active_work_log&.start_time&.iso8601 %>');
+        const startTime = <%= @active_work_log&.start_time ? "new Date('#{@active_work_log.start_time.in_time_zone('Asia/Tokyo').strftime('%Y-%m-%dT%H:%M:%S+09:00')}')" : "null" %>;
         
         function updateDuration() {
+          if (!startTime) return;
           const now = new Date();
           const duration = (now - startTime) / 3600000; // 時間に変換
           currentDurationElement.textContent = duration.toFixed(1) + '時間';
