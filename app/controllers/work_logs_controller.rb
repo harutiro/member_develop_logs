@@ -4,6 +4,12 @@ class WorkLogsController < ApplicationController
   def index
     @members = Member.all
     
+    # メンバーが存在しない場合は、メンバー管理ページにリダイレクト
+    if @members.empty?
+      redirect_to members_path, alert: 'メンバーを追加してください'
+      return
+    end
+    
     # セッションから選択されたメンバーIDを取得、またはURLパラメータから取得
     selected_member_id = params[:member_id] || session[:selected_member_id]
     
