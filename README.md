@@ -1,24 +1,88 @@
-# README
+# 作業時間管理システム
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+このアプリケーションは、チームメンバーの作業時間を管理・記録するためのシステムです。
 
-Things you may want to cover:
+## 主な機能
 
-* Ruby version
+- メンバー管理
+  - メンバーの追加・編集・削除
+  - メンバーごとの作業時間の記録
 
-* System dependencies
+- 作業時間の記録
+  - 作業開始・終了の記録
+  - 手動での作業時間の記録
+  - 作業時間の編集・削除
 
-* Configuration
+- 作業時間の可視化
+  - メンバーごとの作業状況の表示
+  - 全メンバーの日次作業時間グラフ（2週間分）
+  - 作業ログ一覧の表示
 
-* Database creation
+## 技術スタック
 
-* Database initialization
+- Ruby on Rails 7.1
+- PostgreSQL
+- Tailwind CSS
+- Chart.js
+- Turbo
 
-* How to run the test suite
+## セットアップ
 
-* Services (job queues, cache servers, search engines, etc.)
+1. リポジトリのクローン
+```bash
+git clone [リポジトリURL]
+cd [プロジェクト名]
+```
 
-* Deployment instructions
+2. 依存関係のインストール
+```bash
+bundle install
+```
 
-* ...
+3. データベースのセットアップ
+```bash
+rails db:create
+rails db:migrate
+```
+
+4. サーバーの起動
+```bash
+rails server
+```
+
+5. ブラウザでアクセス
+```
+http://localhost:3000
+```
+
+## 使用方法
+
+### メンバー管理
+
+1. ナビゲーションバーの「メンバー管理」をクリック
+2. 「メンバーを追加」ボタンで新しいメンバーを追加
+3. 各メンバーの「編集」ボタンで情報を編集
+4. 各メンバーの「削除」ボタンでメンバーを削除
+
+### 作業時間の記録
+
+1. トップページでメンバーを選択
+2. 「作業を開始」ボタンで作業開始を記録
+3. 「作業を終了」ボタンで作業終了を記録
+4. 「手動で作業時間を記録」ボタンで過去の作業時間を記録
+
+### 作業ログの管理
+
+1. メンバーを選択して作業ログ一覧を表示
+2. 各ログの「編集」ボタンで作業時間を編集
+3. 各ログの「削除」ボタンで作業ログを削除
+
+## 注意事項
+
+- 作業中のログは編集・削除できません
+- 作業開始後は、同じメンバーで新しい作業を開始できません
+- 作業時間は0.5時間単位で記録されます
+
+## ライセンス
+
+このプロジェクトはMITライセンスの下で公開されています。
