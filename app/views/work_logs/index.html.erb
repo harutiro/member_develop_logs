@@ -1,104 +1,98 @@
-<div class="container mx-auto px-4 py-8">
+<div class="container">
   <h1 class="text-2xl font-bold mb-6">作業時間管理</h1>
   
-  <div class="mb-8">
-    <%= form_tag work_logs_path, method: :get, class: "flex gap-4 items-end", data: { turbo: false } do %>
-      <div>
+  <div class="card mb-8">
+    <%= form_tag work_logs_path, method: :get, class: "form-group", data: { turbo: false } do %>
+      <div class="form-group">
         <%= label_tag :member_id, "メンバー" %>
         <%= select_tag :member_id, 
             options_from_collection_for_select(@members, :id, :name, @selected_member&.id),
-            class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500",
+            class: "form-control",
             onchange: "this.form.submit()" %>
       </div>
     <% end %>
   </div>
   
   <% if @selected_member %>
-    <div class="mb-8">
-      <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-semibold mb-4"><%= @selected_member.name %>の作業状況</h2>
-        <div id="work-status">
-          <% if @active_work_log %>
-            <div class="space-y-4">
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <div class="text-lg font-medium text-gray-900 mb-2">作業開始時間</div>
-                <div class="text-3xl font-bold text-indigo-600">
-                  <%= @active_work_log.start_time.strftime("%H:%M") %>
-                </div>
-                <div class="text-sm text-gray-500 mt-1">
-                  <%= @active_work_log.start_time.strftime("%Y年%m月%d日") %>
-                </div>
+    <div class="card mb-8">
+      <h2 class="text-xl font-semibold mb-4"><%= @selected_member.name %>の作業状況</h2>
+      <div id="work-status">
+        <% if @active_work_log %>
+          <div class="space-y-4">
+            <div class="card">
+              <div class="text-lg font-medium mb-2">作業開始時間</div>
+              <div class="text-3xl font-bold text-primary">
+                <%= @active_work_log.start_time.strftime("%H:%M") %>
               </div>
-              
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <div class="text-lg font-medium text-gray-900 mb-2">現在の作業時間</div>
-                <div class="text-3xl font-bold text-green-600" id="current-duration">
-                  <%= ((Time.current - @active_work_log.start_time) / 3600).round(1) %>時間
-                </div>
+              <div class="text-sm text-gray-500 mt-1">
+                <%= @active_work_log.start_time.strftime("%Y年%m月%d日") %>
               </div>
+            </div>
+            
+            <div class="card">
+              <div class="text-lg font-medium mb-2">現在の作業時間</div>
+              <div class="text-3xl font-bold text-success" id="current-duration">
+                <%= ((Time.current - @active_work_log.start_time) / 3600).round(1) %>時間
+              </div>
+            </div>
 
-              <%= form_tag end_work_work_logs_path, method: :post, data: { turbo: false } do %>
-                <%= hidden_field_tag :member_id, @selected_member.id %>
-                <%= submit_tag "作業を終了", 
-                    class: "w-full bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 text-lg font-medium" %>
-              <% end %>
-            </div>
-          <% else %>
-            <div class="text-center">
-              <div class="text-gray-500 mb-4">作業を開始すると、ここに作業時間が表示されます</div>
-              <%= form_tag start_work_work_logs_path, method: :post, data: { turbo: false } do %>
-                <%= hidden_field_tag :member_id, @selected_member.id %>
-                <%= submit_tag "作業を開始", 
-                    class: "bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 text-lg font-medium",
-                    onclick: "this.disabled = true; this.form.submit();" %>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-  
-  <div class="mb-8">
-    <h2 class="text-xl font-semibold mb-4">全員の日次作業時間グラフ</h2>
-    <div class="bg-white p-4 rounded-lg shadow">
-      <canvas id="dailyChart" width="800" height="400"></canvas>
-    </div>
-  </div>
-  
-  <% if @selected_member %>
-    <div>
-      <h2 class="text-xl font-semibold mb-4"><%= @selected_member.name %>の作業ログ一覧</h2>
-      <div class="bg-white shadow overflow-hidden sm:rounded-md">
-        <% if @selected_member_logs.any? %>
-          <ul class="divide-y divide-gray-200">
-            <% @selected_member_logs.each do |log| %>
-              <li class="px-6 py-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm font-medium text-gray-900">
-                      <%= log.start_time.strftime("%Y年%m月%d日 %H:%M") %> 〜 <%= log.end_time&.strftime("%H:%M") || "作業中" %>
-                    </p>
-                    <p class="text-sm text-gray-500">
-                      作業時間: <%= log.duration %>時間
-                    </p>
-                  </div>
-                </div>
-              </li>
+            <%= form_tag end_work_work_logs_path, method: :post, data: { turbo: false } do %>
+              <%= hidden_field_tag :member_id, @selected_member.id %>
+              <%= submit_tag "作業を終了", class: "btn btn-danger w-full" %>
             <% end %>
-          </ul>
+          </div>
         <% else %>
-          <div class="px-6 py-4 text-center text-gray-500">
-            作業ログがありません
+          <div class="text-center">
+            <div class="text-gray-500 mb-4">作業を開始すると、ここに作業時間が表示されます</div>
+            <%= form_tag start_work_work_logs_path, method: :post, data: { turbo: false } do %>
+              <%= hidden_field_tag :member_id, @selected_member.id %>
+              <%= submit_tag "作業を開始", 
+                  class: "btn btn-success",
+                  onclick: "this.disabled = true; this.form.submit();" %>
+            <% end %>
           </div>
         <% end %>
       </div>
     </div>
   <% end %>
   
+  <div class="card mb-8">
+    <h2 class="text-xl font-semibold mb-4">全員の日次作業時間グラフ</h2>
+    <canvas id="dailyChart" width="800" height="400"></canvas>
+  </div>
+  
+  <% if @selected_member %>
+    <div class="card">
+      <h2 class="text-xl font-semibold mb-4"><%= @selected_member.name %>の作業ログ一覧</h2>
+      <% if @selected_member_logs.any? %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>開始時間</th>
+              <th>終了時間</th>
+              <th>作業時間</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @selected_member_logs.each do |log| %>
+              <tr>
+                <td><%= log.start_time.strftime("%Y年%m月%d日 %H:%M") %></td>
+                <td><%= log.end_time&.strftime("%H:%M") || "作業中" %></td>
+                <td><%= log.duration %>時間</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <div class="text-center text-gray-500 py-4">
+          作業ログがありません
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  
   <div class="mt-8">
-    <%= link_to "手動で作業時間を記録", new_work_log_path, 
-        class: "bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" %>
+    <%= link_to "手動で作業時間を記録", new_work_log_path, class: "btn" %>
   </div>
 </div>
 
@@ -117,11 +111,11 @@
         // グラフのデータセットを作成
         const datasets = Object.entries(data).map(([memberName, memberData], index) => {
           const colors = [
-            'rgba(79, 70, 229, 0.5)',   // インディゴ
-            'rgba(16, 185, 129, 0.5)',  // エメラルド
-            'rgba(245, 158, 11, 0.5)',  // アンバー
-            'rgba(239, 68, 68, 0.5)',   // レッド
-            'rgba(59, 130, 246, 0.5)',  // ブルー
+            'rgba(74, 144, 226, 0.5)',   // プライマリーカラー
+            'rgba(16, 185, 129, 0.5)',   // 成功カラー
+            'rgba(245, 158, 11, 0.5)',   // 警告カラー
+            'rgba(239, 68, 68, 0.5)',    // エラーカラー
+            'rgba(59, 130, 246, 0.5)',   // 情報カラー
           ];
           
           return {
