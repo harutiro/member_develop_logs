@@ -1,0 +1,124 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">作業時間記録</h1>
+  
+  <%= form_with(model: @work_log, class: "space-y-6") do |f| %>
+    <% if @work_log.errors.any? %>
+      <div class="bg-red-50 p-4 rounded-md">
+        <div class="text-red-700">
+          <h2 class="text-sm font-medium"><%= pluralize(@work_log.errors.count, "error") %> prohibited this work log from being saved:</h2>
+          <ul class="mt-2 list-disc list-inside">
+            <% @work_log.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+    
+    <div>
+      <%= f.label :member_id, "メンバー", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.collection_select :member_id, @members, :id, :name, 
+          { prompt: "メンバーを選択してください" },
+          class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :start_time, "開始時間", class: "block text-sm font-medium text-gray-700" %>
+        <div class="mt-1 flex rounded-md shadow-sm">
+          <%= f.datetime_local_field :start_time, 
+              class: "block w-full rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" %>
+          <button type="button" onclick="setCurrentTime('work_log_start_time')" 
+              class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 rounded-r-md hover:bg-gray-100">
+            現在時刻
+          </button>
+        </div>
+      </div>
+      
+      <div>
+        <%= f.label :end_time, "終了時間", class: "block text-sm font-medium text-gray-700" %>
+        <div class="mt-1 flex rounded-md shadow-sm">
+          <%= f.datetime_local_field :end_time, 
+              class: "block w-full rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" %>
+          <button type="button" onclick="setCurrentTime('work_log_end_time')" 
+              class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 rounded-r-md hover:bg-gray-100">
+            現在時刻
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-gray-50 p-4 rounded-md">
+      <h3 class="text-lg font-medium text-gray-900 mb-2">作業時間の計算</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">開始時間</label>
+          <input type="text" id="calc_start_time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" readonly>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">終了時間</label>
+          <input type="text" id="calc_end_time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" readonly>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-sm font-medium text-gray-700">作業時間</label>
+          <input type="text" id="calc_duration" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" readonly>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex gap-4">
+      <%= f.submit "記録", class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700" %>
+      <%= link_to "キャンセル", work_logs_path, class: "bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+function setCurrentTime(fieldId) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  
+  const dateTimeString = `${year}-${month}-${day}T${hours}:${minutes}`;
+  document.getElementById(fieldId).value = dateTimeString;
+  
+  calculateDuration();
+}
+
+function calculateDuration() {
+  const startTime = document.getElementById('work_log_start_time').value;
+  const endTime = document.getElementById('work_log_end_time').value;
+  
+  if (startTime && endTime) {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    
+    if (end >= start) {
+      const duration = (end - start) / (1000 * 60 * 60); // 時間単位に変換
+      document.getElementById('calc_duration').value = `${duration.toFixed(2)}時間`;
+    } else {
+      document.getElementById('calc_duration').value = '終了時間は開始時間より後の時間を指定してください';
+    }
+  }
+}
+
+// 開始時間と終了時間の入力フィールドにイベントリスナーを追加
+document.getElementById('work_log_start_time').addEventListener('change', calculateDuration);
+document.getElementById('work_log_end_time').addEventListener('change', calculateDuration);
+
+// 計算用の表示フィールドを更新する関数
+function updateCalcFields() {
+  const startTime = document.getElementById('work_log_start_time').value;
+  const endTime = document.getElementById('work_log_end_time').value;
+  
+  document.getElementById('calc_start_time').value = startTime ? new Date(startTime).toLocaleString('ja-JP') : '';
+  document.getElementById('calc_end_time').value = endTime ? new Date(endTime).toLocaleString('ja-JP') : '';
+}
+
+// 入力フィールドの変更時に計算用フィールドを更新
+document.getElementById('work_log_start_time').addEventListener('change', updateCalcFields);
+document.getElementById('work_log_end_time').addEventListener('change', updateCalcFields);
+</script> 

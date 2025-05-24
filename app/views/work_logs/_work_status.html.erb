@@ -1,0 +1,23 @@
+<% if active_work_log %>
+  <div class="flex items-center gap-4">
+    <div class="text-lg">
+      作業開始時間: <span id="start-time"><%= active_work_log.start_time.strftime("%H:%M") %></span>
+    </div>
+    <%= button_to "作業を終了", end_work_work_logs_path(member_id: selected_member.id),
+        method: :post,
+        class: "bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700",
+        data: { 
+          confirm: "作業を終了しますか？",
+          remote: true,
+          action: "click->work-log#endWork"
+        } %>
+  </div>
+<% else %>
+  <%= button_to "作業を開始", start_work_work_logs_path(member_id: selected_member.id),
+      method: :post,
+      class: "bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700",
+      data: { 
+        remote: true,
+        action: "click->work-log#startWork"
+      } %>
+<% end %> 

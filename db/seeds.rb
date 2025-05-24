@@ -7,3 +7,16 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# メンバーの追加
+Member.create!(name: '山田太郎')
+Member.create!(name: '鈴木花子')
+Member.create!(name: '佐藤次郎')
+
+# サンプルの作業ログを追加
+member = Member.first
+WorkLog.create!(
+  member: member,
+  start_time: Time.current.beginning_of_day + 9.hours,
+  end_time: Time.current.beginning_of_day + 18.hours
+)
