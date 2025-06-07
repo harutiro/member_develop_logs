@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">できたことを記録</h1>
+
+        <%= form_with(model: @achievement, local: true) do |f| %>
+          <% if @achievement.errors.any? %>
+            <div class="alert alert-danger">
+              <h2><%= pluralize(@achievement.errors.count, "error") %> prohibited this achievement from being saved:</h2>
+              <ul>
+                <% @achievement.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= f.label :content, "内容", class: "form-label" %>
+            <%= f.text_area :content, class: "form-control", rows: 3 %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :category, "カテゴリー", class: "form-label" %>
+            <%= f.select :category, Achievement::CATEGORIES.map { |c| [c.humanize, c] }, {}, class: "form-select" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :points, "ポイント", class: "form-label" %>
+            <%= f.number_field :points, class: "form-control", min: 0 %>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <%= f.submit "記録する", class: "btn btn-success" %>
+            <%= link_to "戻る", achievements_path, class: "btn btn-outline-secondary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

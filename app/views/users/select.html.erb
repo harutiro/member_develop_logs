@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card mt-5">
+        <div class="card-body text-center">
+          <h1 class="card-title mb-4">ユーザーを選択</h1>
+
+          <% if @users.any? %>
+            <div class="list-group">
+              <% @users.each do |user| %>
+                <%= button_to user.name, set_user_path(user_id: user.id), 
+                    method: :post, 
+                    class: "list-group-item list-group-item-action" %>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="alert alert-info">
+              ユーザーが登録されていません。
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

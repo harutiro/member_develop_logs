@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body text-center">
+        <h1 class="card-title">メンターアバターの詳細</h1>
+
+        <div class="my-4">
+          <% if @mentor_avatar.current_avatar.present? %>
+            <%= image_tag @mentor_avatar.current_avatar, class: "img-fluid rounded", style: "max-height: 400px;" %>
+          <% else %>
+            <div class="alert alert-info">
+              アバターがまだ設定されていません。
+            </div>
+          <% end %>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <th style="width: 30%">成長段階</th>
+                <td><%= @mentor_avatar.growth_stage %></td>
+              </tr>
+              <tr>
+                <th>総開発時間</th>
+                <td><%= @mentor_avatar.total_development_time %>分</td>
+              </tr>
+              <tr>
+                <th>達成数</th>
+                <td><%= @mentor_avatar.achievement_count %></td>
+              </tr>
+              <tr>
+                <th>最終更新日時</th>
+                <td><%= @mentor_avatar.updated_at.strftime("%Y/%m/%d %H:%M") %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-4">
+          <%= link_to "一覧に戻る", mentor_avatars_path, class: "btn btn-outline-secondary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

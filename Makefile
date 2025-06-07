@@ -10,7 +10,7 @@ setup:
 
 # 開発サーバーの起動
 up:
-	docker compose up
+	docker compose up -d
 
 # 開発サーバーの停止
 down:
@@ -47,4 +47,4 @@ deploy-status:
 # ロールバック
 rollback:
 	docker compose -f docker-compose.prod.yml down
-	docker compose -f docker-compose.prod.yml up -d 
+	docker compose -f docker-compose.prod.yml up -d

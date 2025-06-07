@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>開発時間の記録</h1>
+  <%= link_to "新しい記録", new_development_time_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h3 class="card-title">総開発時間</h3>
+    <h2 class="text-center text-primary"><%= current_user.total_development_time / 3600 %>時間</h2>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h3 class="card-title">記録一覧</h3>
+    <% if @development_times.any? %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>開始時間</th>
+              <th>終了時間</th>
+              <th>開発時間</th>
+              <th>メモ</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @development_times.each do |time| %>
+              <tr>
+                <td><%= time.start_time.strftime("%Y/%m/%d %H:%M") %></td>
+                <td><%= time.end_time.strftime("%Y/%m/%d %H:%M") %></td>
+                <td><%= time.duration / 60 %>分</td>
+                <td><%= time.notes %></td>
+                <td>
+                  <%= link_to "詳細", development_time_path(time), class: "btn btn-sm btn-outline-primary" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-center">まだ開発時間が記録されていません</p>
+    <% end %>
+  </div>
+</div>

@@ -1,4 +1,21 @@
 Rails.application.routes.draw do
+  root to: "pages#home"
+  
+  get 'select_user', to: 'users#select', as: :select_user
+  post 'set_user', to: 'users#set', as: :set_user
+
+  resources :development_times
+  resources :achievements
+  resources :mentor_avatars, only: [:index, :show]
+
+  get "pages/home"
+  namespace :api do
+    namespace :v1 do
+      resources :development_times, only: [:index, :create]
+      resources :achievements, only: [:index, :create]
+      resources :mentor_avatars, only: [:show]
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -10,7 +27,6 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root 'work_logs#index'
   resources :members
   resources :work_logs do
     collection do

@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>できたことの記録</h1>
+  <%= link_to "新しい記録", new_achievement_path, class: "btn btn-success" %>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h3 class="card-title">達成状況</h3>
+    <div class="row text-center">
+      <div class="col-md-4">
+        <h4>バグ修正</h4>
+        <h2 class="text-primary"><%= current_user.achievements.where(category: 'bug_fix').count %>回</h2>
+      </div>
+      <div class="col-md-4">
+        <h4>機能実装</h4>
+        <h2 class="text-success"><%= current_user.achievements.where(category: 'feature_implementation').count %>回</h2>
+      </div>
+      <div class="col-md-4">
+        <h4>学習</h4>
+        <h2 class="text-info"><%= current_user.achievements.where(category: 'learning').count %>回</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h3 class="card-title">記録一覧</h3>
+    <% if @achievements.any? %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>日時</th>
+              <th>内容</th>
+              <th>カテゴリー</th>
+              <th>ポイント</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @achievements.each do |achievement| %>
+              <tr>
+                <td><%= achievement.created_at.strftime("%Y/%m/%d %H:%M") %></td>
+                <td><%= achievement.content %></td>
+                <td><%= achievement.category %></td>
+                <td><span class="badge bg-success">+<%= achievement.points %>pt</span></td>
+                <td>
+                  <%= link_to "詳細", achievement_path(achievement), class: "btn btn-sm btn-outline-success" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-center">まだできたことが記録されていません</p>
+    <% end %>
+  </div>
+</div>

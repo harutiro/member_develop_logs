@@ -8,6 +8,21 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# ユーザーのシードデータ
+users = [
+  { name: '山田太郎', email: 'yamada@example.com' },
+  { name: '鈴木花子', email: 'suzuki@example.com' },
+  { name: '佐藤次郎', email: 'sato@example.com' }
+]
+
+users.each do |user_data|
+  User.find_or_create_by!(email: user_data[:email]) do |user|
+    user.name = user_data[:name]
+    user.total_development_time = 0
+    user.level = 1
+  end
+end
+
 # メンバーのシードデータ
 members = [
   { name: '山田太郎' },
@@ -34,6 +49,18 @@ if member
     member: member,
     start_time: 1.day.ago.beginning_of_day + 9.hours,
     end_time: 1.day.ago.beginning_of_day + 17.hours
+  )
+end
+
+# 各ユーザーにmentor_avatarを作成
+User.find_each do |user|
+  MentorAvatar.find_or_create_by!(
+    user_id: user.id,
+    name: "#{user.name}のメンター",
+    description: "はじめのメンター",
+    image_url: "default.png",
+    transformation_type: "cool",
+    level: 1
   )
 end
 

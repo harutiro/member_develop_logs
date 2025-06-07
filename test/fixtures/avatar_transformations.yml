@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mentor_avatar: one
+  trigger_type: MyString
+  trigger_value: 1
+  transformation_date: 2025-06-07 07:56:56
+
+two:
+  mentor_avatar: two
+  trigger_type: MyString
+  trigger_value: 1
+  transformation_date: 2025-06-07 07:56:56

@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">開発時間を記録</h1>
+
+        <%= form_with(model: @development_time, local: true) do |f| %>
+          <% if @development_time.errors.any? %>
+            <div class="alert alert-danger">
+              <h2><%= pluralize(@development_time.errors.count, "error") %> prohibited this development time from being saved:</h2>
+              <ul>
+                <% @development_time.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= f.label :start_time, "開始時間", class: "form-label" %>
+            <%= f.datetime_local_field :start_time, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :end_time, "終了時間", class: "form-label" %>
+            <%= f.datetime_local_field :end_time, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :notes, "メモ", class: "form-label" %>
+            <%= f.text_area :notes, class: "form-control", rows: 3 %>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <%= f.submit "記録する", class: "btn btn-primary" %>
+            <%= link_to "戻る", development_times_path, class: "btn btn-outline-secondary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
