@@ -8,15 +8,33 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# メンバーの追加
-Member.create!(name: '山田太郎')
-Member.create!(name: '鈴木花子')
-Member.create!(name: '佐藤次郎')
+# メンバーのシードデータ
+members = [
+  { name: '山田太郎' },
+  { name: '鈴木花子' },
+  { name: '佐藤次郎' }
+]
 
-# サンプルの作業ログを追加
+members.each do |member_data|
+  Member.find_or_create_by!(name: member_data[:name])
+end
+
+# 作業ログのシードデータ
 member = Member.first
-WorkLog.create!(
-  member: member,
-  start_time: Time.current.beginning_of_day + 9.hours,
-  end_time: Time.current.beginning_of_day + 18.hours
-)
+if member
+  # 今日の作業ログ
+  WorkLog.create!(
+    member: member,
+    start_time: Time.current.beginning_of_day + 9.hours,
+    end_time: Time.current.beginning_of_day + 18.hours
+  )
+
+  # 昨日の作業ログ
+  WorkLog.create!(
+    member: member,
+    start_time: 1.day.ago.beginning_of_day + 9.hours,
+    end_time: 1.day.ago.beginning_of_day + 17.hours
+  )
+end
+
+puts 'シードデータの作成が完了しました。'
