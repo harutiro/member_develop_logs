@@ -1,73 +1,30 @@
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="card mb-4">
-      <div class="card-body text-center">
-        <h1 class="card-title">メンターアバター</h1>
-        
-        <div class="my-4">
-          <% if @mentor_avatar.present? %>
-            <%= image_tag @mentor_avatar.image_url, class: "img-fluid rounded", style: "max-height: 300px;" %>
-          <% else %>
-            <div class="alert alert-info">
-              メンターアバターが登録されていません。
-            </div>
-          <% end %>
-        </div>
+<div class="mb-3 text-end">
+  <%= link_to 'メンターを追加', new_mentor_avatar_path, class: 'btn btn-success' %>
+  <%= link_to '現在のメンター', current_mentor_avatar_path, class: 'btn btn-outline-primary ms-2' %>
+</div>
 
-        <div class="row">
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">総開発時間</h5>
-                <p class="card-text h3"><%= current_user.total_development_time %>分</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">達成数</h5>
-                <p class="card-text h3"><%= current_user.achievements.count %></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">成長段階</h5>
-                <p class="card-text h3"><%= @mentor_avatar.level %>段階</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-body">
-        <h2 class="card-title">成長の記録</h2>
-
-        <% if @transformations.any? %>
-          <div class="list-group">
-            <% @transformations.each do |transformation| %>
-              <div class="list-group-item">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1"><%= transformation.growth_stage %></h5>
-                  <small><%= transformation.created_at.strftime("%Y/%m/%d %H:%M") %></small>
-                </div>
-                <p class="mb-1">
-                  総開発時間: <%= transformation.total_development_time %>分<br>
-                  達成数: <%= transformation.achievement_count %>
-                </p>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="alert alert-info">
-            まだ成長の記録がありません。
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div> 
+<h3>登録済みメンター一覧</h3>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>画像</th>
+      <th>名前</th>
+      <th>説明</th>
+      <th>成長タイプ</th>
+      <th>レベル</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @mentor_avatars.each do |avatar| %>
+      <tr>
+        <td><%= image_tag avatar.image.attached? ? url_for(avatar.image) : 'default.png', style: 'max-height: 80px;' %></td>
+        <td><%= avatar.name %></td>
+        <td><%= avatar.description %></td>
+        <td><%= avatar.transformation_type %></td>
+        <td><%= avatar.level %>段階</td>
+        <td><%= link_to '詳細', mentor_avatar_path(avatar), class: 'btn btn-outline-primary btn-sm' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table> 

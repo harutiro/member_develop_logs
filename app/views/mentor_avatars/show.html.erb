@@ -5,11 +5,11 @@
         <h1 class="card-title">メンターアバターの詳細</h1>
 
         <div class="my-4">
-          <% if @mentor_avatar.current_avatar.present? %>
-            <%= image_tag @mentor_avatar.current_avatar, class: "img-fluid rounded", style: "max-height: 400px;" %>
+          <% if @mentor_avatar.present? %>
+            <%= image_tag @mentor_avatar.image_url, class: "img-fluid rounded", style: "max-height: 400px;" %>
           <% else %>
             <div class="alert alert-info">
-              アバターがまだ設定されていません。
+              メンターアバターが登録されていません。
             </div>
           <% end %>
         </div>
@@ -19,15 +19,15 @@
             <tbody>
               <tr>
                 <th style="width: 30%">成長段階</th>
-                <td><%= @mentor_avatar.growth_stage %></td>
+                <td><%= @mentor_avatar.level %>段階</td>
               </tr>
               <tr>
                 <th>総開発時間</th>
-                <td><%= @mentor_avatar.total_development_time %>分</td>
+                <td><%= @mentor_avatar.user.total_development_time %>分</td>
               </tr>
               <tr>
                 <th>達成数</th>
-                <td><%= @mentor_avatar.achievement_count %></td>
+                <td><%= @mentor_avatar.user.achievements.count %></td>
               </tr>
               <tr>
                 <th>最終更新日時</th>

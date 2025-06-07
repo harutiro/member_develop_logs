@@ -1,0 +1,19 @@
+<div class="container mt-4">
+  <div class="card mb-4">
+    <div class="card-header">現在のメンター</div>
+    <div class="card-body text-center">
+      <% if @mentor_avatar.present? %>
+        <%= image_tag @mentor_avatar.image.attached? ? url_for(@mentor_avatar.image) : 'default.png', class: 'img-fluid rounded', style: 'max-height: 300px;' %>
+        <h5 class="mt-3"><%= @mentor_avatar.name %></h5>
+        <p><%= @mentor_avatar.description %></p>
+        <p>成長タイプ: <%= @mentor_avatar.transformation_type %></p>
+        <p>レベル: <%= @mentor_avatar.level %></p>
+      <% else %>
+        <div class="alert alert-info">メンターアバターが登録されていません。</div>
+      <% end %>
+      <div class="mt-3">
+        <%= link_to 'メンター一覧へ', mentor_avatars_path, class: 'btn btn-outline-secondary' %>
+      </div>
+    </div>
+  </div>
+</div> 

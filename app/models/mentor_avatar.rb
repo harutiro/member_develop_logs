@@ -1,9 +1,10 @@
 class MentorAvatar < ApplicationRecord
+  belongs_to :user
   has_many :avatar_transformations, dependent: :destroy
+  has_one_attached :image
 
   validates :name, presence: true
   validates :description, presence: true
-  validates :image_url, presence: true
   validates :transformation_type, presence: true
   validates :level, presence: true, numericality: { greater_than: 0 }
 

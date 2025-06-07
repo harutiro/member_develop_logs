@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   resources :development_times
   resources :achievements
-  resources :mentor_avatars, only: [:index, :show]
+  resources :mentor_avatars
 
   get "pages/home"
   namespace :api do
@@ -34,4 +34,6 @@ Rails.application.routes.draw do
       post :end_work
     end
   end
+
+  get 'mentor_avatars/current', to: 'mentor_avatars#current', as: :current_mentor_avatar
 end
