@@ -100,3 +100,51 @@ make rollback
 ## ライセンス
 
 このプロジェクトは社内利用に限定されています。
+
+## アプリアイコンの変更方法
+
+### 1. アイコンファイルの準備
+新しいアイコンファイルを以下の仕様で準備してください：
+- **PNG形式**: 512x512ピクセル推奨
+- **SVG形式**: ベクター形式（任意サイズ対応）
+
+### 2. アイコンファイルの配置
+準備したアイコンファイルを以下の場所に配置してください：
+```
+public/icon.png  # メインのPNGアイコン
+public/icon.svg  # SVGアイコン
+```
+
+### 3. ブラウザキャッシュのクリア
+アイコンを変更した後、ブラウザのキャッシュをクリアしてください：
+- Chrome: Ctrl+Shift+R (Windows/Linux) または Cmd+Shift+R (Mac)
+- Safari: Cmd+Option+R
+- Firefox: Ctrl+F5 (Windows/Linux) または Cmd+Shift+R (Mac)
+
+### 4. アイコンが反映されない場合
+- ブラウザの開発者ツールでキャッシュを無効化
+- プライベートブラウジングモードで確認
+- 複数のブラウザで確認
+
+## アイコン設定ファイル
+
+アイコンの設定は以下のファイルで管理されています：
+- `app/views/layouts/application.html.erb` - ファビコンとApple Touch Icon
+- `app/views/pwa/manifest.json.erb` - PWAマニフェスト
+
+## 開発環境での確認
+
+Docker環境でアプリを起動している場合：
+```bash
+# アイコンファイルを変更後、コンテナを再起動
+docker compose restart web
+```
+
+## アイコンサイズの推奨仕様
+
+- **ファビコン**: 16x16, 32x32, 48x48px
+- **Apple Touch Icon**: 180x180px
+- **PWAアイコン**: 512x512px
+- **Androidアイコン**: 192x192, 512x512px
+
+現在のアプリは512x512pxの単一サイズで設定されています。
