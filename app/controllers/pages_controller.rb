@@ -9,6 +9,12 @@ class PagesController < ApplicationController
     @recent_achievements = current_user&.achievements&.order(created_at: :desc)&.limit(5) || []
     @current_development_time = current_user&.current_development_time
     
+    # 初回ユーザー判定
+    if current_user.first_time_user? && !session[:tutorial_shown]
+      @show_tutorial = true
+      session[:tutorial_shown] = true
+    end
+    
     # 未表示のレベルアップ通知を確認
     unshown_notification = current_user.level_up_notifications.unshown.first
     if unshown_notification
@@ -41,6 +47,7 @@ class PagesController < ApplicationController
     session.delete(:first_mentor_shown)
     session.delete(:new_mentor_acquired)
     session.delete(:new_mentor_level)
+    session.delete(:tutorial_shown)
     # LevelUpNotificationもリセット
     current_user.level_up_notifications.update_all(shown: false)
     redirect_to root_path, notice: 'セッションをリセットしました。アニメーションが再表示されるはずです。'

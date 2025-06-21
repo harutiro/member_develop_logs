@@ -617,5 +617,179 @@
       });
     </script>
   <% end %>
+
+  <% if @show_tutorial %>
+    <!-- 初回ユーザー向け使い方説明モーダル -->
+    <div id="tutorial-modal" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.9); z-index: 9999;">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <div class="modal-body text-center p-5 text-white">
+            <!-- タイトル -->
+            <div class="tutorial-title mb-4 animate__animated animate__bounceIn">
+              <h1 class="text-white fw-bold mb-3">🎉 開発時間記録アプリへようこそ！ 🎉</h1>
+              <p class="lead">あなたの開発の成長を記録し、メンターと一緒にレベルアップしましょう！</p>
+            </div>
+            
+            <!-- 使い方説明 -->
+            <div class="tutorial-content">
+              <!-- ステップ1: 開発時間記録 -->
+              <div class="tutorial-step mb-5 animate__animated animate__fadeInUp animate__delay-1s">
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <div class="tutorial-icon mb-3">
+                      <i class="fas fa-clock fa-4x text-warning"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-8 text-start">
+                    <h3 class="text-warning fw-bold mb-3">📝 ステップ1: 開発時間を記録</h3>
+                    <ul class="list-unstyled">
+                      <li class="mb-2">✅ <strong>開発開始</strong>ボタンを押して作業を開始</li>
+                      <li class="mb-2">✅ 作業が終わったら<strong>開発終了</strong>ボタンを押す</li>
+                      <li class="mb-2">✅ 自動的に開発時間が記録される</li>
+                      <li class="mb-2">✅ メモも残せるので、何をしたか記録しよう</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- ステップ2: できたことを記録 -->
+              <div class="tutorial-step mb-5 animate__animated animate__fadeInUp animate__delay-2s">
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <div class="tutorial-icon mb-3">
+                      <i class="fas fa-trophy fa-4x text-success"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-8 text-start">
+                    <h3 class="text-success fw-bold mb-3">🏆 ステップ2: できたことを記録</h3>
+                    <ul class="list-unstyled">
+                      <li class="mb-2">✅ 新しい技術を習得した</li>
+                      <li class="mb-2">✅ バグを修正した</li>
+                      <li class="mb-2">✅ 機能を実装した</li>
+                      <li class="mb-2">✅ どんな小さな達成でも記録しよう</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- ステップ3: レベルアップとメンター -->
+              <div class="tutorial-step mb-5 animate__animated animate__fadeInUp animate__delay-3s">
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <div class="tutorial-icon mb-3">
+                      <i class="fas fa-user-graduate fa-4x text-info"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-8 text-start">
+                    <h3 class="text-info fw-bold mb-3">👨‍💻 ステップ3: レベルアップとメンター獲得</h3>
+                    <ul class="list-unstyled">
+                      <li class="mb-2">✅ 開発時間と達成数を積み重ねるとレベルアップ</li>
+                      <li class="mb-2">✅ レベルアップすると新しいメンターが登場</li>
+                      <li class="mb-2">✅ メンターは自動クリックでぬるぽゲームを強化</li>
+                      <li class="mb-2">✅ メンターコレクションを完成させよう</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- ステップ4: ぬるぽゲーム -->
+              <div class="tutorial-step mb-5 animate__animated animate__fadeInUp animate__delay-4s">
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <div class="tutorial-icon mb-3">
+                      <i class="fas fa-gamepad fa-4x text-warning"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-8 text-start">
+                    <h3 class="text-warning fw-bold mb-3">🎮 ステップ4: ぬるぽクリッカーでリフレッシュ</h3>
+                    <ul class="list-unstyled">
+                      <li class="mb-2">✅ 開発の合間にぬるぽをクリック</li>
+                      <li class="mb-2">✅ レベルとメンターでクリック力が強化</li>
+                      <li class="mb-2">✅ 全メンバーと競争しよう</li>
+                      <li class="mb-2">✅ リフレッシュしながら成長を楽しもう</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 特別なメッセージ -->
+            <div class="tutorial-message mb-4 animate__animated animate__fadeInUp animate__delay-5s">
+              <div class="bg-white text-dark p-4 rounded-lg shadow-lg">
+                <h4 class="text-primary mb-3">🚀 さあ、始めましょう！</h4>
+                <p class="mb-2">• まずは<strong>開発開始</strong>ボタンを押してみてください</p>
+                <p class="mb-2">• 何か達成したら<strong>できたことを記録</strong>してください</p>
+                <p class="mb-0">• 定期的にぬるぽゲームでリフレッシュしてください</p>
+              </div>
+            </div>
+            
+            <!-- 閉じるボタン -->
+            <div class="modal-footer border-0 justify-content-center animate__animated animate__fadeInUp animate__delay-6s">
+              <button type="button" class="btn btn-warning btn-lg px-5 py-3 shadow-lg" onclick="closeTutorialModal()">
+                <i class="fas fa-rocket me-2"></i>開発を始める！
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- カスタムCSS -->
+    <style>
+      .tutorial-step {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      .tutorial-icon {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+      
+      .tutorial-message {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+      }
+      
+      .modal-content {
+        border-radius: 25px;
+      }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+      // モーダルを閉じる
+      function closeTutorialModal() {
+        const modal = document.getElementById('tutorial-modal');
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+      }
+      
+      // ページ読み込み時の処理
+      document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('tutorial-modal')) {
+          // 15秒後に自動で閉じる
+          setTimeout(closeTutorialModal, 15000);
+        }
+      });
+      
+      // ESCキーでモーダルを閉じる
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          closeTutorialModal();
+        }
+      });
+    </script>
+  <% end %>
 </div>
 </div>

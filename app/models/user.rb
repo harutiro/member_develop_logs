@@ -87,4 +87,11 @@ class User < ApplicationRecord
       click_power: level
     )
   end
+
+  # 初回アクセスかどうかを判定
+  def first_time_user?
+    # 開発時間、達成、ぬるぽゲームの記録がない場合を初回ユーザーとする
+    development_times.count == 0 && achievements.count == 0 && 
+    (nullpo_game.nil? || (nullpo_game.total_clicks == 0 && nullpo_game.nullpo_count == 0))
+  end
 end
