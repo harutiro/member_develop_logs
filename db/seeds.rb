@@ -53,15 +53,10 @@ if member
 end
 
 # 各ユーザーにmentor_avatarを作成
-User.find_each do |user|
-  MentorAvatar.find_or_create_by!(
-    user_id: user.id,
-    name: "#{user.name}のメンター",
-    description: "はじめのメンター",
-    image_url: "default.png",
-    transformation_type: "cool",
-    level: 1
-  )
-end
+MentorAvatar.find_or_create_by!(
+  name: "はじめのメンター",
+  description: "はじめのメンター",
+  level: 1
+)
 
 puts 'シードデータの作成が完了しました。'

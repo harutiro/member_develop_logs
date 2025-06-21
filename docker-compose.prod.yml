@@ -8,9 +8,10 @@ services:
       - bundle:/usr/local/bundle
     ports:
       - "3000:3000"
+    env_file:
+      - .env.production
     environment:
-      - RAILS_ENV=production
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/member_develop_logs_production
+      - DISABLE_DATABASE_ENVIRONMENT_CHECK=1
     depends_on:
       - db
     restart: always

@@ -31,26 +31,5 @@ test:
 # Store production database in the storage/directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary:
-    <<: *default
-    database: member_develop_logs_production
-    username: member_develop_logs
-    password: <%= ENV["MEMBER_DEVELOP_LOGS_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *default
-    database: member_develop_logs_cache
-    username: member_develop_logs
-    password: <%= ENV["MEMBER_DEVELOP_LOGS_DATABASE_PASSWORD"] %>
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *default
-    database: member_develop_logs_queue
-    username: member_develop_logs
-    password: <%= ENV["MEMBER_DEVELOP_LOGS_DATABASE_PASSWORD"] %>
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *default
-    database: member_develop_logs_cable
-    username: member_develop_logs
-    password: <%= ENV["MEMBER_DEVELOP_LOGS_DATABASE_PASSWORD"] %>
-    migrations_paths: db/cable_migrate
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>

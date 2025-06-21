@@ -1,4 +1,4 @@
-.PHONY: setup up down db-reset test console release-build deploy deploy-status rollback
+.PHONY: setup up down db-reset test console release-build deploy deploy-status rollback prod-db-reset prod-seed prod-init
 
 # 初期セットアップ
 setup:
@@ -42,7 +42,19 @@ release-build:
 # 本番環境へのデプロイ
 deploy:
 	docker compose -f docker-compose.prod.yml up -d
+	docker compose -f docker-compose.prod.yml run --rm web bundle install
 	docker compose -f docker-compose.prod.yml run --rm web rails db:migrate
+
+# 本番DBリセット（全データ削除・再作成）
+prod-db-reset:
+	DISABLE_DATABASE_ENVIRONMENT_CHECK=1 docker compose -f docker-compose.prod.yml run --rm web rails db:migrate:reset
+
+# 本番シード投入
+prod-seed:
+	docker compose -f docker-compose.prod.yml run --rm web rails db:seed
+
+# 本番初期化（リセット＋シード）
+prod-init: prod-db-reset prod-seed
 
 # デプロイ状態の確認
 deploy-status:
