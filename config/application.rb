@@ -34,6 +34,11 @@ module MemberDevelopLogs
     if Rails.env.production?
       config.active_record.database_selector = nil
       config.active_record.database_resolver = nil
+      
+      # SolidQueueを無効化し、ActiveStorageの分析を同期的に実行
+      config.active_storage.analyzers = []
+      config.active_storage.previewers = []
+      config.active_storage.variable_content_types = []
     end
   end
 end
