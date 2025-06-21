@@ -116,6 +116,10 @@
       <div class="card-body">
         <h3 class="card-title">あなたの成長</h3>
         <div class="text-center mb-4">
+          <h4>現在のレベル</h4>
+          <h1 class="text-warning mb-3">レベル <%= current_user&.level || 1 %></h1>
+        </div>
+        <div class="text-center mb-4">
           <h4>総開発時間</h4>
           <h2 class="text-primary"><%= @total_development_time / 3600 %>時間</h2>
         </div>
@@ -123,6 +127,23 @@
           <h4>達成したこと</h4>
           <h2 class="text-success"><%= @achievement_count %>個</h2>
         </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h3 class="card-title">メンター情報</h3>
+        <% if @current_avatar %>
+          <div class="text-center">
+            <h4>メンターレベル</h4>
+            <h2 class="text-info mb-3">レベル <%= @current_avatar.level %></h2>
+            <p class="text-muted"><%= @current_avatar.name %></p>
+          </div>
+        <% else %>
+          <div class="text-center">
+            <p class="text-muted">メンターが設定されていません</p>
+          </div>
+        <% end %>
       </div>
     </div>
 
