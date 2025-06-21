@@ -8,7 +8,8 @@
           <%= button_to "リセット", reset_nullpo_game_path, 
               method: :post, 
               class: "btn btn-outline-danger",
-              data: { confirm: "本当にリセットしますか？" } %>
+              data: { confirm: "本当にリセットしますか？" },
+              onclick: "resetStackedIcons();" %>
         </div>
       </div>
 
@@ -63,8 +64,10 @@
               </div>
 
               <!-- ぬるぽぽさアニメーション -->
-              <div id="nullpo-animation-container" style="position: relative; height: 200px; overflow: hidden;">
+              <div id="nullpo-animation-container" style="position: relative; height: 300px; overflow: hidden; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%); border-radius: 10px; backdrop-filter: blur(5px);">
                 <!-- アニメーション要素がここに動的に追加されます -->
+                <div id="falling-container" style="position: absolute; bottom: 0; left: 0; right: 0; height: 100%; pointer-events: none;"></div>
+                <div id="stack-counter" class="stack-counter" style="display: none;">積み重ね: 0個</div>
               </div>
 
               <!-- ゲーム説明 -->
@@ -132,6 +135,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const clickPower = document.getElementById('click-power');
   const autoClicks = document.getElementById('auto-clicks');
   const animationContainer = document.getElementById('nullpo-animation-container');
+  const fallingContainer = document.getElementById('falling-container');
+  const stackCounter = document.getElementById('stack-counter');
+
+  // 積み重ねられたアイコンの管理
+  let stackedIcons = [];
+  const containerWidth = 400; // コンテナの幅
+  const iconSize = 30; // アイコンのサイズ
+  const gravity = 0.5; // 重力加速度
+  const bounce = 0.7; // 跳ね返り係数
+  const friction = 0.98; // 摩擦係数
 
   console.log('ぬるぽゲーム初期化完了');
   console.log('CSRFトークン:', document.querySelector('meta[name="csrf-token"]')?.content);
@@ -181,25 +194,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ぬるぽぽさアニメーション
   function createNullpoAnimation(x, y) {
-    const nullpoEmojis = ['🐾', '✨', '💫', '🌟', '⭐', '💥', '🔥', '💎', '🎉', '🎊', '🎈', '🎪', '🌈', '🚀', '⚡', '💖'];
+    const nullpoEmojis = ['🐾', '✨', '💫', '🌟', '⭐', '💥', '🔥', '💎', '🎉', '🎊', '🎈', '🎪', '🌈', '🚀', '⚡', '💖', '🎯', '🎨', '🎭', '🎪'];
     const randomEmoji = nullpoEmojis[Math.floor(Math.random() * nullpoEmojis.length)];
     
-    // メインアニメーション要素
-    const nullpoElement = document.createElement('div');
-    nullpoElement.innerHTML = randomEmoji;
-    nullpoElement.style.cssText = `
-      position: absolute;
-      left: ${x}px;
-      top: ${y}px;
-      font-size: ${2 + Math.random() * 2}rem;
-      pointer-events: none;
-      z-index: 1000;
-      animation: nullpoFloat 1.5s ease-out forwards;
-      transform: rotate(${Math.random() * 360}deg);
-      filter: hue-rotate(${Math.random() * 360}deg);
-    `;
-    
-    animationContainer.appendChild(nullpoElement);
+    // 落下するアイコンを作成
+    createFallingIcon(x, y, randomEmoji);
     
     // パーティクル爆発エフェクト
     createParticleExplosion(x, y);
@@ -208,126 +207,130 @@ document.addEventListener('DOMContentLoaded', function() {
     createRippleEffect(x, y);
     
     // 複数のアニメーション要素を作成（ランダムな位置）
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        const extraElement = document.createElement('div');
-        extraElement.innerHTML = nullpoEmojis[Math.floor(Math.random() * nullpoEmojis.length)];
-        const offsetX = (Math.random() - 0.5) * 150;
-        const offsetY = (Math.random() - 0.5) * 100;
-        
-        extraElement.style.cssText = `
-          position: absolute;
-          left: ${x + offsetX}px;
-          top: ${y + offsetY}px;
-          font-size: ${1 + Math.random() * 1.5}rem;
-          pointer-events: none;
-          z-index: 1000;
-          animation: nullpoFloatExtra 1.2s ease-out forwards;
-          transform: rotate(${Math.random() * 360}deg);
-          filter: hue-rotate(${Math.random() * 360}deg) brightness(${0.8 + Math.random() * 0.4});
-        `;
-        
-        animationContainer.appendChild(extraElement);
-        
-        setTimeout(() => {
-          if (extraElement.parentNode) {
-            extraElement.parentNode.removeChild(extraElement);
-          }
-        }, 1200);
-      }, i * 80);
-    }
-    
-    // アニメーション終了後に要素を削除
-    setTimeout(() => {
-      if (nullpoElement.parentNode) {
-        nullpoElement.parentNode.removeChild(nullpoElement);
-      }
-    }, 1500);
-  }
-
-  // パーティクル爆発エフェクト
-  function createParticleExplosion(x, y) {
-    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
-    
-    for (let i = 0; i < 12; i++) {
-      const particle = document.createElement('div');
-      const angle = (i / 12) * 2 * Math.PI;
-      const distance = 50 + Math.random() * 100;
-      const endX = Math.cos(angle) * distance;
-      const endY = Math.sin(angle) * distance;
-      
-      particle.style.cssText = `
-        position: absolute;
-        left: ${x}px;
-        top: ${y}px;
-        width: ${4 + Math.random() * 8}px;
-        height: ${4 + Math.random() * 8}px;
-        background: ${colors[Math.floor(Math.random() * colors.length)]};
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 999;
-        transform: translate(-50%, -50%);
-        animation: particleExplosion 1s ease-out forwards;
-      `;
-      
-      // カスタムアニメーション
-      particle.animate([
-        { 
-          transform: 'translate(-50%, -50%) scale(0) rotate(0deg)',
-          opacity: 1
-        },
-        { 
-          transform: `translate(calc(-50% + ${endX * 0.5}px), calc(-50% + ${endY * 0.5}px)) scale(1) rotate(180deg)`,
-          opacity: 0.8
-        },
-        { 
-          transform: `translate(calc(-50% + ${endX}px), calc(-50% + ${endY}px)) scale(0) rotate(360deg)`,
-          opacity: 0
-        }
-      ], {
-        duration: 1000,
-        easing: 'ease-out'
-      });
-      
-      animationContainer.appendChild(particle);
-      
-      setTimeout(() => {
-        if (particle.parentNode) {
-          particle.parentNode.removeChild(particle);
-        }
-      }, 1000);
-    }
-  }
-
-  // 波紋エフェクト
-  function createRippleEffect(x, y) {
     for (let i = 0; i < 3; i++) {
       setTimeout(() => {
-        const ripple = document.createElement('div');
-        ripple.style.cssText = `
-          position: absolute;
-          left: ${x}px;
-          top: ${y}px;
-          width: 20px;
-          height: 20px;
-          border: 3px solid rgba(0, 123, 255, 0.8);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 998;
-          animation: rippleEffect 1s ease-out forwards;
-          transform: translate(-50%, -50%);
-        `;
-        
-        animationContainer.appendChild(ripple);
-        
-        setTimeout(() => {
-          if (ripple.parentNode) {
-            ripple.parentNode.removeChild(ripple);
-          }
-        }, 1000);
-      }, i * 200);
+        const extraEmoji = nullpoEmojis[Math.floor(Math.random() * nullpoEmojis.length)];
+        const offsetX = (Math.random() - 0.5) * 100;
+        const offsetY = (Math.random() - 0.5) * 50;
+        createFallingIcon(x + offsetX, y + offsetY, extraEmoji);
+      }, i * 100);
     }
   }
+
+  // 落下するアイコンを作成
+  function createFallingIcon(x, y, emoji) {
+    const icon = document.createElement('div');
+    icon.innerHTML = emoji;
+    icon.style.cssText = `
+      position: absolute;
+      left: ${x}px;
+      top: ${y}px;
+      font-size: ${iconSize}px;
+      pointer-events: none;
+      z-index: 1000;
+      transform: rotate(${Math.random() * 360}deg);
+      filter: hue-rotate(${Math.random() * 360}deg);
+      transition: none;
+    `;
+    
+    fallingContainer.appendChild(icon);
+    
+    // 物理演算の初期値
+    const physics = {
+      x: x,
+      y: y,
+      vx: (Math.random() - 0.5) * 2, // 水平速度
+      vy: 0, // 垂直速度
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 10,
+      settled: false
+    };
+    
+    stackedIcons.push({ element: icon, physics: physics });
+  }
+
+  // 物理演算の更新
+  function updatePhysics() {
+    stackedIcons.forEach((iconData, index) => {
+      const { element, physics } = iconData;
+      
+      if (physics.settled) return;
+      
+      // 重力を適用
+      physics.vy += gravity;
+      
+      // 速度を更新
+      physics.x += physics.vx;
+      physics.y += physics.vy;
+      
+      // 回転を更新
+      physics.rotation += physics.rotationSpeed;
+      
+      // 摩擦を適用
+      physics.vx *= friction;
+      physics.rotationSpeed *= friction;
+      
+      // 地面との衝突判定
+      const containerHeight = fallingContainer.offsetHeight;
+      const groundY = containerHeight - iconSize;
+      
+      if (physics.y >= groundY) {
+        physics.y = groundY;
+        physics.vy = -physics.vy * bounce;
+        
+        // 速度が小さくなったら停止
+        if (Math.abs(physics.vy) < 1) {
+          physics.vy = 0;
+          physics.vx = 0;
+          physics.rotationSpeed = 0;
+          physics.settled = true;
+        }
+      }
+      
+      // 左右の壁との衝突判定
+      if (physics.x <= 0 || physics.x >= containerWidth - iconSize) {
+        physics.vx = -physics.vx * bounce;
+        physics.x = Math.max(0, Math.min(containerWidth - iconSize, physics.x));
+      }
+      
+      // 他のアイコンとの衝突判定
+      stackedIcons.forEach((otherIconData, otherIndex) => {
+        if (index === otherIndex || !otherIconData.physics.settled) return;
+        
+        const dx = physics.x - otherIconData.physics.x;
+        const dy = physics.y - otherIconData.physics.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < iconSize) {
+          // 衝突処理
+          const overlap = iconSize - distance;
+          const angle = Math.atan2(dy, dx);
+          
+          physics.x += Math.cos(angle) * overlap * 0.5;
+          physics.y += Math.sin(angle) * overlap * 0.5;
+          
+          // 速度を反転
+          physics.vx = -physics.vx * bounce;
+          physics.vy = -physics.vy * bounce;
+        }
+      });
+      
+      // 要素の位置を更新
+      element.style.left = `${physics.x}px`;
+      element.style.top = `${physics.y}px`;
+      element.style.transform = `rotate(${physics.rotation}deg)`;
+    });
+  }
+
+  // アニメーションループ
+  function animationLoop() {
+    updatePhysics();
+    updateStackCounter();
+    requestAnimationFrame(animationLoop);
+  }
+
+  // アニメーションループを開始
+  animationLoop();
 
   // ボタンクリックエフェクト
   function addButtonEffect() {
@@ -507,6 +510,111 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 初期状態を取得
   updateGameStatus();
+
+  // パーティクル爆発エフェクト
+  function createParticleExplosion(x, y) {
+    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+    
+    for (let i = 0; i < 8; i++) {
+      const particle = document.createElement('div');
+      const angle = (i / 8) * 2 * Math.PI;
+      const distance = 30 + Math.random() * 50;
+      const endX = Math.cos(angle) * distance;
+      const endY = Math.sin(angle) * distance;
+      
+      particle.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        width: ${3 + Math.random() * 6}px;
+        height: ${3 + Math.random() * 6}px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 999;
+        transform: translate(-50%, -50%);
+      `;
+      
+      // カスタムアニメーション
+      particle.animate([
+        { 
+          transform: 'translate(-50%, -50%) scale(0) rotate(0deg)',
+          opacity: 1
+        },
+        { 
+          transform: `translate(calc(-50% + ${endX * 0.5}px), calc(-50% + ${endY * 0.5}px)) scale(1) rotate(180deg)`,
+          opacity: 0.8
+        },
+        { 
+          transform: `translate(calc(-50% + ${endX}px), calc(-50% + ${endY}px)) scale(0) rotate(360deg)`,
+          opacity: 0
+        }
+      ], {
+        duration: 800,
+        easing: 'ease-out'
+      });
+      
+      animationContainer.appendChild(particle);
+      
+      setTimeout(() => {
+        if (particle.parentNode) {
+          particle.parentNode.removeChild(particle);
+        }
+      }, 800);
+    }
+  }
+
+  // 波紋エフェクト
+  function createRippleEffect(x, y) {
+    for (let i = 0; i < 2; i++) {
+      setTimeout(() => {
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+          position: absolute;
+          left: ${x}px;
+          top: ${y}px;
+          width: 15px;
+          height: 15px;
+          border: 2px solid rgba(0, 123, 255, 0.6);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 998;
+          animation: rippleEffect 0.8s ease-out forwards;
+          transform: translate(-50%, -50%);
+        `;
+        
+        animationContainer.appendChild(ripple);
+        
+        setTimeout(() => {
+          if (ripple.parentNode) {
+            ripple.parentNode.removeChild(ripple);
+          }
+        }, 800);
+      }, i * 150);
+    }
+  }
+
+  // 積み重ねられたアイコンをリセット
+  function resetStackedIcons() {
+    stackedIcons.forEach(iconData => {
+      if (iconData.element.parentNode) {
+        iconData.element.parentNode.removeChild(iconData.element);
+      }
+    });
+    stackedIcons = [];
+    updateStackCounter();
+  }
+
+  // 積み重ねカウンターを更新
+  function updateStackCounter() {
+    const settledCount = stackedIcons.filter(iconData => iconData.physics.settled).length;
+    if (settledCount > 0) {
+      stackCounter.textContent = `積み重ね: ${settledCount}個`;
+      stackCounter.style.display = 'block';
+    } else {
+      stackCounter.style.display = 'none';
+    }
+  }
 });
 </script>
 
@@ -553,10 +661,10 @@ document.addEventListener('DOMContentLoaded', function() {
   0% {
     transform: translate(-50%, -50%) scale(0);
     opacity: 1;
-    border-width: 3px;
+    border-width: 2px;
   }
   100% {
-    transform: translate(-50%, -50%) scale(4);
+    transform: translate(-50%, -50%) scale(3);
     opacity: 0;
     border-width: 1px;
   }
@@ -632,6 +740,7 @@ document.addEventListener('DOMContentLoaded', function() {
   backdrop-filter: blur(5px);
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 /* 追加の視覚効果 */
@@ -650,5 +759,36 @@ document.addEventListener('DOMContentLoaded', function() {
 /* アニメーション要素のz-index調整 */
 #nullpo-animation-container > div {
   z-index: 2;
+}
+
+/* 積み重ねコンテナのスタイル */
+#falling-container {
+  background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.05) 100%);
+  border-radius: 0 0 10px 10px;
+}
+
+/* 落下するアイコンのスタイル */
+#falling-container > div {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* 積み重ね効果の影 */
+#falling-container > div {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* 積み重ねカウンター表示 */
+.stack-counter {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 123, 255, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  z-index: 1000;
 }
 </style> 
