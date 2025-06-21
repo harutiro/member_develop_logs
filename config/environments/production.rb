@@ -54,7 +54,7 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Replace the default in-process memory cache store with a durable alternative.
-  config.cache_store = :solid_cache_store
+  config.cache_store = :memory_store
 
   # 本番環境ではSolidQueueを無効化し、同期的に実行
   config.active_job.queue_adapter = :inline
