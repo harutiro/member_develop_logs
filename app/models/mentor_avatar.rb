@@ -3,6 +3,8 @@ class MentorAvatar < ApplicationRecord
   has_many :avatar_transformations, dependent: :destroy
   has_one_attached :image
 
+  include Rails.application.routes.url_helpers
+
   validates :name, presence: true
   validates :description, presence: true
   validates :transformation_type, presence: true
@@ -24,13 +26,20 @@ class MentorAvatar < ApplicationRecord
     order(created_at: :desc).first
   end
 
+  def image_url
+    if image.attached?
+      Rails.application.routes.url_helpers.url_for(image)
+    else
+      '/assets/default.png'
+    end
+  end
+
   def self.transform_based_on_achievements(total_hours, achievement_count)
     case
     when total_hours >= 100 && achievement_count >= 50
       create!(
         name: "マスター",
         description: "プログラミングの達人",
-        image_url: "master.png",
         transformation_type: "master",
         level: 5
       )
@@ -38,7 +47,6 @@ class MentorAvatar < ApplicationRecord
       create!(
         name: "賢者",
         description: "コードの賢者",
-        image_url: "sage.png",
         transformation_type: "sage",
         level: 4
       )
@@ -46,7 +54,6 @@ class MentorAvatar < ApplicationRecord
       create!(
         name: "クール",
         description: "クールなプログラマー",
-        image_url: "cool.png",
         transformation_type: "cool",
         level: 3
       )
@@ -54,7 +61,6 @@ class MentorAvatar < ApplicationRecord
       create!(
         name: "初心者",
         description: "プログラミング初心者",
-        image_url: "beginner.png",
         transformation_type: "beginner",
         level: 1
       )

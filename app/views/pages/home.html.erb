@@ -8,7 +8,13 @@
         <h2 class="card-title">メンターの現在の姿</h2>
         <% if @current_avatar %>
           <div class="text-center">
-            <%= image_tag @current_avatar.image_url, class: "img-fluid rounded", style: "max-height: 300px;" %>
+            <% if @current_avatar.image_url %>
+              <%= image_tag @current_avatar.image_url, class: "img-fluid rounded", style: "max-height: 300px;" %>
+            <% else %>
+              <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+                <p class="text-muted">画像がありません</p>
+              </div>
+            <% end %>
             <h3 class="mt-3"><%= @current_avatar.name %></h3>
             <p class="text-muted"><%= @current_avatar.description %></p>
           </div>
