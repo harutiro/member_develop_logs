@@ -3,12 +3,12 @@ class MentorAvatarsController < ApplicationController
   before_action :set_mentor_avatar, only: [:show, :edit, :update, :destroy]
 
   def index
-    @mentor_avatars = MentorAvatar.where(user: current_user)
+    @mentor_avatars = current_user.mentor_avatars.order(:created_at)
     @users = User.all
   end
 
   def current
-    @mentor_avatar = current_user.mentor_avatar
+    @mentor_avatar = current_user.current_mentor_avatar
   end
 
   def new

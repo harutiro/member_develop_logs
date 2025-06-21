@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_one :mentor_avatar, dependent: :destroy
+  has_many :mentor_avatars, dependent: :destroy
   has_many :development_times, dependent: :destroy
   has_many :achievements, dependent: :destroy
 
@@ -36,5 +37,10 @@ class User < ApplicationRecord
   def can_level_up?
     setting = LevelUpSetting.current
     setting.level_up_condition_met?(self)
+  end
+
+  # 現在のメンターアバター（最新のもの）
+  def current_mentor_avatar
+    mentor_avatars.order(:created_at).last
   end
 end

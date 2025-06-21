@@ -3,8 +3,8 @@ class AdminController < ApplicationController
   helper_method :current_user
 
   def index
-    @users = User.all.includes(:mentor_avatar, :development_times, :achievements)
-    @mentor_avatars = MentorAvatar.where(user: current_user)
+    @users = User.all.includes(:mentor_avatars, :development_times, :achievements)
+    @mentor_avatars = current_user.mentor_avatars.order(:created_at)
   end
 
   def bulk_level_up
