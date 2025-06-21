@@ -57,26 +57,10 @@ class NullpoGame < ApplicationRecord
   end
 
   def formatted_nullpo_count
-    if nullpo_count >= 1_000_000_000
-      "#{(nullpo_count / 1_000_000_000.0).round(1)}B"
-    elsif nullpo_count >= 1_000_000
-      "#{(nullpo_count / 1_000_000.0).round(1)}M"
-    elsif nullpo_count >= 1_000
-      "#{(nullpo_count / 1_000.0).round(1)}K"
-    else
-      nullpo_count.to_s
-    end
+    nullpo_count.to_s
   end
 
   def formatted_auto_clicks_per_second
-    if auto_clicks_per_second >= 1_000_000_000
-      "#{(auto_clicks_per_second / 1_000_000_000.0).round(1)}B/s"
-    elsif auto_clicks_per_second >= 1_000_000
-      "#{(auto_clicks_per_second / 1_000_000.0).round(1)}M/s"
-    elsif auto_clicks_per_second >= 1_000
-      "#{(auto_clicks_per_second / 1_000.0).round(1)}K/s"
-    else
-      "#{auto_clicks_per_second}/s"
-    end
+    "#{auto_clicks_per_second}/s"
   end
 end 
