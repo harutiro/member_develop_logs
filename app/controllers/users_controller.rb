@@ -60,7 +60,7 @@ class UsersController < ApplicationController
         # セッションに新しいメンター獲得フラグを保存
         session[:new_mentor_acquired] = true
         session[:new_mentor_level] = new_level
-        redirect_to root_path, notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
+        redirect_to users_path, notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
       else
         redirect_to users_path, notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
       end

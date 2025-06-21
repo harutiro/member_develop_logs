@@ -29,6 +29,6 @@ class AchievementsController < ApplicationController
   end
 
   def achievement_params
-    params.require(:achievement).permit(:content, :category, :points)
+    params.require(:achievement).permit(:content, :category)
   end
 end

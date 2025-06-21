@@ -26,11 +26,6 @@
             <%= f.select :category, Achievement::CATEGORIES.map { |c| [c.humanize, c] }, {}, class: "form-select" %>
           </div>
 
-          <div class="mb-3">
-            <%= f.label :points, "ポイント", class: "form-label" %>
-            <%= f.number_field :points, class: "form-control", min: 0 %>
-          </div>
-
           <div class="d-flex justify-content-between">
             <%= f.submit "記録する", class: "btn btn-success" %>
             <%= link_to "戻る", achievements_path, class: "btn btn-outline-secondary" %>

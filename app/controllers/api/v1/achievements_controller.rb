@@ -26,7 +26,7 @@ module Api
       private
 
       def achievement_params
-        params.require(:achievement).permit(:content, :category, :points)
+        params.require(:achievement).permit(:content, :category)
       end
 
       def update_mentor_avatar
