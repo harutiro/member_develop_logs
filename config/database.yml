@@ -36,4 +36,3 @@ production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
   # 本番環境では単一データベースのみ使用
-  # primary, cache, queue, cableの設定を削除
