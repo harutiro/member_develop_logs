@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   get 'admin', to: 'admin#index', as: :admin
   post 'admin/bulk_level_up', to: 'admin#bulk_level_up', as: :bulk_level_up_admin
 
-  resources :users, except: [:show]
+  resources :users, except: [:show] do
+    member do
+      post :level_up
+    end
+  end
   resources :development_times do
     collection do
       post :start_development
