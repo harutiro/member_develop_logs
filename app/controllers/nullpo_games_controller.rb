@@ -3,6 +3,8 @@ class NullpoGamesController < ApplicationController
 
   def show
     @game = current_user.nullpo_game_or_create!
+    @total_clicks_all_users = NullpoGame.total_clicks_all_users
+    @total_nullpo_count_all_users = NullpoGame.total_nullpo_count_all_users
   end
 
   def status
@@ -16,6 +18,8 @@ class NullpoGamesController < ApplicationController
       total_clicks: @game.total_clicks,
       click_power: @game.click_power,
       auto_clicks_per_second: @game.formatted_auto_clicks_per_second,
+      total_clicks_all_users: NullpoGame.total_clicks_all_users,
+      total_nullpo_count_all_users: NullpoGame.total_nullpo_count_all_users,
       success: true
     }
   rescue => e
@@ -37,6 +41,8 @@ class NullpoGamesController < ApplicationController
           total_clicks: @game.total_clicks,
           click_power: @game.click_power,
           auto_clicks_per_second: @game.formatted_auto_clicks_per_second,
+          total_clicks_all_users: NullpoGame.total_clicks_all_users,
+          total_nullpo_count_all_users: NullpoGame.total_nullpo_count_all_users,
           success: true
         } 
       }

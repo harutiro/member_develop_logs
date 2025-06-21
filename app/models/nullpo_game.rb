@@ -6,6 +6,16 @@ class NullpoGame < ApplicationRecord
   validates :auto_clicks_per_second, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :click_power, presence: true, numericality: { greater_than: 0 }
 
+  # 全ユーザーの合計クリック数を取得
+  def self.total_clicks_all_users
+    sum(:total_clicks)
+  end
+
+  # 全ユーザーの合計ぬるぽ数を取得
+  def self.total_nullpo_count_all_users
+    sum(:nullpo_count)
+  end
+
   def self.find_or_create_for_user(user)
     find_or_create_by(user: user) do |game|
       game.nullpo_count = 0

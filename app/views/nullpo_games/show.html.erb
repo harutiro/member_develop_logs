@@ -14,6 +14,29 @@
       </div>
 
       <!-- ゲーム統計 -->
+      <!-- 上段：2列 -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card text-center" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); border: 3px solid #dc3545; box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3); animation: pulse-glow 2s infinite;">
+            <div class="card-body">
+              <h5 class="card-title text-white fw-bold mb-2">全メンバー<br>合計ぬるぽ</h5>
+              <div class="text-white fw-bold" id="total-nullpo-all" style="font-size: 3rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); line-height: 1.2;">
+                <div><%= @total_nullpo_count_all_users %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">全メンバー<br>合計クリック</h5>
+              <h2 class="text-secondary" id="total-clicks-all"><%= @total_clicks_all_users %></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 下段：4列 -->
       <div class="row mb-4">
         <div class="col-md-3">
           <div class="card text-center">
@@ -134,6 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const totalClicks = document.getElementById('total-clicks');
   const clickPower = document.getElementById('click-power');
   const autoClicks = document.getElementById('auto-clicks');
+  const totalNullpoAll = document.getElementById('total-nullpo-all');
+  const totalClicksAll = document.getElementById('total-clicks-all');
   const animationContainer = document.getElementById('nullpo-animation-container');
   const fallingContainer = document.getElementById('falling-container');
   const stackCounter = document.getElementById('stack-counter');
@@ -427,6 +452,8 @@ document.addEventListener('DOMContentLoaded', function() {
         totalClicks.textContent = data.total_clicks;
         clickPower.textContent = data.click_power;
         autoClicks.textContent = data.auto_clicks_per_second;
+        totalNullpoAll.textContent = data.total_nullpo_count_all_users;
+        totalClicksAll.textContent = data.total_clicks_all_users;
       } else {
         console.error('ステータス更新エラー:', data.error);
       }
@@ -933,5 +960,17 @@ document.addEventListener('DOMContentLoaded', function() {
   border-radius: 15px;
   font-size: 0.8rem;
   z-index: 1000;
+}
+
+/* 全メンバー合計ぬるぽのパルスアニメーション */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12px 35px rgba(220, 53, 69, 0.6);
+    transform: scale(1.02);
+  }
 }
 </style> 
