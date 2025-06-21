@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_043339) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_050000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -76,6 +76,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_043339) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "start_time"], name: "index_development_times_on_user_id_and_start_time"
     t.index ["user_id"], name: "index_development_times_on_user_id"
+  end
+
+  create_table "level_up_settings", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.integer "hours_per_level", default: 1, null: false
+    t.integer "achievements_per_level", default: 0, null: false
+    t.boolean "enabled", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enabled"], name: "index_level_up_settings_on_enabled"
   end
 
   create_table "members", force: :cascade do |t|

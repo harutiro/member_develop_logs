@@ -47,10 +47,9 @@ class MentorAvatarsController < ApplicationController
 
   def level_up
     user = User.find(params[:user_id])
-    next_level_hours = user.level * 1
-    current_hours = user.total_development_time / 3600.0
+    setting = LevelUpSetting.current
     
-    if current_hours >= next_level_hours
+    if setting.level_up_condition_met?(user)
       user.update!(level: user.level + 1)
       
       # メンターアバターもレベルアップ
@@ -60,7 +59,17 @@ class MentorAvatarsController < ApplicationController
       
       redirect_to mentor_avatars_path, notice: "#{user.name}がレベルアップしました！（レベル#{user.level - 1} → #{user.level}）"
     else
-      redirect_to mentor_avatars_path, alert: "#{user.name}はまだレベルアップできません。"
+      requirements = setting.next_level_requirements(user)
+      message = "#{user.name}はまだレベルアップできません。"
+      
+      if requirements[:hours_remaining] > 0
+        message += " 時間: あと#{requirements[:hours_remaining].round(2)}時間"
+      end
+      if requirements[:achievements_remaining] > 0
+        message += " 達成数: あと#{requirements[:achievements_remaining]}個"
+      end
+      
+      redirect_to mentor_avatars_path, alert: message
     end
   end
 

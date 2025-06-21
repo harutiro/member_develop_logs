@@ -1,0 +1,96 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-info mt-4">
+        <strong>ご案内：</strong> レベルアップ設定は複数作成できますが、<strong>有効</strong>にできるのは常に1つだけです。新しい設定を有効化すると、他の設定は自動的に無効になります。現在有効な設定のみがアプリ全体で参照されます。過去の設定は履歴として残り、いつでも有効化・編集・削除が可能です。
+      </div>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>レベルアップ設定</h1>
+        <div>
+          <%= link_to "管理画面に戻る", admin_path, class: "btn btn-outline-primary" %>
+          <%= link_to "新しい設定を作成", new_level_up_setting_path, class: "btn btn-success ms-2" %>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">レベルアップ設定一覧</h3>
+          
+          <% if @level_up_settings.any? %>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>名前</th>
+                    <th>説明</th>
+                    <th>時間/レベル</th>
+                    <th>達成数/レベル</th>
+                    <th>ステータス</th>
+                    <th>作成日</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @level_up_settings.each do |setting| %>
+                    <tr>
+                      <td><%= setting.name %></td>
+                      <td><%= setting.description %></td>
+                      <td><%= setting.hours_per_level %>時間</td>
+                      <td><%= setting.achievements_per_level %>個</td>
+                      <td>
+                        <% if setting.enabled %>
+                          <span class="badge bg-success">有効</span>
+                        <% else %>
+                          <span class="badge bg-secondary">無効</span>
+                        <% end %>
+                      </td>
+                      <td><%= setting.created_at.strftime("%Y/%m/%d %H:%M") %></td>
+                      <td>
+                        <div class="btn-group" role="group">
+                          <%= link_to "詳細", level_up_setting_path(setting), class: "btn btn-outline-primary btn-sm" %>
+                          <%= link_to "編集", edit_level_up_setting_path(setting), class: "btn btn-outline-secondary btn-sm" %>
+                          <%= button_to setting.enabled ? "無効化" : "有効化", 
+                              toggle_enabled_level_up_setting_path(setting), 
+                              method: :patch, 
+                              class: "btn btn-outline-warning btn-sm" %>
+                          <%= button_to "削除", level_up_setting_path(setting), 
+                              method: :delete, 
+                              class: "btn btn-outline-danger btn-sm",
+                              data: { confirm: "#{setting.name}を削除しますか？" } %>
+                        </div>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <div class="alert alert-info">
+              レベルアップ設定が登録されていません。
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- 現在の設定情報 -->
+      <div class="card mt-4">
+        <div class="card-body">
+          <h3 class="card-title">現在の設定</h3>
+          <% current_setting = LevelUpSetting.current %>
+          <div class="row">
+            <div class="col-md-6">
+              <h5>有効な設定</h5>
+              <p><strong><%= current_setting.name %></strong></p>
+              <p><%= current_setting.description %></p>
+            </div>
+            <div class="col-md-6">
+              <h5>レベルアップ条件</h5>
+              <p>時間: <strong><%= current_setting.hours_per_level %>時間/レベル</strong></p>
+              <p>達成数: <strong><%= current_setting.achievements_per_level %>個/レベル</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -129,12 +129,32 @@
     <div class="card">
       <div class="card-body">
         <h3 class="card-title">次の目標</h3>
-        <div class="progress mb-3">
-          <div class="progress-bar" role="progressbar" style="width: <%= (@total_development_time / 3600.0 / 100 * 100).clamp(0, 100) %>%">
-            <%= (@total_development_time / 3600.0 / 100 * 100).clamp(0, 100).round %>% 
+        <% if current_user %>
+          <% requirements = current_user.next_level_requirements %>
+          <% total_required = requirements[:hours_required] + requirements[:achievements_required] %>
+          <% total_current = requirements[:hours_current] + requirements[:achievements_current] %>
+          <% progress_percentage = total_required > 0 ? (total_current / total_required * 100).clamp(0, 100) : 100 %>
+          
+          <div class="progress mb-3">
+            <div class="progress-bar" role="progressbar" style="width: <%= progress_percentage %>%">
+              <%= progress_percentage.round %>%
+            </div>
           </div>
-        </div>
-        <p class="text-center">次のレベルまであと<%= 100 - (@total_development_time / 3600) %>時間</p>
+          
+          <div class="text-center">
+            <% if requirements[:hours_remaining] > 0 %>
+              <p>時間: あと<%= requirements[:hours_remaining].round(2) %>時間</p>
+            <% end %>
+            <% if requirements[:achievements_remaining] > 0 %>
+              <p>達成数: あと<%= requirements[:achievements_remaining] %>個</p>
+            <% end %>
+            <% if requirements[:hours_remaining] <= 0 && requirements[:achievements_remaining] <= 0 %>
+              <p class="text-success fw-bold">レベルアップ可能！</p>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-center">ユーザーを選択してください</p>
+        <% end %>
       </div>
     </div>
   </div>

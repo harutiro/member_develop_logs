@@ -12,7 +12,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="card">
             <div class="card-body">
               <h3 class="card-title">ユーザー管理</h3>
@@ -24,13 +24,25 @@
           </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="card">
             <div class="card-body">
               <h3 class="card-title">メンター管理</h3>
               <p class="card-text">メンターアバターの一覧表示、編集、削除を行います。</p>
               <div class="d-grid">
                 <%= link_to "メンター管理", mentor_avatars_path, class: "btn btn-success" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">レベルアップ設定</h3>
+              <p class="card-text">レベルアップの条件を調整します。</p>
+              <div class="d-grid">
+                <%= link_to "レベルアップ設定", level_up_settings_path, class: "btn btn-warning" %>
               </div>
             </div>
           </div>

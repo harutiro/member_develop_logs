@@ -19,6 +19,11 @@ Rails.application.routes.draw do
       post :level_up
     end
   end
+  resources :level_up_settings do
+    member do
+      patch :toggle_enabled
+    end
+  end
 
   get "pages/home"
   namespace :api do

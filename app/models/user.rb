@@ -14,8 +14,16 @@ class User < ApplicationRecord
   end
 
   def check_level_up
-    new_level = (total_development_time / 3600) + 1 # 1時間ごとにレベルアップ
-    update(level: new_level) if new_level > level
+    setting = LevelUpSetting.current
+    return unless setting.level_up_condition_met?(self)
+    
+    new_level = level + 1
+    update(level: new_level)
+    
+    # メンターアバターもレベルアップ
+    if mentor_avatar
+      mentor_avatar.update!(level: mentor_avatar.level + 1)
+    end
   end
 
   def total_development_time
@@ -24,5 +32,10 @@ class User < ApplicationRecord
 
   def current_development_time
     development_times.where(end_time: nil).first
+  end
+
+  def next_level_requirements
+    setting = LevelUpSetting.current
+    setting.next_level_requirements(self)
   end
 end

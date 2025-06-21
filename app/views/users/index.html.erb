@@ -52,13 +52,15 @@
                         <% end %>
                       </td>
                       <td>
-                        <% next_level_hours = user.level * 1 %>
-                        <% current_hours = user.total_development_time / 3600.0 %>
-                        <% remaining_hours = next_level_hours - current_hours %>
-                        <% if remaining_hours > 0 %>
+                        <% requirements = user.next_level_requirements %>
+                        <% if requirements[:hours_remaining] > 0 || requirements[:achievements_remaining] > 0 %>
                           <small class="text-muted">
-                            あと<%= remaining_hours.round(2) %>時間
-                            <br>(<%= (remaining_hours * 3600).round %>秒)
+                            <% if requirements[:hours_remaining] > 0 %>
+                              時間: あと<%= requirements[:hours_remaining].round(2) %>時間<br>
+                            <% end %>
+                            <% if requirements[:achievements_remaining] > 0 %>
+                              達成数: あと<%= requirements[:achievements_remaining] %>個<br>
+                            <% end %>
                           </small>
                         <% else %>
                           <span class="text-danger fw-bold">レベルアップ可能！</span>

@@ -1,0 +1,83 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>レベルアップ設定詳細</h1>
+        <div>
+          <%= link_to "管理画面に戻る", admin_path, class: "btn btn-outline-primary" %>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h3>基本情報</h3>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th style="width: 30%">設定名</th>
+                    <td><%= @level_up_setting.name %></td>
+                  </tr>
+                  <tr>
+                    <th>説明</th>
+                    <td><%= @level_up_setting.description %></td>
+                  </tr>
+                  <tr>
+                    <th>ステータス</th>
+                    <td>
+                      <% if @level_up_setting.enabled %>
+                        <span class="badge bg-success">有効</span>
+                      <% else %>
+                        <span class="badge bg-secondary">無効</span>
+                      <% end %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>作成日</th>
+                    <td><%= @level_up_setting.created_at.strftime("%Y/%m/%d %H:%M") %></td>
+                  </tr>
+                  <tr>
+                    <th>更新日</th>
+                    <td><%= @level_up_setting.updated_at.strftime("%Y/%m/%d %H:%M") %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <h3>レベルアップ条件</h3>
+              <div class="card">
+                <div class="card-body">
+                  <h5>時間条件</h5>
+                  <p class="h4 text-primary"><%= @level_up_setting.hours_per_level %>時間/レベル</p>
+                  <small class="text-muted">現在のレベル × <%= @level_up_setting.hours_per_level %>時間で次のレベルに到達</small>
+                  
+                  <hr>
+                  
+                  <h5>達成数条件</h5>
+                  <p class="h4 text-success"><%= @level_up_setting.achievements_per_level %>個/レベル</p>
+                  <small class="text-muted">現在のレベル × <%= @level_up_setting.achievements_per_level %>個で次のレベルに到達</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <h3>操作</h3>
+            <div class="btn-group" role="group">
+              <%= link_to "編集", edit_level_up_setting_path(@level_up_setting), class: "btn btn-outline-secondary" %>
+              <%= button_to @level_up_setting.enabled ? "無効化" : "有効化", 
+                  toggle_enabled_level_up_setting_path(@level_up_setting), 
+                  method: :patch, 
+                  class: "btn btn-outline-warning" %>
+              <%= button_to "削除", level_up_setting_path(@level_up_setting), 
+                  method: :delete, 
+                  class: "btn btn-outline-danger",
+                  data: { confirm: "#{@level_up_setting.name}を削除しますか？" } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
