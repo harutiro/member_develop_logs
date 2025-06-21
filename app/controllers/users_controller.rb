@@ -52,13 +52,14 @@ class UsersController < ApplicationController
     if setting.level_up_condition_met?(@user)
       old_level = @user.level
       @user.update!(level: @user.level + 1)
-      
-      # メンターアバターもレベルアップ
-      if @user.current_mentor_avatar
-        @user.current_mentor_avatar.update!(level: @user.current_mentor_avatar.level + 1)
+      new_level = @user.level
+      # 新しいメンターを獲得した場合はパラメータを付与
+      new_mentor = MentorAvatar.find_by(level: new_level)
+      if new_mentor
+        redirect_to users_path(new_mentor_id: new_mentor.id), notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
+      else
+        redirect_to users_path, notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
       end
-      
-      redirect_to users_path, notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
     else
       requirements = setting.next_level_requirements(@user)
       message = "#{@user.name}はまだレベルアップできません。"

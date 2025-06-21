@@ -3,8 +3,8 @@ class AdminController < ApplicationController
   helper_method :current_user
 
   def index
-    @users = User.all.includes(:mentor_avatars, :development_times, :achievements)
-    @mentor_avatars = current_user.mentor_avatars.order(:created_at)
+    @users = User.all.includes(:development_times, :achievements)
+    @mentor_avatars = MentorAvatar.order(:level)
   end
 
   def bulk_level_up
@@ -15,12 +15,6 @@ class AdminController < ApplicationController
       if setting.level_up_condition_met?(user)
         old_level = user.level
         user.update!(level: user.level + 1)
-        
-        # メンターアバターもレベルアップ
-        if user.mentor_avatar
-          user.mentor_avatar.update!(level: user.mentor_avatar.level + 1)
-        end
-        
         leveled_up_users << { user: user, old_level: old_level, new_level: user.level }
       end
     end

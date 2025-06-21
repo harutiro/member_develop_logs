@@ -3,7 +3,7 @@ class MentorAvatarsController < ApplicationController
   before_action :set_mentor_avatar, only: [:show, :edit, :update, :destroy]
 
   def index
-    @mentor_avatars = current_user.mentor_avatars.order(:created_at)
+    @mentor_avatars = MentorAvatar.order(:level)
     @users = User.all
   end
 
@@ -17,7 +17,6 @@ class MentorAvatarsController < ApplicationController
 
   def create
     @mentor_avatar = MentorAvatar.new(mentor_avatar_params)
-    @mentor_avatar.user = current_user
     if @mentor_avatar.save
       redirect_to mentor_avatars_path, notice: 'メンターアバターを登録しました。'
     else
@@ -50,14 +49,39 @@ class MentorAvatarsController < ApplicationController
     setting = LevelUpSetting.current
     
     if setting.level_up_condition_met?(user)
+      old_level = user.level
       user.update!(level: user.level + 1)
       
-      # メンターアバターもレベルアップ
-      if user.mentor_avatar
-        user.mentor_avatar.update!(level: user.mentor_avatar.level + 1)
+      # ユーザーレベルに基づいて新しいメンターを獲得
+      new_level = user.level
+      case new_level
+      when 2
+        user.mentor_avatars.create!(
+          name: "クール",
+          description: "クールなプログラマー",
+          level: 2
+        )
+      when 3
+        user.mentor_avatars.create!(
+          name: "賢者",
+          description: "コードの賢者",
+          level: 3
+        )
+      when 4
+        user.mentor_avatars.create!(
+          name: "マスター",
+          description: "プログラミングの達人",
+          level: 4
+        )
+      when 5
+        user.mentor_avatars.create!(
+          name: "伝説",
+          description: "伝説のプログラマー",
+          level: 5
+        )
       end
       
-      redirect_to mentor_avatars_path, notice: "#{user.name}がレベルアップしました！（レベル#{user.level - 1} → #{user.level}）"
+      redirect_to mentor_avatars_path, notice: "#{user.name}がレベルアップしました！（レベル#{old_level} → #{user.level}）"
     else
       requirements = setting.next_level_requirements(user)
       message = "#{user.name}はまだレベルアップできません。"
@@ -76,7 +100,7 @@ class MentorAvatarsController < ApplicationController
   private
 
   def set_mentor_avatar
-    @mentor_avatar = MentorAvatar.where(user: current_user).find(params[:id])
+    @mentor_avatar = MentorAvatar.find(params[:id])
   end
 
   def mentor_avatar_params

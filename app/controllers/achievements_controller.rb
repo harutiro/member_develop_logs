@@ -16,7 +16,6 @@ class AchievementsController < ApplicationController
   def create
     @achievement = current_user.achievements.new(achievement_params)
     if @achievement.save
-      update_mentor_avatar
       redirect_to achievements_path, notice: 'できたことを記録しました。'
     else
       render :new, status: :unprocessable_entity
@@ -31,10 +30,5 @@ class AchievementsController < ApplicationController
 
   def achievement_params
     params.require(:achievement).permit(:content, :category, :points)
-  end
-
-  def update_mentor_avatar
-    mentor_avatar = current_user.mentor_avatar
-    mentor_avatar.update_by_achievement(current_user.total_development_time, current_user.achievements.count) if mentor_avatar
   end
 end

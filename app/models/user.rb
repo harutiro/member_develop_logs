@@ -1,6 +1,4 @@
 class User < ApplicationRecord
-  has_one :mentor_avatar, dependent: :destroy
-  has_many :mentor_avatars, dependent: :destroy
   has_many :development_times, dependent: :destroy
   has_many :achievements, dependent: :destroy
   has_one :nullpo_game, dependent: :destroy
@@ -40,9 +38,14 @@ class User < ApplicationRecord
     setting.level_up_condition_met?(self)
   end
 
-  # 現在のメンターアバター（最新のもの）
+  # 現在のメンターアバター（自分のレベル以下で最大のもの）
   def current_mentor_avatar
-    mentor_avatars.order(:created_at).last
+    MentorAvatar.where('level <= ?', level).order(level: :desc).first
+  end
+
+  # 集めたメンター（自分のレベル以下の全メンター）
+  def collected_mentor_avatars
+    MentorAvatar.where('level <= ?', level).order(:level)
   end
 
   # ぬるぽゲームを作成または取得

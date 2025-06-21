@@ -1,5 +1,4 @@
 class MentorAvatar < ApplicationRecord
-  belongs_to :user
   has_many :avatar_transformations, dependent: :destroy
   has_one_attached :image
 
@@ -22,16 +21,6 @@ class MentorAvatar < ApplicationRecord
   rescue => e
     # ホスト情報が不足している場合のフォールバック
     '/assets/default.png'
-  end
-
-  def update_by_achievement(total_development_time, achievement_count)
-    # レベルアップ設定に基づいてメンターアバターを更新
-    setting = LevelUpSetting.current
-    
-    # ユーザーのレベルアップ判定
-    if setting.level_up_condition_met?(user)
-      update!(level: level + 1)
-    end
   end
 
   def self.transform_based_on_achievements(total_hours, achievement_count)
