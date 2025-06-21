@@ -57,9 +57,14 @@
               
               <!-- ぬるぽボタン -->
               <div class="mb-4">
-                <button id="nullpo-button" class="btn btn-lg btn-primary" style="font-size: 2rem; padding: 2rem 4rem;">
+                <button id="nullpo-button" class="btn btn-lg btn-primary nullpo-button" style="font-size: 2rem; padding: 2rem 4rem; transition: all 0.2s ease; border-radius: 20px; background: linear-gradient(45deg, #007bff, #0056b3); border: none; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);">
                   🐾 ぬるぽ 🐾
                 </button>
+              </div>
+
+              <!-- ぬるぽぽさアニメーション -->
+              <div id="nullpo-animation-container" style="position: relative; height: 200px; overflow: hidden;">
+                <!-- アニメーション要素がここに動的に追加されます -->
               </div>
 
               <!-- ゲーム説明 -->
@@ -126,11 +131,250 @@ document.addEventListener('DOMContentLoaded', function() {
   const totalClicks = document.getElementById('total-clicks');
   const clickPower = document.getElementById('click-power');
   const autoClicks = document.getElementById('auto-clicks');
+  const animationContainer = document.getElementById('nullpo-animation-container');
 
   console.log('ぬるぽゲーム初期化完了');
   console.log('CSRFトークン:', document.querySelector('meta[name="csrf-token"]')?.content);
   console.log('クリックURL:', '<%= click_nullpo_game_path %>');
   console.log('ステータスURL:', '<%= status_nullpo_game_path %>');
+
+  // 効果音の設定
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  
+  function playClickSound() {
+    try {
+      // ランダムな効果音を選択
+      const sounds = [
+        { freq: [800, 1200], duration: 0.1 }, // 高音ピップ
+        { freq: [600, 900], duration: 0.15 }, // 中音ピップ
+        { freq: [400, 700], duration: 0.12 }, // 低音ピップ
+        { freq: [1000, 1500, 1200], duration: 0.2 }, // 3音階
+        { freq: [500, 800, 1100], duration: 0.18 } // 上昇音階
+      ];
+      
+      const selectedSound = sounds[Math.floor(Math.random() * sounds.length)];
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // 複数の周波数がある場合は音階を作成
+      if (selectedSound.freq.length === 2) {
+        oscillator.frequency.setValueAtTime(selectedSound.freq[0], audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(selectedSound.freq[1], audioContext.currentTime + selectedSound.duration);
+      } else if (selectedSound.freq.length === 3) {
+        oscillator.frequency.setValueAtTime(selectedSound.freq[0], audioContext.currentTime);
+        oscillator.frequency.setValueAtTime(selectedSound.freq[1], audioContext.currentTime + selectedSound.duration * 0.5);
+        oscillator.frequency.setValueAtTime(selectedSound.freq[2], audioContext.currentTime + selectedSound.duration);
+      }
+      
+      gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + selectedSound.duration);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + selectedSound.duration);
+    } catch (error) {
+      console.log('効果音再生エラー:', error);
+    }
+  }
+
+  // ぬるぽぽさアニメーション
+  function createNullpoAnimation(x, y) {
+    const nullpoEmojis = ['🐾', '✨', '💫', '🌟', '⭐', '💥', '🔥', '💎', '🎉', '🎊', '🎈', '🎪', '🌈', '🚀', '⚡', '💖'];
+    const randomEmoji = nullpoEmojis[Math.floor(Math.random() * nullpoEmojis.length)];
+    
+    // メインアニメーション要素
+    const nullpoElement = document.createElement('div');
+    nullpoElement.innerHTML = randomEmoji;
+    nullpoElement.style.cssText = `
+      position: absolute;
+      left: ${x}px;
+      top: ${y}px;
+      font-size: ${2 + Math.random() * 2}rem;
+      pointer-events: none;
+      z-index: 1000;
+      animation: nullpoFloat 1.5s ease-out forwards;
+      transform: rotate(${Math.random() * 360}deg);
+      filter: hue-rotate(${Math.random() * 360}deg);
+    `;
+    
+    animationContainer.appendChild(nullpoElement);
+    
+    // パーティクル爆発エフェクト
+    createParticleExplosion(x, y);
+    
+    // 波紋エフェクト
+    createRippleEffect(x, y);
+    
+    // 複数のアニメーション要素を作成（ランダムな位置）
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        const extraElement = document.createElement('div');
+        extraElement.innerHTML = nullpoEmojis[Math.floor(Math.random() * nullpoEmojis.length)];
+        const offsetX = (Math.random() - 0.5) * 150;
+        const offsetY = (Math.random() - 0.5) * 100;
+        
+        extraElement.style.cssText = `
+          position: absolute;
+          left: ${x + offsetX}px;
+          top: ${y + offsetY}px;
+          font-size: ${1 + Math.random() * 1.5}rem;
+          pointer-events: none;
+          z-index: 1000;
+          animation: nullpoFloatExtra 1.2s ease-out forwards;
+          transform: rotate(${Math.random() * 360}deg);
+          filter: hue-rotate(${Math.random() * 360}deg) brightness(${0.8 + Math.random() * 0.4});
+        `;
+        
+        animationContainer.appendChild(extraElement);
+        
+        setTimeout(() => {
+          if (extraElement.parentNode) {
+            extraElement.parentNode.removeChild(extraElement);
+          }
+        }, 1200);
+      }, i * 80);
+    }
+    
+    // アニメーション終了後に要素を削除
+    setTimeout(() => {
+      if (nullpoElement.parentNode) {
+        nullpoElement.parentNode.removeChild(nullpoElement);
+      }
+    }, 1500);
+  }
+
+  // パーティクル爆発エフェクト
+  function createParticleExplosion(x, y) {
+    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+    
+    for (let i = 0; i < 12; i++) {
+      const particle = document.createElement('div');
+      const angle = (i / 12) * 2 * Math.PI;
+      const distance = 50 + Math.random() * 100;
+      const endX = Math.cos(angle) * distance;
+      const endY = Math.sin(angle) * distance;
+      
+      particle.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        width: ${4 + Math.random() * 8}px;
+        height: ${4 + Math.random() * 8}px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 999;
+        transform: translate(-50%, -50%);
+        animation: particleExplosion 1s ease-out forwards;
+      `;
+      
+      // カスタムアニメーション
+      particle.animate([
+        { 
+          transform: 'translate(-50%, -50%) scale(0) rotate(0deg)',
+          opacity: 1
+        },
+        { 
+          transform: `translate(calc(-50% + ${endX * 0.5}px), calc(-50% + ${endY * 0.5}px)) scale(1) rotate(180deg)`,
+          opacity: 0.8
+        },
+        { 
+          transform: `translate(calc(-50% + ${endX}px), calc(-50% + ${endY}px)) scale(0) rotate(360deg)`,
+          opacity: 0
+        }
+      ], {
+        duration: 1000,
+        easing: 'ease-out'
+      });
+      
+      animationContainer.appendChild(particle);
+      
+      setTimeout(() => {
+        if (particle.parentNode) {
+          particle.parentNode.removeChild(particle);
+        }
+      }, 1000);
+    }
+  }
+
+  // 波紋エフェクト
+  function createRippleEffect(x, y) {
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+          position: absolute;
+          left: ${x}px;
+          top: ${y}px;
+          width: 20px;
+          height: 20px;
+          border: 3px solid rgba(0, 123, 255, 0.8);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 998;
+          animation: rippleEffect 1s ease-out forwards;
+          transform: translate(-50%, -50%);
+        `;
+        
+        animationContainer.appendChild(ripple);
+        
+        setTimeout(() => {
+          if (ripple.parentNode) {
+            ripple.parentNode.removeChild(ripple);
+          }
+        }, 1000);
+      }, i * 200);
+    }
+  }
+
+  // ボタンクリックエフェクト
+  function addButtonEffect() {
+    nullpoButton.style.transform = 'scale(0.9)';
+    nullpoButton.style.boxShadow = '0 0 30px rgba(0, 123, 255, 0.9)';
+    nullpoButton.style.filter = 'brightness(1.2) hue-rotate(30deg)';
+    
+    // ボタンにキラキラエフェクトを追加
+    addSparkleEffect();
+    
+    setTimeout(() => {
+      nullpoButton.style.transform = 'scale(1)';
+      nullpoButton.style.boxShadow = '';
+      nullpoButton.style.filter = '';
+    }, 150);
+  }
+
+  // キラキラエフェクト
+  function addSparkleEffect() {
+    const sparkles = ['✨', '💫', '⭐', '🌟'];
+    const buttonRect = nullpoButton.getBoundingClientRect();
+    
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        const sparkle = document.createElement('div');
+        sparkle.innerHTML = sparkles[Math.floor(Math.random() * sparkles.length)];
+        sparkle.style.cssText = `
+          position: fixed;
+          left: ${buttonRect.left + Math.random() * buttonRect.width}px;
+          top: ${buttonRect.top + Math.random() * buttonRect.height}px;
+          font-size: ${1 + Math.random() * 1}rem;
+          pointer-events: none;
+          z-index: 1001;
+          animation: sparkleEffect 0.8s ease-out forwards;
+          transform: translate(-50%, -50%);
+        `;
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => {
+          if (sparkle.parentNode) {
+            sparkle.parentNode.removeChild(sparkle);
+          }
+        }, 800);
+      }, i * 50);
+    }
+  }
 
   // ゲーム状態を更新する関数
   function updateGameStatus() {
@@ -162,8 +406,24 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // クリックイベント
-  nullpoButton.addEventListener('click', function() {
+  nullpoButton.addEventListener('click', function(event) {
     console.log('ぬるぽボタンがクリックされました');
+    
+    // 効果音を再生
+    playClickSound();
+    
+    // ボタンエフェクト
+    addButtonEffect();
+    
+    // 画面揺れ効果
+    addScreenShake();
+    
+    // ぬるぽぽさアニメーション
+    const rect = nullpoButton.getBoundingClientRect();
+    const containerRect = animationContainer.getBoundingClientRect();
+    const x = rect.left - containerRect.left + rect.width / 2;
+    const y = rect.top - containerRect.top;
+    createNullpoAnimation(x, y);
     
     // ボタンを一時的に無効化
     nullpoButton.disabled = true;
@@ -216,6 +476,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // 画面揺れ効果
+  function addScreenShake() {
+    const container = document.querySelector('.container');
+    const originalTransform = container.style.transform;
+    
+    // 揺れアニメーション
+    const shakeAnimation = [
+      { transform: 'translateX(0px)' },
+      { transform: 'translateX(-5px)' },
+      { transform: 'translateX(5px)' },
+      { transform: 'translateX(-3px)' },
+      { transform: 'translateX(3px)' },
+      { transform: 'translateX(-1px)' },
+      { transform: 'translateX(1px)' },
+      { transform: 'translateX(0px)' }
+    ];
+    
+    container.animate(shakeAnimation, {
+      duration: 300,
+      easing: 'ease-in-out'
+    });
+  }
+
   // 自動更新（1秒ごと）
   setInterval(function() {
     console.log('自動更新実行');
@@ -225,4 +508,147 @@ document.addEventListener('DOMContentLoaded', function() {
   // 初期状態を取得
   updateGameStatus();
 });
-</script> 
+</script>
+
+<style>
+@keyframes nullpoFloat {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-25px) scale(1.1) rotate(90deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-50px) scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translateY(-75px) scale(1.1) rotate(270deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100px) scale(0.8) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes nullpoFloatExtra {
+  0% {
+    transform: translateY(0) scale(0.8) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-30px) scale(1.1) rotate(180deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-60px) scale(0.6) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes rippleEffect {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+    border-width: 3px;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(4);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+@keyframes sparkleEffect {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.nullpo-button:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+  background: linear-gradient(45deg, #0056b3, #004085) !important;
+  transition: all 0.3s ease;
+}
+
+.nullpo-button:active {
+  transform: scale(0.95) translateY(1px);
+  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+  transition: all 0.1s ease;
+}
+
+/* ぬるぽぽさの追加エフェクト */
+.nullpo-button.clicked {
+  animation: nullpoClick 0.3s ease-out;
+}
+
+@keyframes nullpoClick {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* パーティクルエフェクト */
+.particle {
+  position: absolute;
+  pointer-events: none;
+  animation: particleFloat 2s ease-out forwards;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-150px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* ぬるぽぽさコンテナのスタイル */
+#nullpo-animation-container {
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 追加の視覚効果 */
+#nullpo-animation-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* アニメーション要素のz-index調整 */
+#nullpo-animation-container > div {
+  z-index: 2;
+}
+</style> 
