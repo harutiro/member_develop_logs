@@ -130,6 +130,36 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('ぬるぽゲーム初期化完了');
   console.log('CSRFトークン:', document.querySelector('meta[name="csrf-token"]')?.content);
   console.log('クリックURL:', '<%= click_nullpo_game_path %>');
+  console.log('ステータスURL:', '<%= status_nullpo_game_path %>');
+
+  // ゲーム状態を更新する関数
+  function updateGameStatus() {
+    fetch('<%= status_nullpo_game_path %>', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        nullpoCount.textContent = data.nullpo_count;
+        totalClicks.textContent = data.total_clicks;
+        clickPower.textContent = data.click_power;
+        autoClicks.textContent = data.auto_clicks_per_second;
+      } else {
+        console.error('ステータス更新エラー:', data.error);
+      }
+    })
+    .catch(error => {
+      console.error('ステータス更新エラー:', error);
+    });
+  }
 
   // クリックイベント
   nullpoButton.addEventListener('click', function() {
@@ -166,10 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
       console.log('データ受信:', data);
       if (data.success) {
-        nullpoCount.textContent = data.nullpo_count;
-        totalClicks.textContent = data.total_clicks;
-        clickPower.textContent = data.click_power;
-        autoClicks.textContent = data.auto_clicks_per_second;
+        // クリック後に即座に状態を更新
+        updateGameStatus();
       } else {
         throw new Error(data.error || '不明なエラーが発生しました');
       }
@@ -188,10 +216,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 自動更新（5秒ごと）
+  // 自動更新（1秒ごと）
   setInterval(function() {
     console.log('自動更新実行');
-    location.reload();
-  }, 5000);
+    updateGameStatus();
+  }, 1000);
+
+  // 初期状態を取得
+  updateGameStatus();
 });
 </script> 

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     member do
       post :click
       post :reset
+      get :status
     end
   end
 

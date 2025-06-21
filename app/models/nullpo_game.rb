@@ -27,9 +27,13 @@ class NullpoGame < ApplicationRecord
   def auto_click!
     return if auto_clicks_per_second <= 0
     
-    clicks_to_add = auto_clicks_per_second
-    increment!(:nullpo_count, clicks_to_add)
-    update!(last_auto_click_at: Time.current)
+    # 最後の自動クリックから1秒以上経過しているかチェック
+    if last_auto_click_at.nil? || last_auto_click_at < 1.second.ago
+      clicks_to_add = auto_clicks_per_second
+      increment!(:nullpo_count, clicks_to_add)
+      update!(last_auto_click_at: Time.current)
+      Rails.logger.info "自動クリック実行: #{clicks_to_add}個追加"
+    end
   rescue => e
     Rails.logger.error "自動クリックエラー: #{e.message}"
   end

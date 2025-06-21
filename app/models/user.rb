@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :mentor_avatars, dependent: :destroy
   has_many :development_times, dependent: :destroy
   has_many :achievements, dependent: :destroy
+  has_one :nullpo_game, dependent: :destroy
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -42,5 +43,22 @@ class User < ApplicationRecord
   # 現在のメンターアバター（最新のもの）
   def current_mentor_avatar
     mentor_avatars.order(:created_at).last
+  end
+
+  # ぬるぽゲームを作成または取得
+  def nullpo_game_or_create!
+    nullpo_game || create_nullpo_game!
+  end
+
+  # ぬるぽゲームを作成
+  def create_nullpo_game!
+    return nullpo_game if nullpo_game
+    
+    create_nullpo_game(
+      nullpo_count: 0,
+      total_clicks: 0,
+      auto_clicks_per_second: 0,
+      click_power: level
+    )
   end
 end

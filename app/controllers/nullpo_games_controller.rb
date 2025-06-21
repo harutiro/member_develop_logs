@@ -1,13 +1,12 @@
 class NullpoGamesController < ApplicationController
   before_action :require_user_selected
-  before_action :set_game
 
   def show
-    @game = current_user.nullpo_game || current_user.create_nullpo_game!
+    @game = current_user.nullpo_game_or_create!
   end
 
   def status
-    @game = current_user.nullpo_game || current_user.create_nullpo_game!
+    @game = current_user.nullpo_game_or_create!
     
     # 自動クリックの処理
     @game.auto_click!
@@ -27,6 +26,7 @@ class NullpoGamesController < ApplicationController
   end
 
   def click
+    @game = current_user.nullpo_game_or_create!
     @game.click!
     
     respond_to do |format|
@@ -54,6 +54,7 @@ class NullpoGamesController < ApplicationController
   end
 
   def reset
+    @game = current_user.nullpo_game_or_create!
     @game.update!(
       nullpo_count: 0,
       total_clicks: 0,
@@ -61,11 +62,5 @@ class NullpoGamesController < ApplicationController
       click_power: 1
     )
     redirect_to nullpo_game_path, notice: 'ゲームをリセットしました！'
-  end
-
-  private
-
-  def set_game
-    @game = NullpoGame.find_or_create_for_user(current_user)
   end
 end 
