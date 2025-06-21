@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_many :development_times, dependent: :destroy
   has_many :achievements, dependent: :destroy
+  has_many :level_up_notifications, dependent: :destroy
   has_one :nullpo_game, dependent: :destroy
 
   validates :name, presence: true
@@ -61,13 +62,13 @@ class User < ApplicationRecord
 
   # 初めてメンターを獲得したかどうかを判定
   def first_mentor_acquired?
-    # レベル1以上で、かつメンターが存在する場合
-    level >= 1 && MentorAvatar.where('level <= ?', level).exists?
+    # レベル1以上で、かつレベル1のメンターが存在する場合
+    level >= 1 && MentorAvatar.find_by(level: 1).present?
   end
 
   # 初回メンターを取得
   def first_mentor
-    MentorAvatar.where('level <= ?', level).order(:level).first
+    MentorAvatar.find_by(level: 1)
   end
 
   # ぬるぽゲームを作成または取得

@@ -1,618 +1,621 @@
 <h1>Pages#home</h1>
 <p>Find me in app/views/pages/home.html.erb</p>
 
-<div class="row">
-  <div class="col-md-8">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h2 class="card-title">メンターの現在の姿</h2>
-        <% if @current_avatar %>
-          <div class="text-center">
-            <% if @current_avatar.image.attached? %>
-              <%= image_tag @current_avatar.image, class: "img-fluid rounded", style: "max-height: 300px;" %>
-            <% else %>
-              <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
-                <p class="text-muted">画像がありません</p>
-              </div>
-            <% end %>
-            <h3 class="mt-3"><%= @current_avatar.name %></h3>
-            <p class="text-muted"><%= @current_avatar.description %></p>
-          </div>
-        <% else %>
-          <p class="text-center">メンターがまだ現れていません...</p>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- 開発時間記録セクション -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <h3 class="card-title">開発時間記録</h3>
-        <% if @current_development_time %>
-          <div class="text-center">
-            <div class="alert alert-info">
-              <h4>開発中です</h4>
-              <p>開始時間: <%= @current_development_time.start_time.strftime("%Y/%m/%d %H:%M") %></p>
-              <p>経過時間: <%= ((Time.current - @current_development_time.start_time) / 60).round %>分</p>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title">メンターの現在の姿</h2>
+          <% if @current_avatar %>
+            <div class="text-center">
+              <% if @current_avatar.image.attached? %>
+                <%= image_tag @current_avatar.image, class: "img-fluid rounded", style: "max-height: 300px;" %>
+              <% else %>
+                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+                  <p class="text-muted">画像がありません</p>
+                </div>
+              <% end %>
+              <h3 class="mt-3"><%= @current_avatar.name %></h3>
+              <p class="text-muted"><%= @current_avatar.description %></p>
             </div>
-            <%= form_with url: end_development_development_times_path, method: :post, local: true do |form| %>
-              <%= form.submit "開発終了", class: "btn btn-danger btn-lg" %>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="text-center">
-            <%= form_with url: start_development_development_times_path, method: :post, local: true do |form| %>
-              <div class="mb-3">
-                <%= form.label :notes, "メモ（任意）", class: "form-label" %>
-                <%= form.text_field :notes, class: "form-control", placeholder: "今日の目標や作業内容を記録" %>
+          <% else %>
+            <p class="text-center">メンターがまだ現れていません...</p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- 開発時間記録セクション -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title">開発時間記録</h3>
+          <% if @current_development_time %>
+            <div class="text-center">
+              <div class="alert alert-info">
+                <h4>開発中です</h4>
+                <p>開始時間: <%= @current_development_time.start_time.strftime("%Y/%m/%d %H:%M") %></p>
+                <p>経過時間: <%= ((Time.current - @current_development_time.start_time) / 60).round %>分</p>
               </div>
-              <%= form.submit "開発開始", class: "btn btn-success btn-lg" %>
-            <% end %>
-          </div>
-        <% end %>
+              <%= form_with url: end_development_development_times_path, method: :post, local: true do |form| %>
+                <%= form.submit "開発終了", class: "btn btn-danger btn-lg" %>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center">
+              <%= form_with url: start_development_development_times_path, method: :post, local: true do |form| %>
+                <div class="mb-3">
+                  <%= form.label :notes, "メモ（任意）", class: "form-label" %>
+                  <%= form.text_field :notes, class: "form-control", placeholder: "今日の目標や作業内容を記録" %>
+                </div>
+                <%= form.submit "開発開始", class: "btn btn-success btn-lg" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
       </div>
-    </div>
 
-    <!-- ぬるぽゲームセクション -->
-    <div class="card mb-4">
-      <div class="card-body text-center">
-        <h3 class="card-title">ぬるぽクリッカー</h3>
-        <p class="card-text">開発の合間にぬるぽをクリックしてリフレッシュしましょう！</p>
-        <p class="text-muted small">レベルとメンターによってクリック力と自動クリックが強化されます</p>
-        <%= link_to "ゲームをプレイ", nullpo_game_path, class: "btn btn-warning btn-lg" %>
+      <!-- ぬるぽゲームセクション -->
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <h3 class="card-title">ぬるぽクリッカー</h3>
+          <p class="card-text">開発の合間にぬるぽをクリックしてリフレッシュしましょう！</p>
+          <p class="text-muted small">レベルとメンターによってクリック力と自動クリックが強化されます</p>
+          <%= link_to "ゲームをプレイ", nullpo_game_path, class: "btn btn-warning btn-lg" %>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card mb-4">
-          <div class="card-body">
-            <h3 class="card-title">最近の開発時間</h3>
-            <% if @recent_development_times.any? %>
-              <ul class="list-group list-group-flush">
-                <% @recent_development_times.each do |time| %>
-                  <li class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <strong><%= time.start_time.strftime("%Y/%m/%d %H:%M") %></strong>
-                        <br>
-                        <small class="text-muted"><%= time.duration.present? ? (time.duration / 60) : "-" %>分</small>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h3 class="card-title">最近の開発時間</h3>
+              <% if @recent_development_times.any? %>
+                <ul class="list-group list-group-flush">
+                  <% @recent_development_times.each do |time| %>
+                    <li class="list-group-item">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <strong><%= time.start_time.strftime("%Y/%m/%d %H:%M") %></strong>
+                          <br>
+                          <small class="text-muted"><%= time.duration.present? ? (time.duration / 60) : "-" %>分</small>
+                        </div>
+                        <% if time.notes.present? %>
+                          <span class="badge bg-primary"><%= time.notes %></span>
+                        <% end %>
                       </div>
-                      <% if time.notes.present? %>
-                        <span class="badge bg-primary"><%= time.notes %></span>
-                      <% end %>
-                    </div>
-                  </li>
-                <% end %>
-              </ul>
-            <% else %>
-              <p class="text-center">まだ開発時間が記録されていません</p>
-            <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-center">まだ開発時間が記録されていません</p>
+              <% end %>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-md-6">
-        <div class="card mb-4">
-          <div class="card-body">
-            <h3 class="card-title">最近のできたこと</h3>
-            <% if @recent_achievements.any? %>
-              <ul class="list-group list-group-flush">
-                <% @recent_achievements.each do |achievement| %>
-                  <li class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <strong><%= achievement.content %></strong>
-                        <br>
-                        <small class="text-muted"><%= achievement.category %></small>
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h3 class="card-title">最近のできたこと</h3>
+              <% if @recent_achievements.any? %>
+                <ul class="list-group list-group-flush">
+                  <% @recent_achievements.each do |achievement| %>
+                    <li class="list-group-item">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <strong><%= achievement.content %></strong>
+                          <br>
+                          <small class="text-muted"><%= achievement.category %></small>
+                        </div>
                       </div>
-                    </div>
-                  </li>
-                <% end %>
-              </ul>
-            <% else %>
-              <p class="text-center">まだできたことが記録されていません</p>
-            <% end %>
-            <%= link_to "できたことを記録", new_achievement_path, class: "btn btn-success mt-3" %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-center">まだできたことが記録されていません</p>
+              <% end %>
+              <%= link_to "できたことを記録", new_achievement_path, class: "btn btn-success mt-3" %>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h3 class="card-title">あなたの成長</h3>
-        <div class="text-center mb-4">
-          <h4>現在のレベル</h4>
-          <h1 class="text-warning mb-3">レベル <%= current_user&.level || 1 %></h1>
-        </div>
-        <div class="text-center mb-4">
-          <h4>総開発時間</h4>
-          <h2 class="text-primary"><%= @total_development_time / 3600 %>時間</h2>
-        </div>
-        <div class="text-center">
-          <h4>達成したこと</h4>
-          <h2 class="text-success"><%= @achievement_count %>個</h2>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mb-4">
-      <div class="card-body">
-        <h3 class="card-title">メンター情報</h3>
-        <% if @current_avatar %>
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title">あなたの成長</h3>
+          <div class="text-center mb-4">
+            <h4>現在のレベル</h4>
+            <h1 class="text-warning mb-3">レベル <%= current_user&.level || 1 %></h1>
+          </div>
+          <div class="text-center mb-4">
+            <h4>総開発時間</h4>
+            <h2 class="text-primary"><%= @total_development_time / 3600 %>時間</h2>
+          </div>
           <div class="text-center">
-            <h4>メンターレベル</h4>
-            <h2 class="text-info mb-3">レベル <%= @current_avatar.level %></h2>
-            <p class="text-muted"><%= @current_avatar.name %></p>
+            <h4>達成したこと</h4>
+            <h2 class="text-success"><%= @achievement_count %>個</h2>
           </div>
-        <% else %>
-          <div class="text-center">
-            <p class="text-muted">メンターが設定されていません</p>
-          </div>
-        <% end %>
+        </div>
       </div>
-    </div>
 
-    <div class="card mb-4">
-      <div class="card-body">
-        <h3 class="card-title">集めたメンター</h3>
-        <% if current_user && current_user.collected_mentor_avatars.any? %>
-          <div class="text-center mb-3">
-            <h4>コレクション（<%= current_user.collected_mentor_avatars.count %>体）</h4>
-          </div>
-          <div class="row">
-            <% current_user.collected_mentor_avatars.each do |avatar| %>
-              <div class="col-6 mb-3">
-                <div class="card <%= avatar == current_user.current_mentor_avatar ? 'border-primary' : 'border-light' %>">
-                  <div class="card-body text-center p-2">
-                    <% if avatar.image.attached? %>
-                      <%= image_tag avatar.image, class: "img-fluid rounded", style: "max-height: 60px; max-width: 60px;" %>
-                    <% else %>
-                      <div class="bg-light rounded d-flex align-items-center justify-content-center mx-auto" style="height: 60px; width: 60px;">
-                        <small class="text-muted">No Image</small>
-                      </div>
-                    <% end %>
-                    <div class="mt-2">
-                      <small class="fw-bold"><%= avatar.name %></small>
-                      <br>
-                      <span class="badge bg-secondary">Lv.<%= avatar.level %></span>
-                      <% if avatar == current_user.current_mentor_avatar %>
-                        <br><small class="text-primary">現在選択中</small>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title">メンター情報</h3>
+          <% if @current_avatar %>
+            <div class="text-center">
+              <h4>メンターレベル</h4>
+              <h2 class="text-info mb-3">レベル <%= @current_avatar.level %></h2>
+              <p class="text-muted"><%= @current_avatar.name %></p>
+            </div>
+          <% else %>
+            <div class="text-center">
+              <p class="text-muted">メンターが設定されていません</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title">集めたメンター</h3>
+          <% if current_user && current_user.collected_mentor_avatars.any? %>
+            <div class="text-center mb-3">
+              <h4>コレクション（<%= current_user.collected_mentor_avatars.count %>体）</h4>
+            </div>
+            <div class="row">
+              <% current_user.collected_mentor_avatars.each do |avatar| %>
+                <div class="col-6 mb-3">
+                  <div class="card <%= avatar == current_user.current_mentor_avatar ? 'border-primary' : 'border-light' %>">
+                    <div class="card-body text-center p-2">
+                      <% if avatar.image.attached? %>
+                        <%= image_tag avatar.image, class: "img-fluid rounded", style: "max-height: 60px; max-width: 60px;" %>
+                      <% else %>
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center mx-auto" style="height: 60px; width: 60px;">
+                          <small class="text-muted">No Image</small>
+                        </div>
                       <% end %>
+                      <div class="mt-2">
+                        <small class="fw-bold"><%= avatar.name %></small>
+                        <br>
+                        <span class="badge bg-secondary">Lv.<%= avatar.level %></span>
+                        <% if avatar == current_user.current_mentor_avatar %>
+                          <br><small class="text-primary">現在選択中</small>
+                        <% end %>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="text-center">
-            <p class="text-muted">まだメンターを集めていません</p>
-            <p class="text-muted small">開発時間を記録してメンターを集めましょう！</p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-body">
-        <h3 class="card-title">次の目標</h3>
-        <% if current_user %>
-          <% requirements = current_user.next_level_requirements %>
-          <% total_required = requirements[:hours_required] + requirements[:achievements_required] %>
-          <% total_current = requirements[:hours_current] + requirements[:achievements_current] %>
-          <% progress_percentage = total_required > 0 ? (total_current / total_required * 100).clamp(0, 100) : 100 %>
-          
-          <div class="progress mb-3">
-            <div class="progress-bar" role="progressbar" style="width: <%= progress_percentage %>%">
-              <%= progress_percentage.round %>%
+              <% end %>
             </div>
-          </div>
-          
-          <div class="text-center">
-            <% if requirements[:hours_remaining] > 0 %>
-              <p>時間: あと<%= requirements[:hours_remaining].round(2) %>時間</p>
-            <% end %>
-            <% if requirements[:achievements_remaining] > 0 %>
-              <p>達成数: あと<%= requirements[:achievements_remaining] %>個</p>
-            <% end %>
-            <% if requirements[:hours_remaining] <= 0 && requirements[:achievements_remaining] <= 0 %>
-              <p class="text-success fw-bold">レベルアップ可能！</p>
-            <% end %>
-          </div>
-        <% else %>
-          <p class="text-center">ユーザーを選択してください</p>
-        <% end %>
+          <% else %>
+            <div class="text-center">
+              <p class="text-muted">まだメンターを集めていません</p>
+              <p class="text-muted small">開発時間を記録してメンターを集めましょう！</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">次の目標</h3>
+          <% if current_user %>
+            <% requirements = current_user.next_level_requirements %>
+            <% total_required = requirements[:hours_required] + requirements[:achievements_required] %>
+            <% total_current = requirements[:hours_current] + requirements[:achievements_current] %>
+            <% progress_percentage = total_required > 0 ? (total_current / total_required * 100).clamp(0, 100) : 100 %>
+            
+            <div class="progress mb-3">
+              <div class="progress-bar" role="progressbar" style="width: <%= progress_percentage %>%">
+                <%= progress_percentage.round %>%
+              </div>
+            </div>
+            
+            <div class="text-center">
+              <% if requirements[:hours_remaining] > 0 %>
+                <p>時間: あと<%= requirements[:hours_remaining].round(2) %>時間</p>
+              <% end %>
+              <% if requirements[:achievements_remaining] > 0 %>
+                <p>達成数: あと<%= requirements[:achievements_remaining] %>個</p>
+              <% end %>
+              <% if requirements[:hours_remaining] <= 0 && requirements[:achievements_remaining] <= 0 %>
+                <p class="text-success fw-bold">レベルアップ可能！</p>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-center">ユーザーを選択してください</p>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<% if @first_mentor %>
-  <!-- 初回メンター獲得モーダル -->
-  <div id="first-mentor-modal" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.9); z-index: 9999;">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 25%, #48dbfb 50%, #ff9ff3 75%, #54a0ff 100%);">
-        <!-- 盛大なパーティクルエフェクト -->
-        <div class="particles-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none;">
-          <div class="particle" style="position: absolute; width: 15px; height: 15px; background: gold; border-radius: 50%; animation: sparkle 1.5s infinite;"></div>
-          <div class="particle" style="position: absolute; width: 12px; height: 12px; background: #ff6b6b; border-radius: 50%; animation: sparkle 2s infinite 0.3s;"></div>
-          <div class="particle" style="position: absolute; width: 18px; height: 18px; background: #4ecdc4; border-radius: 50%; animation: sparkle 1.8s infinite 0.6s;"></div>
-          <div class="particle" style="position: absolute; width: 10px; height: 10px; background: #45b7d1; border-radius: 50%; animation: sparkle 2.2s infinite 0.9s;"></div>
-          <div class="particle" style="position: absolute; width: 20px; height: 20px; background: #96ceb4; border-radius: 50%; animation: sparkle 1.6s infinite 1.2s;"></div>
-          <div class="particle" style="position: absolute; width: 8px; height: 8px; background: #feca57; border-radius: 50%; animation: sparkle 2.5s infinite 1.5s;"></div>
-          <div class="particle" style="position: absolute; width: 16px; height: 16px; background: #ff9ff3; border-radius: 50%; animation: sparkle 1.9s infinite 1.8s;"></div>
-          <div class="particle" style="position: absolute; width: 14px; height: 14px; background: #54a0ff; border-radius: 50%; animation: sparkle 2.1s infinite 2.1s;"></div>
-        </div>
-        
-        <div class="modal-body text-center p-5 text-white">
-          <!-- 初回獲得の特別表示 -->
-          <div class="first-mentor-badge mb-4 animate__animated animate__bounceIn">
-            <div class="bg-warning text-dark px-5 py-3 rounded-pill d-inline-block shadow-lg">
-              <h2 class="mb-0">🎊 初回メンター獲得！ 🎊</h2>
-            </div>
+  <% if @first_mentor %>
+    <!-- 初回メンター獲得モーダル -->
+    <div id="first-mentor-modal" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.9); z-index: 9999;">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 25%, #48dbfb 50%, #ff9ff3 75%, #54a0ff 100%);">
+          <!-- 盛大なパーティクルエフェクト -->
+          <div class="particles-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none;">
+            <div class="particle" style="position: absolute; width: 15px; height: 15px; background: gold; border-radius: 50%; animation: sparkle 1.5s infinite;"></div>
+            <div class="particle" style="position: absolute; width: 12px; height: 12px; background: #ff6b6b; border-radius: 50%; animation: sparkle 2s infinite 0.3s;"></div>
+            <div class="particle" style="position: absolute; width: 18px; height: 18px; background: #4ecdc4; border-radius: 50%; animation: sparkle 1.8s infinite 0.6s;"></div>
+            <div class="particle" style="position: absolute; width: 10px; height: 10px; background: #45b7d1; border-radius: 50%; animation: sparkle 2.2s infinite 0.9s;"></div>
+            <div class="particle" style="position: absolute; width: 20px; height: 20px; background: #96ceb4; border-radius: 50%; animation: sparkle 1.6s infinite 1.2s;"></div>
+            <div class="particle" style="position: absolute; width: 8px; height: 8px; background: #feca57; border-radius: 50%; animation: sparkle 2.5s infinite 1.5s;"></div>
+            <div class="particle" style="position: absolute; width: 16px; height: 16px; background: #ff9ff3; border-radius: 50%; animation: sparkle 1.9s infinite 1.8s;"></div>
+            <div class="particle" style="position: absolute; width: 14px; height: 14px; background: #54a0ff; border-radius: 50%; animation: sparkle 2.1s infinite 2.1s;"></div>
           </div>
           
-          <!-- 特別なメッセージ -->
-          <div class="special-message mb-4 animate__animated animate__fadeInUp animate__delay-1s">
-            <h3 class="text-white fw-bold mb-3">🌟 あなたの冒険が始まります！ 🌟</h3>
-            <p class="lead mb-4">最初のメンターを獲得しました！<br>これから一緒に成長していきましょう！</p>
-          </div>
-          
-          <!-- メンター画像（特別な演出） -->
-          <div class="mentor-image-container mb-4 animate__animated animate__zoomIn animate__delay-2s">
-            <% if @first_mentor.image.attached? %>
-              <%= image_tag @first_mentor.image, 
-                  class: "img-fluid rounded-circle shadow-lg border border-5 border-warning", 
-                  style: "max-height: 300px; max-width: 300px; animation: firstMentorPulse 3s infinite;" %>
-            <% else %>
-              <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto border border-5 border-warning shadow-lg" 
-                   style="height: 300px; width: 300px; animation: firstMentorPulse 3s infinite;">
-                <span class="text-muted" style="font-size: 4rem;">👨‍💻</span>
+          <div class="modal-body text-center p-5 text-white">
+            <!-- 初回獲得の特別表示 -->
+            <div class="first-mentor-badge mb-4 animate__animated animate__bounceIn">
+              <div class="bg-warning text-dark px-5 py-3 rounded-pill d-inline-block shadow-lg">
+                <h2 class="mb-0">🎊 初回メンター獲得！ 🎊</h2>
               </div>
-            <% end %>
-          </div>
-          
-          <!-- メンター情報 -->
-          <div class="mentor-info animate__animated animate__fadeInUp animate__delay-3s">
-            <h2 class="fw-bold mb-3 text-warning" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);"><%= @first_mentor.name %></h2>
-            <p class="lead mb-4" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5);"><%= @first_mentor.description %></p>
-            
-            <!-- レベルバッジ -->
-            <div class="level-badge mb-4">
-              <span class="badge bg-success fs-4 px-5 py-3 shadow-lg">レベル <%= @first_mentor.level %></span>
-            </div>
-            
-            <!-- 特別なお祝いメッセージ -->
-            <div class="celebration-message mb-4 animate__animated animate__tada animate__delay-4s">
-              <h3 class="text-warning fw-bold mb-3">🎉 おめでとうございます！ 🎉</h3>
-              <p class="fs-5 mb-3">あなたの最初のメンターです！</p>
-              <p class="fs-6">これから開発時間を記録して、<br>もっと多くのメンターを集めましょう！</p>
-            </div>
-            
-            <!-- 盛大なエフェクト絵文字 -->
-            <div class="effects-container mb-4">
-              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite;">⭐</span>
-              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.2s;">✨</span>
-              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.4s;">🌟</span>
-              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.6s;">💫</span>
-              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.8s;">🔥</span>
-              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 1s;">🎊</span>
-              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 1.2s;">🎉</span>
             </div>
             
             <!-- 特別なメッセージ -->
-            <div class="special-encouragement mb-4 animate__animated animate__fadeInUp animate__delay-5s">
-              <div class="bg-white text-dark p-4 rounded-lg shadow-lg">
-                <h5 class="text-primary mb-2">🚀 次のステップ</h5>
-                <p class="mb-2">• 開発時間を記録してレベルアップ</p>
-                <p class="mb-2">• 達成を記録してメンターを強化</p>
-                <p class="mb-0">• 新しいメンターを集めてコレクションを完成</p>
+            <div class="special-message mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+              <h3 class="text-white fw-bold mb-3">🌟 あなたの冒険が始まります！ 🌟</h3>
+              <p class="lead mb-4">最初のメンターを獲得しました！<br>これから一緒に成長していきましょう！</p>
+            </div>
+            
+            <!-- メンター画像（特別な演出） -->
+            <div class="mentor-image-container mb-4 animate__animated animate__zoomIn animate__delay-2s">
+              <% if @first_mentor.image.attached? %>
+                <%= image_tag @first_mentor.image, 
+                    class: "img-fluid rounded-circle shadow-lg border border-5 border-warning", 
+                    style: "max-height: 300px; max-width: 300px; animation: firstMentorPulse 3s infinite;" %>
+              <% else %>
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto border border-5 border-warning shadow-lg" 
+                     style="height: 300px; width: 300px; animation: firstMentorPulse 3s infinite;">
+                  <span class="text-muted" style="font-size: 4rem;">👨‍💻</span>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- メンター情報 -->
+            <div class="mentor-info animate__animated animate__fadeInUp animate__delay-3s">
+              <h2 class="fw-bold mb-3 text-warning" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);"><%= @first_mentor.name %></h2>
+              <p class="lead mb-4" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5);"><%= @first_mentor.description %></p>
+              
+              <!-- レベルバッジ -->
+              <div class="level-badge mb-4">
+                <span class="badge bg-success fs-4 px-5 py-3 shadow-lg">レベル <%= @first_mentor.level %></span>
+              </div>
+              
+              <!-- 特別なお祝いメッセージ -->
+              <div class="celebration-message mb-4 animate__animated animate__tada animate__delay-4s">
+                <h3 class="text-warning fw-bold mb-3">🎉 おめでとうございます！ 🎉</h3>
+                <p class="fs-5 mb-3">あなたの最初のメンターです！</p>
+                <p class="fs-6">これから開発時間を記録して、<br>もっと多くのメンターを集めましょう！</p>
+              </div>
+              
+              <!-- 盛大なエフェクト絵文字 -->
+              <div class="effects-container mb-4">
+                <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite;">⭐</span>
+                <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.2s;">✨</span>
+                <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.4s;">🌟</span>
+                <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.6s;">💫</span>
+                <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.8s;">🔥</span>
+                <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 1s;">🎊</span>
+                <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 1.2s;">🎉</span>
+              </div>
+              
+              <!-- 特別なメッセージ -->
+              <div class="special-encouragement mb-4 animate__animated animate__fadeInUp animate__delay-5s">
+                <div class="bg-white text-dark p-4 rounded-lg shadow-lg">
+                  <h5 class="text-primary mb-2">🚀 次のステップ</h5>
+                  <p class="mb-2">• 開発時間を記録してレベルアップ</p>
+                  <p class="mb-2">• 達成を記録してメンターを強化</p>
+                  <p class="mb-0">• 新しいメンターを集めてコレクションを完成</p>
+                </div>
               </div>
             </div>
-          </div>
-          
-          <!-- 閉じるボタン -->
-          <div class="modal-footer border-0 justify-content-center animate__animated animate__fadeInUp animate__delay-6s">
-            <button type="button" class="btn btn-warning btn-lg px-5 py-3 shadow-lg" onclick="closeFirstMentorModal()">
-              <i class="fas fa-rocket me-2"></i>冒険を始める！
-            </button>
+            
+            <!-- 閉じるボタン -->
+            <div class="modal-footer border-0 justify-content-center animate__animated animate__fadeInUp animate__delay-6s">
+              <button type="button" class="btn btn-warning btn-lg px-5 py-3 shadow-lg" onclick="closeFirstMentorModal()">
+                <i class="fas fa-rocket me-2"></i>冒険を始める！
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- カスタムCSS -->
-  <style>
-    @keyframes sparkle {
-      0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-      50% { opacity: 1; transform: scale(1) rotate(180deg); }
-    }
-    
-    @keyframes firstMentorPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 193, 7, 0.5); }
-      50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 193, 7, 0.8); }
-    }
-    
-    @keyframes firstBounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
-      40% { transform: translateY(-25px) scale(1.1); }
-      60% { transform: translateY(-15px) scale(1.05); }
-    }
-    
-    .particle:nth-child(1) { top: 15%; left: 15%; }
-    .particle:nth-child(2) { top: 25%; right: 20%; }
-    .particle:nth-child(3) { bottom: 25%; left: 25%; }
-    .particle:nth-child(4) { bottom: 15%; right: 15%; }
-    .particle:nth-child(5) { top: 45%; left: 45%; }
-    .particle:nth-child(6) { top: 35%; right: 35%; }
-    .particle:nth-child(7) { bottom: 35%; left: 35%; }
-    .particle:nth-child(8) { bottom: 45%; right: 45%; }
-    
-    .effect-emoji {
-      display: inline-block;
-      margin: 0 8px;
-    }
-    
-    .modal-content {
-      border-radius: 25px;
-    }
-    
-    .first-mentor-badge {
-      transform: scale(0);
-      animation: scaleIn 0.8s ease-out forwards;
-    }
-    
-    @keyframes scaleIn {
-      to { transform: scale(1); }
-    }
-    
-    .special-encouragement {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 15px;
-    }
-  </style>
+    <!-- カスタムCSS -->
+    <style>
+      @keyframes sparkle {
+        0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+        50% { opacity: 1; transform: scale(1) rotate(180deg); }
+      }
+      
+      @keyframes firstMentorPulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 193, 7, 0.5); }
+        50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 193, 7, 0.8); }
+      }
+      
+      @keyframes firstBounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
+        40% { transform: translateY(-25px) scale(1.1); }
+        60% { transform: translateY(-15px) scale(1.05); }
+      }
+      
+      .particle:nth-child(1) { top: 15%; left: 15%; }
+      .particle:nth-child(2) { top: 25%; right: 20%; }
+      .particle:nth-child(3) { bottom: 25%; left: 25%; }
+      .particle:nth-child(4) { bottom: 15%; right: 15%; }
+      .particle:nth-child(5) { top: 45%; left: 45%; }
+      .particle:nth-child(6) { top: 35%; right: 35%; }
+      .particle:nth-child(7) { bottom: 35%; left: 35%; }
+      .particle:nth-child(8) { bottom: 45%; right: 45%; }
+      
+      .effect-emoji {
+        display: inline-block;
+        margin: 0 8px;
+      }
+      
+      .modal-content {
+        border-radius: 25px;
+      }
+      
+      .first-mentor-badge {
+        transform: scale(0);
+        animation: scaleIn 0.8s ease-out forwards;
+      }
+      
+      @keyframes scaleIn {
+        to { transform: scale(1); }
+      }
+      
+      .special-encouragement {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+      }
+    </style>
 
-  <!-- JavaScript -->
-  <script>
-    // 特別な効果音を再生
-    function playFirstMentorSound() {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      
-      // より盛大な音階でお祝いの音を再生
-      const frequencies = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98]; // C, E, G, C, E, G
-      let currentNote = 0;
-      
-      function playNote() {
-        if (currentNote < frequencies.length) {
-          const oscillator = audioContext.createOscillator();
-          const gainNode = audioContext.createGain();
-          
-          oscillator.connect(gainNode);
-          gainNode.connect(audioContext.destination);
-          
-          oscillator.frequency.setValueAtTime(frequencies[currentNote], audioContext.currentTime);
-          gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-          
-          oscillator.start(audioContext.currentTime);
-          oscillator.stop(audioContext.currentTime + 0.4);
-          
-          currentNote++;
-          setTimeout(playNote, 400);
+    <!-- JavaScript -->
+    <script>
+      // 特別な効果音を再生
+      function playFirstMentorSound() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // より盛大な音階でお祝いの音を再生
+        const frequencies = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98]; // C, E, G, C, E, G
+        let currentNote = 0;
+        
+        function playNote() {
+          if (currentNote < frequencies.length) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequencies[currentNote], audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.4);
+            
+            currentNote++;
+            setTimeout(playNote, 400);
+          }
         }
-      }
-      
-      playNote();
-    }
-    
-    // モーダルを閉じる
-    function closeFirstMentorModal() {
-      const modal = document.getElementById('first-mentor-modal');
-      modal.classList.remove('show');
-      modal.style.display = 'none';
-      
-      // セッションストレージに表示済みフラグを保存
-      sessionStorage.setItem('firstMentorModalShown', 'true');
-    }
-    
-    // ページ読み込み時に効果音を再生
-    document.addEventListener('DOMContentLoaded', function() {
-      if (document.getElementById('first-mentor-modal')) {
-        setTimeout(playFirstMentorSound, 500);
         
-        // 12秒後に自動で閉じる（初回は長めに）
-        setTimeout(closeFirstMentorModal, 12000);
+        playNote();
       }
-    });
-    
-    // ESCキーでモーダルを閉じる
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        closeFirstMentorModal();
+      
+      // モーダルを閉じる
+      function closeFirstMentorModal() {
+        const modal = document.getElementById('first-mentor-modal');
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        
+        // セッションストレージに表示済みフラグを保存
+        sessionStorage.setItem('firstMentorModalShown', 'true');
       }
-    });
-  </script>
-<% end %>
+      
+      // ページ読み込み時に効果音を再生
+      document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('first-mentor-modal')) {
+          setTimeout(playFirstMentorSound, 500);
+          
+          // 12秒後に自動で閉じる（初回は長めに）
+          setTimeout(closeFirstMentorModal, 12000);
+        }
+      });
+      
+      // ESCキーでモーダルを閉じる
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          closeFirstMentorModal();
+        }
+      });
+    </script>
+  <% end %>
 
-<% if @new_mentor %>
-  <!-- 新しいメンター獲得モーダル -->
-  <div id="new-mentor-modal" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.8); z-index: 9999;">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-        <!-- パーティクルエフェクト -->
-        <div class="particles-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none;">
-          <div class="particle" style="position: absolute; width: 10px; height: 10px; background: gold; border-radius: 50%; animation: sparkle 2s infinite;"></div>
-          <div class="particle" style="position: absolute; width: 8px; height: 8px; background: #ff6b6b; border-radius: 50%; animation: sparkle 2.5s infinite 0.5s;"></div>
-          <div class="particle" style="position: absolute; width: 12px; height: 12px; background: #4ecdc4; border-radius: 50%; animation: sparkle 1.8s infinite 1s;"></div>
-          <div class="particle" style="position: absolute; width: 6px; height: 6px; background: #45b7d1; border-radius: 50%; animation: sparkle 2.2s infinite 1.5s;"></div>
-          <div class="particle" style="position: absolute; width: 14px; height: 14px; background: #96ceb4; border-radius: 50%; animation: sparkle 1.6s infinite 0.8s;"></div>
-        </div>
-        
-        <div class="modal-body text-center p-5 text-white">
-          <!-- レベルアップ表示 -->
-          <div class="level-up-badge mb-4 animate__animated animate__bounceIn">
-            <div class="bg-warning text-dark px-4 py-2 rounded-pill d-inline-block">
-              <h4 class="mb-0">🎉 レベルアップ！ 🎉</h4>
-            </div>
+  <% if @new_mentor %>
+    <!-- 新しいメンター獲得モーダル -->
+    <div id="new-mentor-modal" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.8); z-index: 9999;">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <!-- パーティクルエフェクト -->
+          <div class="particles-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none;">
+            <div class="particle" style="position: absolute; width: 10px; height: 10px; background: gold; border-radius: 50%; animation: sparkle 2s infinite;"></div>
+            <div class="particle" style="position: absolute; width: 8px; height: 8px; background: #ff6b6b; border-radius: 50%; animation: sparkle 2.5s infinite 0.5s;"></div>
+            <div class="particle" style="position: absolute; width: 12px; height: 12px; background: #4ecdc4; border-radius: 50%; animation: sparkle 1.8s infinite 1s;"></div>
+            <div class="particle" style="position: absolute; width: 6px; height: 6px; background: #45b7d1; border-radius: 50%; animation: sparkle 2.2s infinite 1.5s;"></div>
+            <div class="particle" style="position: absolute; width: 14px; height: 14px; background: #96ceb4; border-radius: 50%; animation: sparkle 1.6s infinite 0.8s;"></div>
           </div>
           
-          <!-- メンター画像 -->
-          <div class="mentor-image-container mb-4 animate__animated animate__zoomIn animate__delay-1s">
-            <% if @new_mentor.image.attached? %>
-              <%= image_tag @new_mentor.image, 
-                  class: "img-fluid rounded-circle shadow-lg border border-4 border-warning", 
-                  style: "max-height: 250px; max-width: 250px; animation: pulse 2s infinite;" %>
-            <% else %>
-              <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto border border-4 border-warning shadow-lg" 
-                   style="height: 250px; width: 250px; animation: pulse 2s infinite;">
-                <span class="text-muted fs-1">👨‍💻</span>
+          <div class="modal-body text-center p-5 text-white">
+            <!-- レベルアップ表示 -->
+            <div class="level-up-badge mb-4 animate__animated animate__bounceIn">
+              <div class="bg-warning text-dark px-4 py-2 rounded-pill d-inline-block">
+                <h4 class="mb-0">🎉 レベルアップ！ 🎉</h4>
               </div>
-            <% end %>
-          </div>
-          
-          <!-- メンター情報 -->
-          <div class="mentor-info animate__animated animate__fadeInUp animate__delay-2s">
-            <h2 class="fw-bold mb-3 text-warning"><%= @new_mentor.name %></h2>
-            <p class="lead mb-4"><%= @new_mentor.description %></p>
-            
-            <!-- レベルバッジ -->
-            <div class="level-badge mb-4">
-              <span class="badge bg-success fs-4 px-4 py-2">レベル <%= @new_mentor.level %></span>
             </div>
             
-            <!-- お祝いメッセージ -->
-            <div class="celebration-message mb-4 animate__animated animate__tada animate__delay-3s">
-              <h3 class="text-warning fw-bold">🎊 おめでとうございます！ 🎊</h3>
-              <p class="fs-5">新しいメンターを獲得しました！</p>
+            <!-- メンター画像 -->
+            <div class="mentor-image-container mb-4 animate__animated animate__zoomIn animate__delay-1s">
+              <% if @new_mentor.image.attached? %>
+                <%= image_tag @new_mentor.image, 
+                    class: "img-fluid rounded-circle shadow-lg border border-4 border-warning", 
+                    style: "max-height: 250px; max-width: 250px; animation: pulse 2s infinite;" %>
+              <% else %>
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto border border-4 border-warning shadow-lg" 
+                     style="height: 250px; width: 250px; animation: pulse 2s infinite;">
+                  <span class="text-muted fs-1">👨‍💻</span>
+                </div>
+              <% end %>
             </div>
             
-            <!-- エフェクト絵文字 -->
-            <div class="effects-container mb-4">
-              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite;">⭐</span>
-              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.2s;">✨</span>
-              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.4s;">🌟</span>
-              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.6s;">💫</span>
-              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.8s;">🔥</span>
+            <!-- メンター情報 -->
+            <div class="mentor-info animate__animated animate__fadeInUp animate__delay-2s">
+              <h2 class="fw-bold mb-3 text-warning"><%= @new_mentor.name %></h2>
+              <p class="lead mb-4"><%= @new_mentor.description %></p>
+              
+              <!-- レベルバッジ -->
+              <div class="level-badge mb-4">
+                <span class="badge bg-success fs-4 px-4 py-2">レベル <%= @new_mentor.level %></span>
+              </div>
+              
+              <!-- お祝いメッセージ -->
+              <div class="celebration-message mb-4 animate__animated animate__tada animate__delay-3s">
+                <h3 class="text-warning fw-bold">🎊 おめでとうございます！ 🎊</h3>
+                <p class="fs-5">新しいメンターを獲得しました！</p>
+              </div>
+              
+              <!-- エフェクト絵文字 -->
+              <div class="effects-container mb-4">
+                <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite;">⭐</span>
+                <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.2s;">✨</span>
+                <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.4s;">🌟</span>
+                <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.6s;">💫</span>
+                <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.8s;">🔥</span>
+              </div>
             </div>
-          </div>
-          
-          <!-- 閉じるボタン -->
-          <div class="modal-footer border-0 justify-content-center animate__animated animate__fadeInUp animate__delay-4s">
-            <button type="button" class="btn btn-warning btn-lg px-5" onclick="closeNewMentorModal()">
-              <i class="fas fa-check me-2"></i>了解！
-            </button>
+            
+            <!-- 閉じるボタン -->
+            <div class="modal-footer border-0 justify-content-center animate__animated animate__fadeInUp animate__delay-4s">
+              <button type="button" class="btn btn-warning btn-lg px-5" onclick="closeNewMentorModal()">
+                <i class="fas fa-check me-2"></i>了解！
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- カスタムCSS -->
-  <style>
-    @keyframes sparkle {
-      0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-      50% { opacity: 1; transform: scale(1) rotate(180deg); }
-    }
-    
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-20px); }
-      60% { transform: translateY(-10px); }
-    }
-    
-    .particle:nth-child(1) { top: 20%; left: 20%; }
-    .particle:nth-child(2) { top: 30%; right: 25%; }
-    .particle:nth-child(3) { bottom: 30%; left: 30%; }
-    .particle:nth-child(4) { bottom: 20%; right: 20%; }
-    .particle:nth-child(5) { top: 50%; left: 50%; }
-    
-    .effect-emoji {
-      display: inline-block;
-      margin: 0 10px;
-    }
-    
-    .modal-content {
-      border-radius: 20px;
-    }
-    
-    .level-up-badge {
-      transform: scale(0);
-      animation: scaleIn 0.5s ease-out forwards;
-    }
-    
-    @keyframes scaleIn {
-      to { transform: scale(1); }
-    }
-  </style>
-
-  <!-- JavaScript -->
-  <script>
-    // 効果音を再生
-    function playCelebrationSound() {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      // 複数の音階でお祝いの音を再生
-      const frequencies = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, C
-      let currentNote = 0;
-      
-      function playNote() {
-        if (currentNote < frequencies.length) {
-          oscillator.frequency.setValueAtTime(frequencies[currentNote], audioContext.currentTime);
-          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-          
-          oscillator.start(audioContext.currentTime);
-          oscillator.stop(audioContext.currentTime + 0.3);
-          
-          currentNote++;
-          setTimeout(playNote, 300);
-        }
+    <!-- カスタムCSS -->
+    <style>
+      @keyframes sparkle {
+        0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+        50% { opacity: 1; transform: scale(1) rotate(180deg); }
       }
       
-      playNote();
-    }
-    
-    // モーダルを閉じる
-    function closeNewMentorModal() {
-      const modal = document.getElementById('new-mentor-modal');
-      modal.classList.remove('show');
-      modal.style.display = 'none';
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
       
-      // セッションストレージに表示済みフラグを保存
-      sessionStorage.setItem('mentorModalShown', 'true');
-    }
-    
-    // ページ読み込み時に効果音を再生
-    document.addEventListener('DOMContentLoaded', function() {
-      if (document.getElementById('new-mentor-modal')) {
-        setTimeout(playCelebrationSound, 500);
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-20px); }
+        60% { transform: translateY(-10px); }
+      }
+      
+      .particle:nth-child(1) { top: 20%; left: 20%; }
+      .particle:nth-child(2) { top: 30%; right: 25%; }
+      .particle:nth-child(3) { bottom: 30%; left: 30%; }
+      .particle:nth-child(4) { bottom: 20%; right: 20%; }
+      .particle:nth-child(5) { top: 50%; left: 50%; }
+      
+      .effect-emoji {
+        display: inline-block;
+        margin: 0 10px;
+      }
+      
+      .modal-content {
+        border-radius: 20px;
+      }
+      
+      .level-up-badge {
+        transform: scale(0);
+        animation: scaleIn 0.5s ease-out forwards;
+      }
+      
+      @keyframes scaleIn {
+        to { transform: scale(1); }
+      }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+      // 効果音を再生
+      function playCelebrationSound() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
         
-        // 8秒後に自動で閉じる
-        setTimeout(closeNewMentorModal, 8000);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // 複数の音階でお祝いの音を再生
+        const frequencies = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, C
+        let currentNote = 0;
+        
+        function playNote() {
+          if (currentNote < frequencies.length) {
+            oscillator.frequency.setValueAtTime(frequencies[currentNote], audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+            
+            currentNote++;
+            setTimeout(playNote, 300);
+          }
+        }
+        
+        playNote();
       }
-    });
-    
-    // ESCキーでモーダルを閉じる
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        closeNewMentorModal();
+      
+      // モーダルを閉じる
+      function closeNewMentorModal() {
+        const modal = document.getElementById('new-mentor-modal');
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        
+        // セッションストレージに表示済みフラグを保存
+        sessionStorage.setItem('mentorModalShown', 'true');
       }
-    });
-  </script>
-<% end %>
+      
+      // ページ読み込み時に効果音を再生
+      document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('new-mentor-modal')) {
+          setTimeout(playCelebrationSound, 500);
+          
+          // 8秒後に自動で閉じる
+          setTimeout(closeNewMentorModal, 8000);
+        }
+      });
+      
+      // ESCキーでモーダルを閉じる
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          closeNewMentorModal();
+        }
+      });
+    </script>
+  <% end %>
+</div>
+</div>

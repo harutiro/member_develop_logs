@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_062031) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_065924) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -78,6 +78,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_062031) do
     t.index ["user_id"], name: "index_development_times_on_user_id"
   end
 
+  create_table "level_up_notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "mentor_level"
+    t.boolean "shown"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_level_up_notifications_on_user_id"
+  end
+
   create_table "level_up_settings", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -143,6 +152,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_062031) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "avatar_transformations", "mentor_avatars"
   add_foreign_key "development_times", "users"
+  add_foreign_key "level_up_notifications", "users"
   add_foreign_key "nullpo_games", "users"
   add_foreign_key "work_logs", "members"
 end

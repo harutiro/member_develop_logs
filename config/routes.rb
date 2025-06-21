@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   root to: "pages#home"
   
+  # デバッグ用ルート
+  get 'reset_session', to: 'pages#reset_session', as: :reset_session
+  get 'test_animation', to: 'pages#test_animation', as: :test_animation
+  
   get 'select_user', to: 'users#select', as: :select_user
   post 'set_user', to: 'users#set', as: :set_user
 
