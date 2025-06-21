@@ -11,6 +11,10 @@ setup:
 # 開発サーバーの起動
 up:
 	docker compose up -d
+	open http://localhost:3000
+
+web-client:
+	open http://localhost:3000
 
 # 開発サーバーの停止
 down:
