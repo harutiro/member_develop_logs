@@ -27,6 +27,9 @@ module MemberDevelopLogs
     config.time_zone = "Tokyo"
     config.active_record.default_timezone = :local
 
+    # Rails 8.1の非推奨警告を解決
+    config.active_support.to_time_preserves_timezone = :zone
+
     # SSL設定を無効化
     config.force_ssl = false
 
