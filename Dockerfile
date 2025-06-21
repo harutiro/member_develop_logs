@@ -14,23 +14,21 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim
 # Rails app lives here
 WORKDIR /app
 
-# Install base packages
+# Install base packages (超最適化版)
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
     build-essential \
-    git \
     libpq-dev \
-    nodejs \
-    npm \
     postgresql-client \
     curl \
-    libjemalloc2 \
     libvips && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/* /var/tmp/*
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
+RUN bundle config set --local without 'development test' && \
+    bundle install --jobs 4 --retry 3
 
 # Copy application code
 COPY . .
@@ -38,8 +36,11 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompiling assets
-RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
+# Precompiling assets (スキップ可能)
+ARG SKIP_ASSETS=false
+RUN if [ "$SKIP_ASSETS" != "true" ]; then \
+        SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=production bundle exec rails assets:precompile || true; \
+    fi
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \

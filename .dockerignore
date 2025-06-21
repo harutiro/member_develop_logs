@@ -49,3 +49,27 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# Ignore test files (本番環境では不要)
+/spec/
+/test/
+/coverage/
+
+# Ignore documentation
+/README.md
+/docs/
+
+# Ignore development tools
+/.rubocop.yml
+/.rspec
+/rubocop.yml
+
+# Ignore IDE files
+/.vscode/
+/.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db

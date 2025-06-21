@@ -1,4 +1,4 @@
-.PHONY: setup up down db-reset test console release-build deploy deploy-status rollback prod-db-reset prod-seed prod-init
+.PHONY: setup up down db-reset test console release-build deploy deploy-status rollback prod-db-reset prod-seed prod-init build-fast build-multistage logs logs-db logs-web rebuild build-parallel
 
 # 初期セットアップ
 setup:
@@ -35,9 +35,23 @@ test:
 console:
 	docker compose run --rm web rails console
 
-# リリース用のビルド
+# リリース用のビルド（通常版）
 release-build:
 	docker compose -f docker-compose.prod.yml build
+
+# 高速ビルド（キャッシュ活用）
+build-fast:
+	docker compose -f docker-compose.prod.yml build web
+
+# アセットスキップビルド（超高速）
+build-no-assets:
+	docker compose -f docker-compose.prod.yml build --build-arg SKIP_ASSETS=true web
+
+# マルチステージビルド（超高速）
+build-multistage:
+	cp Dockerfile.multistage Dockerfile.prod
+	docker compose -f docker-compose.prod.yml build --no-cache web
+	rm Dockerfile.prod
 
 # 本番環境へのデプロイ
 deploy:
@@ -64,3 +78,23 @@ deploy-status:
 rollback:
 	docker compose -f docker-compose.prod.yml down
 	docker compose -f docker-compose.prod.yml up -d
+
+# ログ表示
+logs:
+	docker compose -f docker-compose.prod.yml logs -f
+
+# DBログ表示
+logs-db:
+	docker compose -f docker-compose.prod.yml logs -f db
+
+# Webログ表示
+logs-web:
+	docker compose -f docker-compose.prod.yml logs -f web
+
+# 完全リビルド（キャッシュなし）
+rebuild:
+	docker compose -f docker-compose.prod.yml build --no-cache web
+
+# 並列ビルド（BuildKit使用）
+build-parallel:
+	DOCKER_BUILDKIT=1 docker compose -f docker-compose.prod.yml build --no-cache --parallel

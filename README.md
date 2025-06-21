@@ -65,12 +65,13 @@ http://localhost:3000/admin
 
 ## 技術スタック
 
-- **バックエンド**: Ruby on Rails 7
+- **バックエンド**: Ruby on Rails 8
 - **データベース**: PostgreSQL
 - **フロントエンド**: Bootstrap 5, Font Awesome
 - **JavaScript**: Stimulus, Chart.js
 - **ファイルストレージ**: Active Storage
 - **コンテナ**: Docker, Docker Compose
+- **バックグラウンドジョブ**: SolidQueue (開発環境), Inline (本番環境)
 
 ## セットアップ
 
@@ -134,36 +135,74 @@ docker compose exec web rails db:rollback
 docker compose exec web rails db:seed
 ```
 
-## リリース手順
+## 本番環境デプロイ
 
-### 本番環境へのデプロイ
+### 高速ビルドオプション
 
-1. リリース用のビルドを作成
+#### 1. 通常ビルド（推奨）
 ```bash
-make release-build
+make build-fast
 ```
 
-2. 本番環境へのデプロイ
+#### 2. アセットスキップビルド（超高速）
+```bash
+make build-no-assets
+```
+
+#### 3. マルチステージビルド（超高速）
+```bash
+make build-multistage
+```
+
+#### 4. 並列ビルド（BuildKit使用）
+```bash
+make build-parallel
+```
+
+#### 5. 完全リビルド（キャッシュなし）
+```bash
+make rebuild
+```
+
+### デプロイ手順
+
+#### 1. 本番環境へのデプロイ
 ```bash
 make deploy
 ```
 
-3. デプロイの確認
+#### 2. 本番DBの初期化
 ```bash
-make deploy-status
+make prod-init
 ```
 
-4. ロールバックが必要な場合
+#### 3. 本番DBのリセットのみ
+```bash
+make prod-db-reset
+```
+
+#### 4. 本番シード投入のみ
+```bash
+make prod-seed
+```
+
+### デプロイ状態の確認
+
+```bash
+# コンテナ状態確認
+make deploy-status
+
+# ログ確認
+make logs          # 全サービス
+make logs-web      # Webコンテナのみ
+make logs-db       # DBコンテナのみ
+```
+
+### ロールバック
+
 ```bash
 make rollback
 ```
-
-### リリース前の確認事項
-
-- テストが全て通過していること
-- 環境変数が正しく設定されていること
-- データベースのマイグレーションが準備されていること
-- アイコンファイルが適切に配置されていること
 
 ## 環境変数
 
@@ -176,10 +215,11 @@ RAILS_ENV=development
 
 ### 本番環境
 ```bash
-# 本番環境用の環境変数を設定
-DATABASE_URL=postgresql://username:password@host:5432/database_name
+# .env.production ファイルを作成
 RAILS_ENV=production
-RAILS_MASTER_KEY=your_master_key
+DATABASE_URL=postgres://postgres:postgres@db:5432/member_develop_logs_production
+SECRET_KEY_BASE=your_secret_key_here
+MEMBER_DEVELOP_LOGS_DATABASE_PASSWORD=postgres
 ```
 
 ## シードデータ
@@ -216,10 +256,20 @@ docker compose restart db
 #### 3. 画像アップロードエラー
 - Active Storageの設定を確認
 - ストレージディレクトリの権限を確認
+- SolidQueueの設定を確認（本番環境では無効化済み）
 
 #### 4. レベルアップアニメーションが表示されない
 - セッション情報を確認
 - ブラウザのJavaScript設定を確認
+
+#### 5. ビルドが遅い
+- `make build-no-assets` を使用してアセットプリコンパイルをスキップ
+- `make build-multistage` でマルチステージビルドを使用
+- キャッシュを活用（`make build-fast`）
+
+#### 6. 本番環境でのSolidQueueエラー
+- 本番環境ではSolidQueueが無効化されています
+- Active Jobは同期的に実行されます
 
 ## 開発ガイド
 
@@ -250,6 +300,19 @@ make test
 # 特定のテストファイルの実行
 docker compose exec web rails test test/models/user_test.rb
 ```
+
+## パフォーマンス最適化
+
+### ビルド時間の短縮
+- **アセットスキップ**: `make build-no-assets`
+- **マルチステージビルド**: `make build-multistage`
+- **並列ビルド**: `make build-parallel`
+- **キャッシュ活用**: `make build-fast`
+
+### 本番環境の最適化
+- SolidQueueを無効化し、Active Jobを同期的に実行
+- ActiveStorageの分析機能を無効化
+- 複数データベース接続を無効化
 
 ## ライセンス
 

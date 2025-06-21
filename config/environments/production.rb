@@ -24,6 +24,13 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+  # アセットプリコンパイル設定
+  config.assets.compile = false
+  config.assets.digest = true
+  config.assets.version = '1.0'
+  config.assets.js_compressor = :terser
+  config.assets.css_compressor = :sass
+
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
 
