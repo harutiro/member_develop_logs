@@ -29,5 +29,11 @@ module MemberDevelopLogs
 
     # SSL設定を無効化
     config.force_ssl = false
+
+    # 本番環境で複数データベース接続を無効化
+    if Rails.env.production?
+      config.active_record.database_selector = nil
+      config.active_record.database_resolver = nil
+    end
   end
 end
