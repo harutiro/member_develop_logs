@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_041335) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_043339) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -88,13 +88,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_041335) do
   create_table "mentor_avatars", force: :cascade do |t|
     t.string "name", null: false
     t.text "description", null: false
-    t.string "transformation_type", null: false
     t.integer "level", default: 1, null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["level"], name: "index_mentor_avatars_on_level"
-    t.index ["transformation_type"], name: "index_mentor_avatars_on_transformation_type"
     t.index ["user_id"], name: "index_mentor_avatars_on_user_id"
   end
 

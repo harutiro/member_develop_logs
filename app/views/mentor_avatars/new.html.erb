@@ -33,11 +33,6 @@
             </div>
 
             <div class="mb-3">
-              <%= f.label :transformation_type, '成長タイプ', class: 'form-label' %>
-              <%= f.select :transformation_type, MentorAvatar::TRANSFORMATION_TYPES.map { |t| [t, t] }, {}, class: 'form-select' %>
-            </div>
-
-            <div class="mb-3">
               <%= f.label :level, 'レベル', class: 'form-label' %>
               <%= f.number_field :level, class: 'form-control', min: 1 %>
             </div>

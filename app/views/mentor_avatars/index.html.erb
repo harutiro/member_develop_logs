@@ -10,7 +10,6 @@
       <th>画像</th>
       <th>名前</th>
       <th>説明</th>
-      <th>成長タイプ</th>
       <th>レベル</th>
       <th></th>
     </tr>
@@ -21,7 +20,6 @@
         <td><%= image_tag avatar.image.attached? ? url_for(avatar.image) : 'default.png', style: 'max-height: 80px;' %></td>
         <td><%= avatar.name %></td>
         <td><%= avatar.description %></td>
-        <td><%= avatar.transformation_type %></td>
         <td><%= avatar.level %>段階</td>
         <td><%= link_to '詳細', mentor_avatar_path(avatar), class: 'btn btn-outline-primary btn-sm' %></td>
       </tr>

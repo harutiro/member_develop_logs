@@ -4,6 +4,7 @@ class MentorAvatarsController < ApplicationController
 
   def index
     @mentor_avatars = MentorAvatar.where(user: current_user)
+    @users = User.all
   end
 
   def current
@@ -27,6 +28,25 @@ class MentorAvatarsController < ApplicationController
   def show
   end
 
+  def level_up
+    user = User.find(params[:user_id])
+    next_level_hours = user.level * 1
+    current_hours = user.total_development_time / 3600.0
+    
+    if current_hours >= next_level_hours
+      user.update!(level: user.level + 1)
+      
+      # メンターアバターもレベルアップ
+      if user.mentor_avatar
+        user.mentor_avatar.update!(level: user.mentor_avatar.level + 1)
+      end
+      
+      redirect_to mentor_avatars_path, notice: "#{user.name}がレベルアップしました！（レベル#{user.level - 1} → #{user.level}）"
+    else
+      redirect_to mentor_avatars_path, alert: "#{user.name}はまだレベルアップできません。"
+    end
+  end
+
   private
 
   def set_mentor_avatar
@@ -34,6 +54,6 @@ class MentorAvatarsController < ApplicationController
   end
 
   def mentor_avatar_params
-    params.require(:mentor_avatar).permit(:name, :description, :image, :transformation_type, :level)
+    params.require(:mentor_avatar).permit(:name, :description, :image, :level)
   end
 end

@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card mt-5">
+        <div class="card-body">
+          <h1 class="card-title text-center mb-4">ユーザー編集</h1>
+
+          <%= form_with model: @user, local: true do |form| %>
+            <% if @user.errors.any? %>
+              <div class="alert alert-danger">
+                <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h4>
+                <ul>
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= form.label :name, "名前", class: "form-label" %>
+              <%= form.text_field :name, class: "form-control", placeholder: "例：田中太郎" %>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :email, "メールアドレス", class: "form-label" %>
+              <%= form.email_field :email, class: "form-control", placeholder: "例：tanaka@example.com" %>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= form.submit "更新", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+
+          <div class="text-center mt-3">
+            <%= link_to "ユーザー一覧に戻る", users_path, class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

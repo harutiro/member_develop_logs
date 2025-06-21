@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'select_user', to: 'users#select', as: :select_user
   post 'set_user', to: 'users#set', as: :set_user
 
+  resources :users, except: [:show]
   resources :development_times do
     collection do
       post :start_development
@@ -11,7 +12,11 @@ Rails.application.routes.draw do
     end
   end
   resources :achievements
-  resources :mentor_avatars
+  resources :mentor_avatars do
+    collection do
+      post :level_up
+    end
+  end
 
   get "pages/home"
   namespace :api do
