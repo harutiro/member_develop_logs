@@ -1,6 +1,6 @@
 class AchievementsController < ApplicationController
   before_action :require_user_selected
-  before_action :set_achievement, only: [:show]
+  before_action :set_achievement, only: [ :show ]
 
   def index
     @achievements = current_user.achievements.order(created_at: :desc)
@@ -16,7 +16,7 @@ class AchievementsController < ApplicationController
   def create
     @achievement = current_user.achievements.new(achievement_params)
     if @achievement.save
-      redirect_to achievements_path, notice: 'できたことを記録しました。'
+      redirect_to achievements_path, notice: "できたことを記録しました。"
     else
       render :new, status: :unprocessable_entity
     end

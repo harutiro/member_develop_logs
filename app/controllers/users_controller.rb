@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  skip_before_action :require_user_selected, only: [:select, :set, :new, :create, :index]
-  before_action :set_user, only: [:edit, :update, :destroy, :level_up]
+  skip_before_action :require_user_selected, only: [ :select, :set, :new, :create, :index ]
+  before_action :set_user, only: [ :edit, :update, :destroy, :level_up ]
 
   def select
     @users = User.all.includes(:development_times, :achievements)
@@ -48,12 +48,12 @@ class UsersController < ApplicationController
 
   def level_up
     setting = LevelUpSetting.current
-    
+
     if setting.level_up_condition_met?(@user)
       old_level = @user.level
       @user.update!(level: @user.level + 1)
       new_level = @user.level
-      
+
       # 新しいメンターを獲得したかチェック
       new_mentor = MentorAvatar.find_by(level: new_level)
       if new_mentor
@@ -65,14 +65,14 @@ class UsersController < ApplicationController
     else
       requirements = setting.next_level_requirements(@user)
       message = "#{@user.name}はまだレベルアップできません。"
-      
+
       if requirements[:hours_remaining] > 0
         message += " 時間: あと#{requirements[:hours_remaining].round(2)}時間"
       end
       if requirements[:achievements_remaining] > 0
         message += " 達成数: あと#{requirements[:achievements_remaining]}個"
       end
-      
+
       redirect_to users_path, alert: message
     end
   end
@@ -86,4 +86,4 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :email)
   end
-end 
+end

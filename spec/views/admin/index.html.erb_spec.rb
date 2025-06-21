@@ -5,8 +5,8 @@ RSpec.describe "admin/index", type: :view do
   let(:mentor_avatar) { create(:mentor_avatar, user: user) }
 
   before do
-    assign(:users, [user])
-    assign(:mentor_avatars, [mentor_avatar])
+    assign(:users, [ user ])
+    assign(:mentor_avatars, [ mentor_avatar ])
     allow(view).to receive(:current_user).and_return(user)
     render
   end
@@ -30,4 +30,4 @@ RSpec.describe "admin/index", type: :view do
     expect(rendered).to include("ユーザー数")
     expect(rendered).to include("メンター数")
   end
-end 
+end

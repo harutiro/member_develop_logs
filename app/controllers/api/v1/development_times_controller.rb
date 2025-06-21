@@ -21,7 +21,7 @@ module Api
         development_time = current_user.development_times.find(params[:id])
         render json: development_time
       rescue ActiveRecord::RecordNotFound
-        render json: { error: '記録が見つかりません' }, status: :not_found
+        render json: { error: "記録が見つかりません" }, status: :not_found
       end
 
       private

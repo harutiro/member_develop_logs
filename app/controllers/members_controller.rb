@@ -1,5 +1,5 @@
 class MembersController < ApplicationController
-  before_action :set_member, only: [:show, :edit, :update, :destroy]
+  before_action :set_member, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @members = Member.all.order(:id)
@@ -15,7 +15,7 @@ class MembersController < ApplicationController
   def create
     @member = Member.new(member_params)
     if @member.save
-      redirect_to members_path, notice: 'メンバーを追加しました。'
+      redirect_to members_path, notice: "メンバーを追加しました。"
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,7 +26,7 @@ class MembersController < ApplicationController
 
   def update
     if @member.update(member_params)
-      redirect_to members_path, notice: 'メンバー情報を更新しました。'
+      redirect_to members_path, notice: "メンバー情報を更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -34,7 +34,7 @@ class MembersController < ApplicationController
 
   def destroy
     @member.destroy
-    redirect_to members_path, notice: 'メンバーを削除しました。'
+    redirect_to members_path, notice: "メンバーを削除しました。"
   end
 
   private
@@ -45,4 +45,4 @@ class MembersController < ApplicationController
     def member_params
       params.require(:member).permit(:name)
     end
-end 
+end

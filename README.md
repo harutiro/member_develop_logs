@@ -92,6 +92,11 @@ make test-docker
 make test-system
 ```
 
+### Dockerでシステムテスト
+```bash
+make test-system-docker
+```
+
 ## 🏗 開発
 
 ### 開発サーバー起動
@@ -322,3 +327,52 @@ make logs-prod
 ---
 
 **Member Develop Logs** - チームの成長を記録し、モチベーションを向上させる開発時間管理システム
+
+## 🔧 開発ワークフロー
+
+### Git Hooks セットアップ
+
+プロジェクト内のGit hooksを有効にするには、初回セットアップ時に以下を実行してください：
+
+```bash
+# Git hooksをセットアップ
+make setup-hooks
+```
+
+これにより、プロジェクト内の`hooks/`ディレクトリが`.git/hooks`にシンボリックリンクされ、push時に自動的にlintチェックとテストが実行されます。
+
+**注意**: 新しい開発者がプロジェクトをクローンした際は、必ず`make setup-hooks`を実行してください。
+
+### 通常の開発フロー
+1. 機能開発
+2. テスト実行: `make test`
+3. コードスタイルチェック: `make lint`
+4. 必要に応じて自動修正: `make lint-fix`
+5. コミット
+6. Push（自動でlint + testチェック）
+
+### Pre-pushフック
+push時に自動的に以下のチェックが実行されます：
+- コミットされていない変更の確認
+- Lintチェック（エラーがあれば自動修正）
+- テスト実行
+
+**エラーが発生した場合：**
+- pushが取り消されます
+- エラーメッセージが表示されます
+- 修正後、再度pushしてください
+
+### 手動でのpush前チェック
+```bash
+make pre-push  # lint + testを実行
+```
+
+### Docker環境での開発
+```bash
+# Dockerでlintチェック
+make lint-docker
+make lint-fix-docker
+
+# Dockerでテスト
+make test-docker
+```

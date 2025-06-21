@@ -1,6 +1,6 @@
 class MentorAvatarsController < ApplicationController
   before_action :require_user_selected
-  before_action :set_mentor_avatar, only: [:show, :edit, :update, :destroy]
+  before_action :set_mentor_avatar, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @mentor_avatars = MentorAvatar.order(:level)
@@ -18,7 +18,7 @@ class MentorAvatarsController < ApplicationController
   def create
     @mentor_avatar = MentorAvatar.new(mentor_avatar_params)
     if @mentor_avatar.save
-      redirect_to mentor_avatars_path, notice: 'メンターアバターを登録しました。'
+      redirect_to mentor_avatars_path, notice: "メンターアバターを登録しました。"
     else
       render :new, status: :unprocessable_entity
     end
@@ -32,7 +32,7 @@ class MentorAvatarsController < ApplicationController
 
   def update
     if @mentor_avatar.update(mentor_avatar_params)
-      redirect_to mentor_avatars_path, notice: 'メンターアバターを更新しました。'
+      redirect_to mentor_avatars_path, notice: "メンターアバターを更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -47,11 +47,11 @@ class MentorAvatarsController < ApplicationController
   def level_up
     user = User.find(params[:user_id])
     setting = LevelUpSetting.current
-    
+
     if setting.level_up_condition_met?(user)
       old_level = user.level
       user.update!(level: user.level + 1)
-      
+
       # ユーザーレベルに基づいて新しいメンターを獲得
       new_level = user.level
       case new_level
@@ -80,19 +80,19 @@ class MentorAvatarsController < ApplicationController
           level: 5
         )
       end
-      
+
       redirect_to mentor_avatars_path, notice: "#{user.name}がレベルアップしました！（レベル#{old_level} → #{user.level}）"
     else
       requirements = setting.next_level_requirements(user)
       message = "#{user.name}はまだレベルアップできません。"
-      
+
       if requirements[:hours_remaining] > 0
         message += " 時間: あと#{requirements[:hours_remaining].round(2)}時間"
       end
       if requirements[:achievements_remaining] > 0
         message += " 達成数: あと#{requirements[:achievements_remaining]}個"
       end
-      
+
       redirect_to mentor_avatars_path, alert: message
     end
   end

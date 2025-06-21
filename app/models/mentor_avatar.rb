@@ -16,11 +16,11 @@ class MentorAvatar < ApplicationRecord
     if image.attached?
       Rails.application.routes.url_helpers.url_for(image)
     else
-      '/assets/default.png'
+      "/assets/default.png"
     end
   rescue => e
     # ホスト情報が不足している場合のフォールバック
-    '/assets/default.png'
+    "/assets/default.png"
   end
 
   def self.transform_based_on_achievements(total_hours, achievement_count)

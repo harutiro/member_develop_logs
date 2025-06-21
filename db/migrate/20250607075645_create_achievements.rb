@@ -8,7 +8,7 @@ class CreateAchievements < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :achievements, [:user_id, :created_at]
+    add_index :achievements, [ :user_id, :created_at ]
     add_index :achievements, :category
   end
 end

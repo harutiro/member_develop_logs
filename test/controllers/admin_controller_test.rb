@@ -36,4 +36,4 @@ class AdminControllerTest < ActionDispatch::IntegrationTest
     post bulk_level_up_admin_path
     assert_redirected_to select_user_path
   end
-end 
+end

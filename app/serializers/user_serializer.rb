@@ -3,4 +3,4 @@ class UserSerializer < ActiveModel::Serializer
 
   has_many :development_times
   has_many :achievements
-end 
+end

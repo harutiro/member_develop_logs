@@ -8,8 +8,7 @@ class CreateLevelUpSettings < ActiveRecord::Migration[8.0]
       t.boolean :enabled, default: true, null: false
       t.timestamps
     end
-    
+
     add_index :level_up_settings, :enabled
   end
 end
- 

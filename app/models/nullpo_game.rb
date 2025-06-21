@@ -36,7 +36,7 @@ class NullpoGame < ApplicationRecord
 
   def auto_click!
     return if auto_clicks_per_second <= 0
-    
+
     # 最後の自動クリックから1秒以上経過しているかチェック
     if last_auto_click_at.nil? || last_auto_click_at < 1.second.ago
       clicks_to_add = auto_clicks_per_second
@@ -51,7 +51,7 @@ class NullpoGame < ApplicationRecord
   def update_auto_click_power!
     # ユーザーのレベルに基づいてクリック力を更新
     self.click_power = user.level
-    
+
     # メンターアバターに基づいて自動クリック力を更新
     mentor = user.current_mentor_avatar
     if mentor
@@ -59,7 +59,7 @@ class NullpoGame < ApplicationRecord
     else
       self.auto_clicks_per_second = 0
     end
-    
+
     save!
   rescue => e
     Rails.logger.error "パワー更新エラー: #{e.message}"
@@ -73,4 +73,4 @@ class NullpoGame < ApplicationRecord
   def formatted_auto_clicks_per_second
     "#{auto_clicks_per_second}/s"
   end
-end 
+end

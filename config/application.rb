@@ -14,7 +14,7 @@ module MemberDevelopLogs
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w(assets tasks))
+    config.autoload_lib(ignore: %w[assets tasks])
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -24,7 +24,7 @@ module MemberDevelopLogs
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    config.time_zone = 'Tokyo'
+    config.time_zone = "Tokyo"
     config.active_record.default_timezone = :local
 
     # SSL設定を無効化
@@ -34,7 +34,7 @@ module MemberDevelopLogs
     if Rails.env.production?
       config.active_record.database_selector = nil
       config.active_record.database_resolver = nil
-      
+
       # SolidQueueを無効化し、ActiveStorageの分析を同期的に実行
       config.active_storage.analyzers = []
       config.active_storage.previewers = []

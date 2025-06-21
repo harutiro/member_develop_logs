@@ -5,7 +5,7 @@ gem "rails", "~> 8.0.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.1", groups: [:development, :production]
+gem "pg", "~> 1.1", groups: [ :development, :production ]
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
@@ -71,7 +71,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "factory_bot_rails"
   gem "faker"
-  
+
   # テスト環境用SQLite
   gem "sqlite3", "~> 2.1"
 end
@@ -79,7 +79,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  
+
   # APIドキュメント用
   gem "rswag"
   gem "rswag-specs"

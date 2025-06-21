@@ -20,7 +20,7 @@ module Api
         achievement = current_user.achievements.find(params[:id])
         render json: achievement
       rescue ActiveRecord::RecordNotFound
-        render json: { error: '記録が見つかりません' }, status: :not_found
+        render json: { error: "記録が見つかりません" }, status: :not_found
       end
 
       private

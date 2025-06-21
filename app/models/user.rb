@@ -41,12 +41,12 @@ class User < ApplicationRecord
 
   # 現在のメンターアバター（自分のレベル以下で最大のもの）
   def current_mentor_avatar
-    MentorAvatar.where('level <= ?', level).order(level: :desc).first
+    MentorAvatar.where("level <= ?", level).order(level: :desc).first
   end
 
   # 集めたメンター（自分のレベル以下の全メンター）
   def collected_mentor_avatars
-    MentorAvatar.where('level <= ?', level).order(:level)
+    MentorAvatar.where("level <= ?", level).order(:level)
   end
 
   # 新しいメンターを獲得したかどうかを判定
@@ -79,7 +79,7 @@ class User < ApplicationRecord
   # ぬるぽゲームを作成
   def create_nullpo_game!
     return nullpo_game if nullpo_game
-    
+
     create_nullpo_game(
       nullpo_count: 0,
       total_clicks: 0,
@@ -91,7 +91,7 @@ class User < ApplicationRecord
   # 初回アクセスかどうかを判定
   def first_time_user?
     # 開発時間、達成、ぬるぽゲームの記録がない場合を初回ユーザーとする
-    development_times.count == 0 && achievements.count == 0 && 
+    development_times.count == 0 && achievements.count == 0 &&
     (nullpo_game.nil? || (nullpo_game.total_clicks == 0 && nullpo_game.nullpo_count == 0))
   end
 end

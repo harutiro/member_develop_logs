@@ -16,13 +16,13 @@ RSpec.describe AdminController, type: :controller do
 
       it "@usersが設定される" do
         get :index
-        expect(assigns(:users)).to eq([user])
+        expect(assigns(:users)).to eq([ user ])
       end
 
       it "@mentor_avatarsが設定される" do
         mentor_avatar = create(:mentor_avatar, user: user)
         get :index
-        expect(assigns(:mentor_avatars)).to eq([mentor_avatar])
+        expect(assigns(:mentor_avatars)).to eq([ mentor_avatar ])
       end
     end
 
@@ -33,4 +33,4 @@ RSpec.describe AdminController, type: :controller do
       end
     end
   end
-end 
+end

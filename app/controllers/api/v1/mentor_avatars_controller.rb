@@ -6,7 +6,7 @@ module Api
         if avatar
           render json: avatar
         else
-          render json: { error: 'アバターが見つかりません' }, status: :not_found
+          render json: { error: "アバターが見つかりません" }, status: :not_found
         end
       end
 

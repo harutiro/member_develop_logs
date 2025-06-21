@@ -9,8 +9,8 @@ class CreateNullpoGames < ActiveRecord::Migration[8.0]
       t.datetime :last_auto_click_at
       t.timestamps
     end
-    
+
     add_index :nullpo_games, :nullpo_count
     add_index :nullpo_games, :auto_clicks_per_second
   end
-end 
+end

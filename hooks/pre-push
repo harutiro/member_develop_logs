@@ -1,0 +1,31 @@
+#!/bin/bash
+
+echo "🚀 Pre-push チェックを開始します..."
+
+# 現在のブランチ名を取得
+CURRENT_BRANCH=$(git branch --show-current)
+echo "📋 現在のブランチ: $CURRENT_BRANCH"
+
+# ステージングされていない変更があるかチェック
+if ! git diff-index --quiet HEAD --; then
+    echo "❌ コミットされていない変更があります。先にコミットしてください。"
+    exit 1
+fi
+
+# Lintチェック
+echo "🔍 Lintチェックを実行中..."
+if ! make lint-check; then
+    echo "❌ Lintチェックが失敗しました。"
+    echo "以下のコマンドで修正してください:"
+    echo "  make lint-fix"
+    exit 1
+fi
+
+# テスト実行
+echo "🧪 テストを実行中..."
+if ! make test; then
+    echo "❌ テストが失敗しました。"
+    exit 1
+fi
+
+echo "✅ Pre-push チェックが完了しました。pushを続行します。" 

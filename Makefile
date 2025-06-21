@@ -1,7 +1,7 @@
 # Member Develop Logs - Makefile
 # 開発・テスト・デプロイ用のコマンド集
 
-.PHONY: help install test test-docker build run stop clean deploy
+.PHONY: help install test test-docker build run stop clean deploy lint lint-fix lint-check pre-push setup-hooks
 
 # デフォルトターゲット
 help:
@@ -16,6 +16,11 @@ help:
 	@echo "  deploy       - 本番環境にデプロイ"
 	@echo "  deploy-prod  - 本番環境にデプロイ（高速ビルド）"
 	@echo "  deploy-fast  - 本番環境にデプロイ（アセットスキップ）"
+	@echo "  lint         - コードスタイルチェック"
+	@echo "  lint-fix     - コードスタイル自動修正"
+	@echo "  lint-check   - lintチェック（変更があればエラー）"
+	@echo "  pre-push     - push前のチェック（lint + test）"
+	@echo "  setup-hooks  - Git hooksをセットアップ"
 
 # 依存関係のインストール
 install:
@@ -112,9 +117,47 @@ security:
 lint:
 	bundle exec rubocop
 
+# Dockerでコードスタイルチェック
+lint-docker:
+	docker compose run --rm web bundle exec rubocop
+
 # コードスタイル自動修正
 lint-fix:
-	bundle exec rubocop -a
+	bundle exec rubocop -A
+
+# Dockerでコードスタイル自動修正
+lint-fix-docker:
+	docker compose run --rm web bundle exec rubocop -A
+
+# lintチェック（変更があればエラー）
+lint-check:
+	@echo "🔍 Lintチェックを実行中..."
+	@if bundle exec rubocop --format=quiet; then \
+		echo "✅ Lintチェック完了 - 問題なし"; \
+	else \
+		echo "❌ Lintエラーが検出されました"; \
+		echo "自動修正を実行します..."; \
+		bundle exec rubocop -A; \
+		echo "⚠️  ファイルが変更されました。再度lintチェックを実行してください"; \
+		exit 1; \
+	fi
+
+# Dockerでlintチェック（変更があればエラー）
+lint-check-docker:
+	@echo "🔍 Docker環境でLintチェックを実行中..."
+	@if docker compose run --rm web bundle exec rubocop --format=quiet; then \
+		echo "✅ Lintチェック完了 - 問題なし"; \
+	else \
+		echo "❌ Lintエラーが検出されました"; \
+		echo "自動修正を実行します..."; \
+		docker compose run --rm web bundle exec rubocop -A; \
+		echo "⚠️  ファイルが変更されました。再度lintチェックを実行してください"; \
+		exit 1; \
+	fi
+
+# push前のチェック（lint + test）
+pre-push: lint-check test
+	@echo "✅ 全てのチェックが完了しました。push可能です。"
 
 # システムテスト
 test-system:
@@ -123,3 +166,8 @@ test-system:
 # Dockerでシステムテスト
 test-system-docker:
 	docker compose run --rm -e RAILS_ENV=test web bin/rails test:system
+
+# Git hooksセットアップ
+setup-hooks:
+	@echo "🔗 Git hooks をセットアップしています..."
+	@./scripts/setup-hooks.sh

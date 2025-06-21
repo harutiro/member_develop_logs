@@ -8,7 +8,7 @@ class CreateAvatarTransformations < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :avatar_transformations, [:mentor_avatar_id, :transformation_date]
+    add_index :avatar_transformations, [ :mentor_avatar_id, :transformation_date ]
     add_index :avatar_transformations, :trigger_type
   end
 end

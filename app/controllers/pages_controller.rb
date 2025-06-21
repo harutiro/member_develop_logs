@@ -8,13 +8,13 @@ class PagesController < ApplicationController
     @recent_development_times = current_user&.development_times&.order(start_time: :desc)&.limit(5) || []
     @recent_achievements = current_user&.achievements&.order(created_at: :desc)&.limit(5) || []
     @current_development_time = current_user&.current_development_time
-    
+
     # 初回ユーザー判定
     if current_user.first_time_user? && !session[:tutorial_shown]
       @show_tutorial = true
       session[:tutorial_shown] = true
     end
-    
+
     # 未表示のレベルアップ通知を確認
     unshown_notification = current_user.level_up_notifications.unshown.first
     if unshown_notification
@@ -22,7 +22,7 @@ class PagesController < ApplicationController
       # 通知を表示済みにマーク
       unshown_notification.update!(shown: true)
     end
-    
+
     # 新しいメンター獲得フラグを確認（セッションから削除する前に変数に保存）
     if session[:new_mentor_acquired] && session[:new_mentor_level]
       @new_mentor = MentorAvatar.find_by(level: session[:new_mentor_level])
@@ -30,7 +30,7 @@ class PagesController < ApplicationController
       session.delete(:new_mentor_acquired)
       session.delete(:new_mentor_level)
     end
-    
+
     # 初回メンター獲得の判定（セッションから削除する前に変数に保存）
     if current_user.first_mentor_acquired? && !session[:first_mentor_shown]
       @first_mentor = current_user.first_mentor
@@ -50,7 +50,7 @@ class PagesController < ApplicationController
     session.delete(:tutorial_shown)
     # LevelUpNotificationもリセット
     current_user.level_up_notifications.update_all(shown: false)
-    redirect_to root_path, notice: 'セッションをリセットしました。アニメーションが再表示されるはずです。'
+    redirect_to root_path, notice: "セッションをリセットしました。アニメーションが再表示されるはずです。"
   end
 
   # デバッグ用：テスト用のセッションを設定（レベル指定可）
@@ -64,7 +64,7 @@ class PagesController < ApplicationController
       )
       redirect_to root_path, notice: "レベル#{level}のメンター紹介テストを表示します。"
     else
-      redirect_to root_path, alert: '有効なレベルを指定してください。'
+      redirect_to root_path, alert: "有効なレベルを指定してください。"
     end
   end
 end

@@ -9,10 +9,10 @@ class NullpoGamesController < ApplicationController
 
   def status
     @game = current_user.nullpo_game_or_create!
-    
+
     # 自動クリックの処理
     @game.auto_click!
-    
+
     render json: {
       nullpo_count: @game.formatted_nullpo_count,
       total_clicks: @game.total_clicks,
@@ -23,7 +23,7 @@ class NullpoGamesController < ApplicationController
       success: true
     }
   rescue => e
-    render json: { 
+    render json: {
       error: e.message,
       success: false
     }, status: :unprocessable_entity
@@ -32,11 +32,11 @@ class NullpoGamesController < ApplicationController
   def click
     @game = current_user.nullpo_game_or_create!
     @game.click!
-    
+
     respond_to do |format|
       format.html { redirect_to nullpo_game_path }
-      format.json { 
-        render json: { 
+      format.json {
+        render json: {
           nullpo_count: @game.formatted_nullpo_count,
           total_clicks: @game.total_clicks,
           click_power: @game.click_power,
@@ -44,17 +44,17 @@ class NullpoGamesController < ApplicationController
           total_clicks_all_users: NullpoGame.total_clicks_all_users,
           total_nullpo_count_all_users: NullpoGame.total_nullpo_count_all_users,
           success: true
-        } 
+        }
       }
     end
   rescue => e
     respond_to do |format|
       format.html { redirect_to nullpo_game_path, alert: "エラーが発生しました: #{e.message}" }
-      format.json { 
-        render json: { 
+      format.json {
+        render json: {
           error: e.message,
           success: false
-        }, status: :unprocessable_entity 
+        }, status: :unprocessable_entity
       }
     end
   end
@@ -67,6 +67,6 @@ class NullpoGamesController < ApplicationController
       auto_clicks_per_second: 0,
       click_power: 1
     )
-    redirect_to nullpo_game_path, notice: 'ゲームをリセットしました！'
+    redirect_to nullpo_game_path, notice: "ゲームをリセットしました！"
   end
-end 
+end

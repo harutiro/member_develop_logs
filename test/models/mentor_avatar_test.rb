@@ -36,7 +36,7 @@ class MentorAvatarTest < ActiveSupport::TestCase
 
   test "should order by level" do
     mentor_avatar2 = mentor_avatars(:two)
-    assert_equal [@mentor_avatar, mentor_avatar2], MentorAvatar.order(:level)
+    assert_equal [ @mentor_avatar, mentor_avatar2 ], MentorAvatar.order(:level)
   end
 
   test "should find by level" do

@@ -1,17 +1,17 @@
 Rails.application.routes.draw do
   root to: "pages#home"
-  
+
   # デバッグ用ルート
-  get 'reset_session', to: 'pages#reset_session', as: :reset_session
-  get 'test_animation', to: 'pages#test_animation', as: :test_animation
-  
-  get 'select_user', to: 'users#select', as: :select_user
-  post 'set_user', to: 'users#set', as: :set_user
+  get "reset_session", to: "pages#reset_session", as: :reset_session
+  get "test_animation", to: "pages#test_animation", as: :test_animation
 
-  get 'admin', to: 'admin#index', as: :admin
-  post 'admin/bulk_level_up', to: 'admin#bulk_level_up', as: :bulk_level_up_admin
+  get "select_user", to: "users#select", as: :select_user
+  post "set_user", to: "users#set", as: :set_user
 
-  resources :users, except: [:show] do
+  get "admin", to: "admin#index", as: :admin
+  post "admin/bulk_level_up", to: "admin#bulk_level_up", as: :bulk_level_up_admin
+
+  resources :users, except: [ :show ] do
     member do
       post :level_up
     end
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :nullpo_game, only: [:show] do
+  resource :nullpo_game, only: [ :show ] do
     member do
       post :click
       post :reset
@@ -45,9 +45,9 @@ Rails.application.routes.draw do
   get "pages/home"
   namespace :api do
     namespace :v1 do
-      resources :development_times, only: [:index, :create]
-      resources :achievements, only: [:index, :create]
-      resources :mentor_avatars, only: [:show]
+      resources :development_times, only: [ :index, :create ]
+      resources :achievements, only: [ :index, :create ]
+      resources :mentor_avatars, only: [ :show ]
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -69,5 +69,5 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'mentor_avatars/current', to: 'mentor_avatars#current', as: :current_mentor_avatar
+  get "mentor_avatars/current", to: "mentor_avatars#current", as: :current_mentor_avatar
 end

@@ -23,4 +23,4 @@ RSpec.describe "Admin", type: :request do
       end
     end
   end
-end 
+end

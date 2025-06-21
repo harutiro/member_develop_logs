@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < BaseController
-      skip_before_action :authenticate_user, only: [:create]
+      skip_before_action :authenticate_user, only: [ :create ]
 
       def create
         user = User.new(user_params)
