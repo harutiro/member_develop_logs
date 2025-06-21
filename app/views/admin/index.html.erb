@@ -1,0 +1,66 @@
+<% content_for :title, "管理画面" %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>管理画面</h1>
+        <div>
+          <span class="me-3">現在のユーザー: <strong><%= current_user.name %></strong></span>
+          <%= link_to "ホームに戻る", root_path, class: "btn btn-outline-primary" %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">ユーザー管理</h3>
+              <p class="card-text">ユーザーの一覧表示、編集、削除を行います。</p>
+              <div class="d-grid">
+                <%= link_to "ユーザー管理", users_path, class: "btn btn-primary" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">メンター管理</h3>
+              <p class="card-text">メンターアバターの一覧表示、編集、削除を行います。</p>
+              <div class="d-grid">
+                <%= link_to "メンター管理", mentor_avatars_path, class: "btn btn-success" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- デバッグ情報 -->
+      <div class="card mt-4">
+        <div class="card-body">
+          <h3 class="card-title">システム状況</h3>
+          <div class="row">
+            <div class="col-md-3">
+              <h5>ユーザー数</h5>
+              <p class="h2 text-primary"><%= @users.count %></p>
+            </div>
+            <div class="col-md-3">
+              <h5>メンター数</h5>
+              <p class="h2 text-success"><%= @mentor_avatars.count %></p>
+            </div>
+            <div class="col-md-3">
+              <h5>総開発時間</h5>
+              <p class="h2 text-info"><%= (@users.sum(&:total_development_time) / 3600.0).round(2) %>時間</p>
+            </div>
+            <div class="col-md-3">
+              <h5>平均レベル</h5>
+              <p class="h2 text-warning"><%= @users.any? ? (@users.sum(&:level).to_f / @users.count).round(1) : 0 %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

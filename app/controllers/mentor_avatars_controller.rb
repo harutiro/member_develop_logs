@@ -1,6 +1,6 @@
 class MentorAvatarsController < ApplicationController
   before_action :require_user_selected
-  before_action :set_mentor_avatar, only: [:show]
+  before_action :set_mentor_avatar, only: [:show, :edit, :update, :destroy]
 
   def index
     @mentor_avatars = MentorAvatar.where(user: current_user)
@@ -28,6 +28,23 @@ class MentorAvatarsController < ApplicationController
   def show
   end
 
+  def edit
+  end
+
+  def update
+    if @mentor_avatar.update(mentor_avatar_params)
+      redirect_to mentor_avatars_path, notice: 'メンターアバターを更新しました。'
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    mentor_name = @mentor_avatar.name
+    @mentor_avatar.destroy
+    redirect_to mentor_avatars_path, notice: "#{mentor_name}を削除しました。"
+  end
+
   def level_up
     user = User.find(params[:user_id])
     next_level_hours = user.level * 1
@@ -50,7 +67,7 @@ class MentorAvatarsController < ApplicationController
   private
 
   def set_mentor_avatar
-    @mentor_avatar = current_user.mentor_avatar
+    @mentor_avatar = MentorAvatar.where(user: current_user).find(params[:id])
   end
 
   def mentor_avatar_params

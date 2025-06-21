@@ -1,28 +1,58 @@
-<div class="mb-3 text-end">
-  <%= link_to 'メンターを追加', new_mentor_avatar_path, class: 'btn btn-success' %>
-  <%= link_to '現在のメンター', current_mentor_avatar_path, class: 'btn btn-outline-primary ms-2' %>
-</div>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>メンターアバター一覧</h1>
+        <div>
+          <%= link_to "管理画面に戻る", admin_path, class: "btn btn-outline-primary" %>
+        </div>
+      </div>
 
-<h3>登録済みメンター一覧</h3>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>画像</th>
-      <th>名前</th>
-      <th>説明</th>
-      <th>レベル</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @mentor_avatars.each do |avatar| %>
-      <tr>
-        <td><%= image_tag avatar.image.attached? ? url_for(avatar.image) : 'default.png', style: 'max-height: 80px;' %></td>
-        <td><%= avatar.name %></td>
-        <td><%= avatar.description %></td>
-        <td><%= avatar.level %>段階</td>
-        <td><%= link_to '詳細', mentor_avatar_path(avatar), class: 'btn btn-outline-primary btn-sm' %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table> 
+      <div class="mb-3 text-end">
+        <%= link_to 'メンターを追加', new_mentor_avatar_path, class: 'btn btn-success' %>
+        <%= link_to '現在のメンター', current_mentor_avatar_path, class: 'btn btn-outline-primary ms-2' %>
+      </div>
+
+      <h3>登録済みメンター一覧</h3>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>画像</th>
+            <th>名前</th>
+            <th>説明</th>
+            <th>レベル</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @mentor_avatars.each do |avatar| %>
+            <tr>
+              <td>
+                <% if avatar.image.attached? %>
+                  <%= image_tag avatar.image, style: 'max-height: 80px;' %>
+                <% else %>
+                  <div class="bg-light d-flex align-items-center justify-content-center" style="height: 80px; width: 80px;">
+                    <small class="text-muted">No Image</small>
+                  </div>
+                <% end %>
+              </td>
+              <td><%= avatar.name %></td>
+              <td><%= avatar.description %></td>
+              <td><%= avatar.level %>段階</td>
+              <td>
+                <div class="btn-group" role="group">
+                  <%= link_to '詳細', mentor_avatar_path(avatar), class: 'btn btn-outline-primary btn-sm' %>
+                  <%= link_to '編集', edit_mentor_avatar_path(avatar), class: 'btn btn-outline-secondary btn-sm' %>
+                  <%= button_to '削除', mentor_avatar_path(avatar), 
+                      method: :delete, 
+                      class: 'btn btn-outline-danger btn-sm',
+                      data: { confirm: "#{avatar.name}を削除しますか？" } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 

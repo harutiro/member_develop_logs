@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   get 'select_user', to: 'users#select', as: :select_user
   post 'set_user', to: 'users#set', as: :set_user
 
+  get 'admin', to: 'admin#index', as: :admin
+
   resources :users, except: [:show]
   resources :development_times do
     collection do
