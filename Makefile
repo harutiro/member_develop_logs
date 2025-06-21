@@ -25,12 +25,6 @@ help:
 # 依存関係のインストール
 install:
 	bundle install
-	yarn install
-
-# ローカルでテスト実行
-test:
-	bin/rails db:test:prepare
-	bin/rails test
 
 # Dockerでテスト実行
 test-docker:
@@ -71,18 +65,6 @@ deploy-fast:
 	SKIP_ASSETS=true docker compose -f docker-compose.prod.yml build
 	docker compose -f docker-compose.prod.yml up -d
 
-# データベース関連
-db-setup:
-	bin/rails db:create
-	bin/rails db:migrate
-	bin/rails db:seed
-
-db-reset:
-	bin/rails db:drop
-	bin/rails db:create
-	bin/rails db:migrate
-	bin/rails db:seed
-
 # Dockerでデータベース関連
 db-setup-docker:
 	docker compose run --rm web bin/rails db:create
@@ -113,34 +95,13 @@ shell-prod:
 security:
 	bundle exec brakeman
 
-# コードスタイルチェック
-lint:
-	bundle exec rubocop
-
 # Dockerでコードスタイルチェック
 lint-docker:
 	docker compose run --rm web bundle exec rubocop
 
-# コードスタイル自動修正
-lint-fix:
-	bundle exec rubocop -A
-
 # Dockerでコードスタイル自動修正
 lint-fix-docker:
 	docker compose run --rm web bundle exec rubocop -A
-
-# lintチェック（変更があればエラー）
-lint-check:
-	@echo "🔍 Lintチェックを実行中..."
-	@if bundle exec rubocop --format=quiet; then \
-		echo "✅ Lintチェック完了 - 問題なし"; \
-	else \
-		echo "❌ Lintエラーが検出されました"; \
-		echo "自動修正を実行します..."; \
-		bundle exec rubocop -A; \
-		echo "⚠️  ファイルが変更されました。再度lintチェックを実行してください"; \
-		exit 1; \
-	fi
 
 # Dockerでlintチェック（変更があればエラー）
 lint-check-docker:
@@ -156,12 +117,8 @@ lint-check-docker:
 	fi
 
 # push前のチェック（lint + test）
-pre-push: lint-check test
+pre-push: lint-check-docker test-docker
 	@echo "✅ 全てのチェックが完了しました。push可能です。"
-
-# システムテスト
-test-system:
-	bin/rails test:system
 
 # Dockerでシステムテスト
 test-system-docker:
