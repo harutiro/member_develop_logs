@@ -24,6 +24,16 @@ class MentorAvatar < ApplicationRecord
     '/assets/default.png'
   end
 
+  def update_by_achievement(total_development_time, achievement_count)
+    # レベルアップ設定に基づいてメンターアバターを更新
+    setting = LevelUpSetting.current
+    
+    # ユーザーのレベルアップ判定
+    if setting.level_up_condition_met?(user)
+      update!(level: level + 1)
+    end
+  end
+
   def self.transform_based_on_achievements(total_hours, achievement_count)
     case
     when total_hours >= 100 && achievement_count >= 50

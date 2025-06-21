@@ -13,17 +13,10 @@ class User < ApplicationRecord
     update(total_development_time: total)
   end
 
+  # 自動レベルアップは無効化（管理者による一斉レベルアップのみ）
   def check_level_up
-    setting = LevelUpSetting.current
-    return unless setting.level_up_condition_met?(self)
-    
-    new_level = level + 1
-    update(level: new_level)
-    
-    # メンターアバターもレベルアップ
-    if mentor_avatar
-      mentor_avatar.update!(level: mentor_avatar.level + 1)
-    end
+    # 自動レベルアップは行わない
+    # 管理者が一斉レベルアップボタンで実行する
   end
 
   def total_development_time
@@ -37,5 +30,11 @@ class User < ApplicationRecord
   def next_level_requirements
     setting = LevelUpSetting.current
     setting.next_level_requirements(self)
+  end
+
+  # レベルアップ可能かどうかを判定（自動実行はしない）
+  def can_level_up?
+    setting = LevelUpSetting.current
+    setting.level_up_condition_met?(self)
   end
 end

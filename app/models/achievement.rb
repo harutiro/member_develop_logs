@@ -16,11 +16,12 @@ class Achievement < ApplicationRecord
 
   validates :category, inclusion: { in: CATEGORIES }
 
-  after_create :update_user_level
+  # 自動レベルアップは無効化（管理者による一斉レベルアップのみ）
+  # after_create :update_user_level
 
-  private
+  # private
 
-  def update_user_level
-    user.check_level_up
-  end
+  # def update_user_level
+  #   user.check_level_up
+  # end
 end

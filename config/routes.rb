@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   post 'set_user', to: 'users#set', as: :set_user
 
   get 'admin', to: 'admin#index', as: :admin
+  post 'admin/bulk_level_up', to: 'admin#bulk_level_up', as: :bulk_level_up_admin
 
   resources :users, except: [:show]
   resources :development_times do

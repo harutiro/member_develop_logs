@@ -71,6 +71,34 @@
               <p class="h2 text-warning"><%= @users.any? ? (@users.sum(&:level).to_f / @users.count).round(1) : 0 %></p>
             </div>
           </div>
+          
+          <!-- 一斉レベルアップボタン -->
+          <div class="mt-4 text-center">
+            <h5>一斉レベルアップ</h5>
+            <p class="text-muted">条件を満たしているユーザーを一斉にレベルアップします</p>
+            
+            <% level_up_candidates = @users.select(&:can_level_up?) %>
+            <% if level_up_candidates.any? %>
+              <div class="alert alert-warning mb-3">
+                <strong>レベルアップ可能なユーザー（<%= level_up_candidates.count %>人）:</strong>
+                <ul class="mb-0 mt-2">
+                  <% level_up_candidates.each do |user| %>
+                    <li><%= user.name %>（現在レベル<%= user.level %>）</li>
+                  <% end %>
+                </ul>
+              </div>
+            <% else %>
+              <div class="alert alert-info mb-3">
+                現在レベルアップ条件を満たしているユーザーはいません。
+              </div>
+            <% end %>
+            
+            <%= button_to "一斉レベルアップ実行", bulk_level_up_admin_path, 
+                method: :post, 
+                class: "btn btn-warning btn-lg",
+                disabled: level_up_candidates.empty?,
+                data: { confirm: "条件を満たしているユーザーを一斉にレベルアップしますか？" } %>
+          </div>
         </div>
       </div>
     </div>
