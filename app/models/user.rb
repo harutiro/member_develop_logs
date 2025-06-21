@@ -21,4 +21,8 @@ class User < ApplicationRecord
   def total_development_time
     development_times.sum(:duration)
   end
+
+  def current_development_time
+    development_times.where(end_time: nil).first
+  end
 end

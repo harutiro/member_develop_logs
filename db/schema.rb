@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_07_113806) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_041335) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -69,8 +69,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_113806) do
   create_table "development_times", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "start_time", null: false
-    t.datetime "end_time", null: false
-    t.integer "duration", null: false
+    t.datetime "end_time"
+    t.integer "duration"
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

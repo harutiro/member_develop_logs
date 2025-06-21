@@ -2,9 +2,9 @@ class DevelopmentTime < ApplicationRecord
   belongs_to :user
 
   validates :start_time, presence: true
-  validates :end_time, presence: true
-  validates :duration, presence: true, numericality: { greater_than: 0 }
-  validate :end_time_after_start_time
+  validates :end_time, presence: true, on: :update
+  validates :duration, presence: true, numericality: { greater_than: 0 }, on: :update
+  validate :end_time_after_start_time, if: -> { end_time.present? }
 
   before_validation :calculate_duration
 

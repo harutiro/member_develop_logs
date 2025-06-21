@@ -7,5 +7,6 @@ class PagesController < ApplicationController
     @achievement_count = current_user&.achievements&.count || 0
     @recent_development_times = current_user&.development_times&.order(start_time: :desc)&.limit(5) || []
     @recent_achievements = current_user&.achievements&.order(created_at: :desc)&.limit(5) || []
+    @current_development_time = current_user&.current_development_time
   end
 end

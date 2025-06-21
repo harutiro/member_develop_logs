@@ -24,6 +24,35 @@
       </div>
     </div>
 
+    <!-- 開発時間記録セクション -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h3 class="card-title">開発時間記録</h3>
+        <% if @current_development_time %>
+          <div class="text-center">
+            <div class="alert alert-info">
+              <h4>開発中です</h4>
+              <p>開始時間: <%= @current_development_time.start_time.strftime("%Y/%m/%d %H:%M") %></p>
+              <p>経過時間: <%= ((Time.current - @current_development_time.start_time) / 60).round %>分</p>
+            </div>
+            <%= form_with url: end_development_development_times_path, method: :post, local: true do |form| %>
+              <%= form.submit "開発終了", class: "btn btn-danger btn-lg" %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center">
+            <%= form_with url: start_development_development_times_path, method: :post, local: true do |form| %>
+              <div class="mb-3">
+                <%= form.label :notes, "メモ（任意）", class: "form-label" %>
+                <%= form.text_field :notes, class: "form-control", placeholder: "今日の目標や作業内容を記録" %>
+              </div>
+              <%= form.submit "開発開始", class: "btn btn-success btn-lg" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-md-6">
         <div class="card mb-4">
@@ -37,7 +66,7 @@
                       <div>
                         <strong><%= time.start_time.strftime("%Y/%m/%d %H:%M") %></strong>
                         <br>
-                        <small class="text-muted"><%= time.duration / 60 %>分</small>
+                        <small class="text-muted"><%= time.duration.present? ? (time.duration / 60) : "-" %>分</small>
                       </div>
                       <% if time.notes.present? %>
                         <span class="badge bg-primary"><%= time.notes %></span>
@@ -49,7 +78,6 @@
             <% else %>
               <p class="text-center">まだ開発時間が記録されていません</p>
             <% end %>
-            <%= link_to "開発時間を記録", new_development_time_path, class: "btn btn-primary mt-3" %>
           </div>
         </div>
       </div>
