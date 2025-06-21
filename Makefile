@@ -1,100 +1,125 @@
-.PHONY: setup up down db-reset test console release-build deploy deploy-status rollback prod-db-reset prod-seed prod-init build-fast build-multistage logs logs-db logs-web rebuild build-parallel
+# Member Develop Logs - Makefile
+# 開発・テスト・デプロイ用のコマンド集
 
-# 初期セットアップ
-setup:
+.PHONY: help install test test-docker build run stop clean deploy
+
+# デフォルトターゲット
+help:
+	@echo "利用可能なコマンド:"
+	@echo "  install      - 依存関係をインストール"
+	@echo "  test         - ローカルでテストを実行"
+	@echo "  test-docker  - Dockerでテストを実行"
+	@echo "  build        - Dockerイメージをビルド"
+	@echo "  run          - 開発環境を起動"
+	@echo "  stop         - 開発環境を停止"
+	@echo "  clean        - クリーンアップ"
+	@echo "  deploy       - 本番環境にデプロイ"
+	@echo "  deploy-prod  - 本番環境にデプロイ（高速ビルド）"
+	@echo "  deploy-fast  - 本番環境にデプロイ（アセットスキップ）"
+
+# 依存関係のインストール
+install:
+	bundle install
+	yarn install
+
+# ローカルでテスト実行
+test:
+	bin/rails db:test:prepare
+	bin/rails test
+
+# Dockerでテスト実行
+test-docker:
+	docker compose run --rm -e RAILS_ENV=test web bin/rails db:test:prepare
+	docker compose run --rm -e RAILS_ENV=test web bin/rails test
+
+# Dockerイメージをビルド
+build:
 	docker compose build
-	docker compose run --rm web bundle install
-	docker compose run --rm web rails db:create
-	docker compose run --rm web rails db:migrate
-	docker compose run --rm web rails db:seed
 
-# 開発サーバーの起動
-up:
+# 開発環境を起動
+run:
 	docker compose up -d
-	open http://localhost:3000
 
-web-client:
-	open http://localhost:3000
-
-# 開発サーバーの停止
-down:
+# 開発環境を停止
+stop:
 	docker compose down
 
-# データベースのリセット
-db-reset:
-	docker compose run --rm web rails db:drop
-	docker compose run --rm web rails db:create
-	docker compose run --rm web rails db:migrate
-	docker compose run --rm web rails db:seed
+# クリーンアップ
+clean:
+	docker compose down -v
+	docker system prune -f
+	rm -rf tmp/cache
+	rm -rf log/*.log
 
-# テストの実行
-test:
-	docker compose run --rm web rails test
-
-# コンソールの起動
-console:
-	docker compose run --rm web rails console
-
-# リリース用のビルド（通常版）
-release-build:
-	docker compose -f docker-compose.prod.yml build
-
-# 高速ビルド（キャッシュ活用）
-build-fast:
-	docker compose -f docker-compose.prod.yml build web
-
-# アセットスキップビルド（超高速）
-build-no-assets:
-	docker compose -f docker-compose.prod.yml build --build-arg SKIP_ASSETS=true web
-
-# マルチステージビルド（超高速）
-build-multistage:
-	cp Dockerfile.multistage Dockerfile.prod
-	docker compose -f docker-compose.prod.yml build --no-cache web
-	rm Dockerfile.prod
-
-# 本番環境へのデプロイ
+# 本番環境にデプロイ
 deploy:
-	docker compose -f docker-compose.prod.yml up -d
-	docker compose -f docker-compose.prod.yml run --rm web bundle install
-	docker compose -f docker-compose.prod.yml run --rm web rails db:migrate
-
-# 本番DBリセット（全データ削除・再作成）
-prod-db-reset:
-	DISABLE_DATABASE_ENVIRONMENT_CHECK=1 docker compose -f docker-compose.prod.yml run --rm web rails db:migrate:reset
-
-# 本番シード投入
-prod-seed:
-	docker compose -f docker-compose.prod.yml run --rm web rails db:seed
-
-# 本番初期化（リセット＋シード）
-prod-init: prod-db-reset prod-seed
-
-# デプロイ状態の確認
-deploy-status:
-	docker compose -f docker-compose.prod.yml ps
-
-# ロールバック
-rollback:
-	docker compose -f docker-compose.prod.yml down
+	docker compose -f docker-compose.prod.yml build
 	docker compose -f docker-compose.prod.yml up -d
 
-# ログ表示
+# 本番環境にデプロイ（高速ビルド）
+deploy-prod:
+	docker compose -f docker-compose.prod.yml build --no-cache
+	docker compose -f docker-compose.prod.yml up -d
+
+# 本番環境にデプロイ（アセットスキップ）
+deploy-fast:
+	SKIP_ASSETS=true docker compose -f docker-compose.prod.yml build
+	docker compose -f docker-compose.prod.yml up -d
+
+# データベース関連
+db-setup:
+	bin/rails db:create
+	bin/rails db:migrate
+	bin/rails db:seed
+
+db-reset:
+	bin/rails db:drop
+	bin/rails db:create
+	bin/rails db:migrate
+	bin/rails db:seed
+
+# Dockerでデータベース関連
+db-setup-docker:
+	docker compose run --rm web bin/rails db:create
+	docker compose run --rm web bin/rails db:migrate
+	docker compose run --rm web bin/rails db:seed
+
+db-reset-docker:
+	docker compose run --rm web bin/rails db:drop
+	docker compose run --rm web bin/rails db:create
+	docker compose run --rm web bin/rails db:migrate
+	docker compose run --rm web bin/rails db:seed
+
+# ログ確認
 logs:
-	docker compose -f docker-compose.prod.yml logs -f
+	docker compose logs -f web
 
-# DBログ表示
-logs-db:
-	docker compose -f docker-compose.prod.yml logs -f db
-
-# Webログ表示
-logs-web:
+logs-prod:
 	docker compose -f docker-compose.prod.yml logs -f web
 
-# 完全リビルド（キャッシュなし）
-rebuild:
-	docker compose -f docker-compose.prod.yml build --no-cache web
+# シェルアクセス
+shell:
+	docker compose exec web bin/rails console
 
-# 並列ビルド（BuildKit使用）
-build-parallel:
-	DOCKER_BUILDKIT=1 docker compose -f docker-compose.prod.yml build --no-cache --parallel
+shell-prod:
+	docker compose -f docker-compose.prod.yml exec web bin/rails console
+
+# セキュリティチェック
+security:
+	bundle exec brakeman
+
+# コードスタイルチェック
+lint:
+	bundle exec rubocop
+
+# コードスタイル自動修正
+lint-fix:
+	bundle exec rubocop -a
+
+# システムテスト
+test-system:
+	bin/rails test:system
+
+# Dockerでシステムテスト
+test-system-docker:
+	docker compose run --rm -e RAILS_ENV=test web bin/rails test:system

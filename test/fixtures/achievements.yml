@@ -2,12 +2,12 @@
 
 one:
   user: one
-  content: MyText
-  category: MyString
-  points: 1
+  content: "テスト実績1"
+  category: "bug_fix"
+  points: 10
 
 two:
   user: two
-  content: MyText
-  category: MyString
-  points: 1
+  content: "テスト実績2"
+  category: "learning"
+  points: 20

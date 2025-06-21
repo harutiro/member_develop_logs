@@ -2,14 +2,14 @@
 
 one:
   user: one
-  start_time: 2025-06-07 07:56:39
-  end_time: 2025-06-07 07:56:39
-  duration: 1
-  notes: MyText
+  start_time: <%= 2.hours.ago %>
+  end_time: <%= 1.hour.ago %>
+  duration: 3600
+  notes: "テスト用の開発時間記録1"
 
 two:
   user: two
-  start_time: 2025-06-07 07:56:39
-  end_time: 2025-06-07 07:56:39
-  duration: 1
-  notes: MyText
+  start_time: <%= 3.hours.ago %>
+  end_time: <%= 1.hour.ago %>
+  duration: 7200
+  notes: "テスト用の開発時間記録2"

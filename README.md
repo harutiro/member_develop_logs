@@ -1,372 +1,324 @@
-# メンバー開発ログ管理システム
+# Member Develop Logs
 
-このシステムは、チームメンバーの開発時間を記録・管理し、レベルアップシステムとメンターアバター機能を備えたアプリケーションです。
+開発時間記録アプリケーション - チームメンバーの開発時間と実績を管理し、レベルアップシステムでモチベーション向上を図るWebアプリケーション
 
-## 主要機能
+## 🚀 機能
 
-### 開発時間管理
-- **開発開始/終了ボタン**: ホーム画面からワンクリックで開発時間を記録
-- **開発時間履歴**: 過去の開発時間を一覧表示
-- **リアルタイム記録**: 現在進行中の開発時間をリアルタイムで表示
+- **開発時間記録**: 開始・終了時間を記録し、自動で開発時間を計算
+- **実績管理**: カテゴリ別の実績を記録・管理
+- **レベルアップシステム**: 開発時間と実績に基づく自動レベルアップ
+- **メンターアバター**: レベルに応じたメンターアバターの獲得
+- **管理画面**: ユーザー管理、一括レベルアップ機能
+- **API**: RESTful APIでモバイルアプリ連携対応
+- **PWA対応**: プログレッシブWebアプリとして動作
 
-### できたこと記録
-- **成果記録**: 開発で達成したことを記録
-- **ポイントシステム**: できたことにポイントを付与
-- **履歴管理**: 過去の成果を一覧表示
+## 🛠 技術スタック
 
-### レベルアップシステム
-- **ユーザーレベル**: 開発時間と成果に基づくレベルアップ
-- **メンターアバター**: レベルに応じて新しいメンターを獲得
-- **レベルアップ通知**: レベルアップ時のアニメーション表示
+### バックエンド
+- **Ruby on Rails 8.0.2**: Webフレームワーク
+- **Ruby 3.3.1**: プログラミング言語
+- **PostgreSQL**: 本番データベース
+- **SQLite**: テスト環境データベース
+- **Redis**: キャッシュ・セッション管理
+- **Sidekiq**: バックグラウンドジョブ
 
-### ぬるぽクリッカーゲーム
-- **クリックゲーム**: ITにまつわるぬるぽクリッカー
-- **効果音・アニメーション**: クリック時の視覚・音響効果
-- **重力システム**: アイコンが重力に従って積み重なる
-- **自動クリック**: 自動クリックアニメーション
-- **全メンバー統計**: 全メンバーの合計クリック数・ぬるぽ数表示
+### フロントエンド
+- **Hotwire (Turbo + Stimulus)**: モダンなJavaScriptフレームワーク
+- **Propshaft**: アセットパイプライン
+- **Tailwind CSS**: スタイリング（推奨）
 
-### 管理機能
-- **ユーザー管理**: ユーザーの作成・編集・削除
-- **メンター管理**: メンターアバターの管理
-- **レベルアップ設定**: レベルアップ条件の設定
-- **一斉レベルアップ**: 管理者による全ユーザーの一斉レベルアップ
+### インフラ・デプロイ
+- **Docker**: コンテナ化
+- **Docker Compose**: 開発・本番環境
+- **Kamal**: デプロイメントツール
+- **Nginx**: リバースプロキシ（本番）
 
-## 管理画面 (/admin)
+### 開発・テスト
+- **RSpec**: テストフレームワーク
+- **Factory Bot**: テストデータ生成
+- **Capybara**: システムテスト
+- **RuboCop**: コードスタイルチェック
+- **Brakeman**: セキュリティチェック
 
-### アクセス方法
-```
-http://localhost:3000/admin
-```
+## 📋 必要条件
 
-### 管理画面の機能
+- Docker & Docker Compose
+- Ruby 3.3.1（ローカル開発時）
+- Node.js 18+（アセットビルド時）
 
-#### 1. ユーザー管理
-- **ユーザー一覧**: 全ユーザーの表示
-- **ユーザー作成**: 新しいユーザーの追加
-- **ユーザー編集**: 既存ユーザーの情報変更
-- **ユーザー削除**: ユーザーの削除
+## 🚀 クイックスタート
 
-#### 2. メンター管理
-- **メンター一覧**: 全メンターアバターの表示
-- **メンター作成**: 新しいメンターの追加
-- **メンター編集**: メンター情報の変更
-- **メンター削除**: メンターの削除
-- **画像管理**: Active Storageを使用した画像アップロード
-
-#### 3. レベルアップ設定
-- **レベル条件設定**: 各レベルに必要な経験値の設定
-- **一斉レベルアップ**: 全ユーザーのレベルを一斉に上げる機能
-
-#### 4. 統計情報
-- **開発時間統計**: 全メンバーの開発時間合計
-- **できたこと統計**: 全メンバーの成果統計
-- **ぬるぽゲーム統計**: 全メンバーのゲーム統計
-
-## 技術スタック
-
-- **バックエンド**: Ruby on Rails 8
-- **データベース**: PostgreSQL
-- **フロントエンド**: Bootstrap 5, Font Awesome
-- **JavaScript**: Stimulus, Chart.js
-- **ファイルストレージ**: Active Storage
-- **コンテナ**: Docker, Docker Compose
-- **バックグラウンドジョブ**: SolidQueue (開発環境), Inline (本番環境)
-
-## セットアップ
-
-### 前提条件
-
-- Docker
-- Docker Compose
-- Make
-
-### 初期セットアップ
-
-以下のコマンドで環境を構築します：
-
+### 1. リポジトリのクローン
 ```bash
+git clone <repository-url>
+cd member_develop_logs
+```
+
+### 2. 開発環境の起動
+```bash
+# 初回セットアップ
 make setup
+
+# 開発サーバー起動
+make run
+
+# ブラウザでアクセス
+open http://localhost:3000
 ```
 
-このコマンドは以下の処理を実行します：
-- 依存関係のインストール
-- データベースの作成
-- マイグレーションの実行
-- シードデータの投入
-
-### 開発サーバーの起動
-
+### 3. データベースのセットアップ
 ```bash
-make up
+# ローカル環境
+make db-setup
+
+# Docker環境
+make db-setup-docker
 ```
 
-アプリケーションは `http://localhost:3000` でアクセス可能です。
+## 🧪 テスト
 
-### 開発サーバーの停止
-
+### ローカルでテスト実行
 ```bash
-make down
+make test
 ```
 
-### その他のコマンド
-
-- データベースのリセット: `make db-reset`
-- テストの実行: `make test`
-- コンソールの起動: `make console`
-- ログの確認: `make logs`
-
-## データベース管理
-
-### マイグレーションの実行
+### Dockerでテスト実行
 ```bash
-# 新しいマイグレーションを作成
-docker compose exec web rails generate migration MigrationName
-
-# マイグレーションを実行
-docker compose exec web rails db:migrate
-
-# マイグレーションをロールバック
-docker compose exec web rails db:rollback
+make test-docker
 ```
 
-### シードデータの投入
+### システムテスト
 ```bash
-docker compose exec web rails db:seed
+make test-system
 ```
 
-## 本番環境デプロイ
+## 🏗 開発
 
-### 高速ビルドオプション
-
-#### 1. 通常ビルド（推奨）
+### 開発サーバー起動
 ```bash
-make build-fast
+make run
 ```
 
-#### 2. アセットスキップビルド（超高速）
+### 開発サーバー停止
 ```bash
-make build-no-assets
+make stop
 ```
 
-#### 3. マルチステージビルド（超高速）
+### Railsコンソール
 ```bash
-make build-multistage
+make shell
 ```
 
-#### 4. 並列ビルド（BuildKit使用）
+### ログ確認
 ```bash
-make build-parallel
+make logs
 ```
 
-#### 5. 完全リビルド（キャッシュなし）
+### コードスタイルチェック
 ```bash
-make rebuild
+make lint
+make lint-fix  # 自動修正
 ```
 
-### デプロイ手順
+### セキュリティチェック
+```bash
+make security
+```
 
-#### 1. 本番環境へのデプロイ
+## 🚀 デプロイ
+
+### 本番環境へのデプロイ
+
+#### 通常デプロイ
 ```bash
 make deploy
 ```
 
-#### 2. 本番DBの初期化
+#### 高速デプロイ（キャッシュ活用）
 ```bash
-make prod-init
+make deploy-prod
 ```
 
-#### 3. 本番DBのリセットのみ
+#### 超高速デプロイ（アセットスキップ）
 ```bash
-make prod-db-reset
+make deploy-fast
 ```
 
-#### 4. 本番シード投入のみ
-```bash
-make prod-seed
-```
+### 環境変数設定
 
-### デプロイ状態の確認
+本番環境用の環境変数ファイル `.env.production` を作成：
 
 ```bash
-# コンテナ状態確認
-make deploy-status
+# データベース
+DATABASE_URL=postgresql://username:password@host:5432/database_name
 
-# ログ確認
-make logs          # 全サービス
-make logs-web      # Webコンテナのみ
-make logs-db       # DBコンテナのみ
-```
-
-### ロールバック
-
-```bash
-make rollback
-```
-
-## 環境変数
-
-### 開発環境
-```bash
-# .env ファイルを作成
-DATABASE_URL=postgresql://postgres:password@db:5432/member_develop_logs_development
-RAILS_ENV=development
-```
-
-### 本番環境
-```bash
-# .env.production ファイルを作成
+# Rails設定
 RAILS_ENV=production
-DATABASE_URL=postgres://postgres:postgres@db:5432/member_develop_logs_production
 SECRET_KEY_BASE=your_secret_key_here
-MEMBER_DEVELOP_LOGS_DATABASE_PASSWORD=postgres
+
+# Redis
+REDIS_URL=redis://host:6379/0
+
+# その他
+RAILS_MAX_THREADS=5
+WEB_CONCURRENCY=2
 ```
 
-## シードデータ
+## 📁 プロジェクト構造
 
-初期データとして以下のメンバーが登録されます：
+```
+member_develop_logs/
+├── app/
+│   ├── controllers/          # コントローラー
+│   ├── models/              # モデル
+│   ├── views/               # ビュー
+│   ├── helpers/             # ヘルパー
+│   ├── javascript/          # JavaScript
+│   └── assets/              # アセット
+├── config/                  # 設定ファイル
+├── db/                      # データベース関連
+├── test/                    # テスト
+├── spec/                    # RSpecテスト
+├── docker-compose.yml       # 開発環境
+├── docker-compose.prod.yml  # 本番環境
+├── Dockerfile               # 本番用Dockerfile
+├── Dockerfile.multistage    # マルチステージビルド
+├── Makefile                 # 開発コマンド集
+└── README.md               # このファイル
+```
 
-- 山田太郎
-- 鈴木花子
-- 佐藤次郎
+## 🔧 設定
 
-また、最初のメンバー（山田太郎）に対して以下の作業ログが作成されます：
+### データベース設定
 
-- 今日の作業ログ（9:00-18:00）
-- 昨日の作業ログ（9:00-17:00）
+#### 開発環境
+- PostgreSQL（Docker）
+- ポート: 5432
+- データベース: `member_develop_logs_development`
 
-## トラブルシューティング
+#### テスト環境
+- SQLite
+- ファイル: `db/test.sqlite3`
+
+#### 本番環境
+- PostgreSQL
+- 環境変数 `DATABASE_URL` で設定
+
+### アセット設定
+
+#### 開発環境
+- リアルタイムコンパイル
+- ホットリロード対応
+
+#### 本番環境
+- プリコンパイル済みアセット
+- 圧縮・最適化
+
+## 🐛 トラブルシューティング
 
 ### よくある問題
 
-#### 1. アイコンが表示されない
-- ブラウザキャッシュをクリア
-- `public/icon.png` が存在することを確認
-- ファイルサイズが適切か確認
-
-#### 2. データベース接続エラー
+#### 1. データベース接続エラー
 ```bash
-# データベースコンテナの状態確認
-docker compose ps db
-
-# データベースの再起動
-docker compose restart db
+# データベースリセット
+make db-reset-docker
 ```
 
-#### 3. 画像アップロードエラー
-- Active Storageの設定を確認
-- ストレージディレクトリの権限を確認
-- SolidQueueの設定を確認（本番環境では無効化済み）
-
-#### 4. レベルアップアニメーションが表示されない
-- セッション情報を確認
-- ブラウザのJavaScript設定を確認
-
-#### 5. ビルドが遅い
-- `make build-no-assets` を使用してアセットプリコンパイルをスキップ
-- `make build-multistage` でマルチステージビルドを使用
-- キャッシュを活用（`make build-fast`）
-
-#### 6. 本番環境でのSolidQueueエラー
-- 本番環境ではSolidQueueが無効化されています
-- Active Jobは同期的に実行されます
-
-## 開発ガイド
-
-### 新しい機能の追加
-
-1. **モデルの作成**
+#### 2. Dockerビルドエラー
 ```bash
-docker compose exec web rails generate model ModelName
+# キャッシュクリア
+make clean
+make build
 ```
 
-2. **コントローラーの作成**
+#### 3. テストエラー
 ```bash
-docker compose exec web rails generate controller ControllerName
+# テスト環境のデータベース準備
+make test-docker
 ```
 
-3. **ルーティングの追加**
-`config/routes.rb` にルートを追加
-
-4. **ビューの作成**
-`app/views/` にビューファイルを作成
-
-### テストの実行
-
+#### 4. 権限エラー（本番環境）
 ```bash
-# 全テストの実行
-make test
+# 環境変数確認
+cat .env.production
 
-# 特定のテストファイルの実行
-docker compose exec web rails test test/models/user_test.rb
+# コンテナ再起動
+docker compose -f docker-compose.prod.yml restart web
 ```
 
-## パフォーマンス最適化
+### ログ確認
 
-### ビルド時間の短縮
-- **アセットスキップ**: `make build-no-assets`
-- **マルチステージビルド**: `make build-multistage`
-- **並列ビルド**: `make build-parallel`
-- **キャッシュ活用**: `make build-fast`
-
-### 本番環境の最適化
-- SolidQueueを無効化し、Active Jobを同期的に実行
-- ActiveStorageの分析機能を無効化
-- 複数データベース接続を無効化
-
-## ライセンス
-
-このプロジェクトは社内利用に限定されています。
-
-## アプリアイコンの変更方法
-
-### 1. アイコンファイルの準備
-新しいアイコンファイルを以下の仕様で準備してください：
-- **PNG形式**: 512x512ピクセル推奨
-- **ファイル名**: `icon.png`
-
-### 2. アイコンファイルの配置
-準備したアイコンファイルを以下の場所に配置してください：
-```
-public/icon.png  # メインのPNGアイコン
-```
-
-### 3. ブラウザキャッシュのクリア
-アイコンを変更した後、ブラウザのキャッシュをクリアしてください：
-- Chrome: Ctrl+Shift+R (Windows/Linux) または Cmd+Shift+R (Mac)
-- Safari: Cmd+Option+R
-- Firefox: Ctrl+F5 (Windows/Linux) または Cmd+Shift+R (Mac)
-
-### 4. アイコンが反映されない場合
-- ブラウザの開発者ツールでキャッシュを無効化
-- プライベートブラウジングモードで確認
-- 複数のブラウザで確認
-
-## アイコン設定ファイル
-
-アイコンの設定は以下のファイルで管理されています：
-- `app/views/layouts/application.html.erb` - ファビコンとApple Touch Icon
-- `app/views/pwa/manifest.json.erb` - PWAマニフェスト
-
-## 開発環境での確認
-
-Docker環境でアプリを起動している場合：
+#### 開発環境
 ```bash
-# アイコンファイルを変更後、コンテナを再起動
-docker compose restart web
+make logs
 ```
 
-## アイコンサイズの推奨仕様
+#### 本番環境
+```bash
+make logs-prod
+```
 
-- **ファビコン**: 16x16, 32x32, 48x48px
-- **Apple Touch Icon**: 180x180px
-- **PWAアイコン**: 512x512px
-- **Androidアイコン**: 192x192, 512x512px
+## 📚 API ドキュメント
 
-現在のアプリは512x512pxのPNG形式で設定されています。
+### 認証
+- セッションベース認証
+- JWTトークン対応（API用）
 
-## 注意事項
+### 主要エンドポイント
 
-- SVGアイコンは使用していません（PNG形式のみ）
-- アイコンファイルは `public/icon.png` のみ配置してください
-- ファイルサイズが大きすぎる場合は、画像を最適化することをお勧めします
+#### ユーザー管理
+- `GET /api/v1/users` - ユーザー一覧
+- `POST /api/v1/users` - ユーザー作成
+- `GET /api/v1/users/:id` - ユーザー詳細
+- `PATCH /api/v1/users/:id` - ユーザー更新
+
+#### 開発時間
+- `GET /api/v1/development_times` - 開発時間一覧
+- `POST /api/v1/development_times` - 開発時間記録
+- `GET /api/v1/development_times/:id` - 開発時間詳細
+
+#### 実績
+- `GET /api/v1/achievements` - 実績一覧
+- `POST /api/v1/achievements` - 実績作成
+- `GET /api/v1/achievements/:id` - 実績詳細
+
+#### メンターアバター
+- `GET /api/v1/mentor_avatars` - メンター一覧
+- `GET /api/v1/mentor_avatars/:id` - メンター詳細
+
+## 🤝 コントリビューション
+
+1. フォークを作成
+2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
+3. 変更をコミット (`git commit -m 'Add some amazing feature'`)
+4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
+5. プルリクエストを作成
+
+### 開発ガイドライン
+
+- テストを必ず書く
+- RuboCopのルールに従う
+- コミットメッセージは日本語で
+- 機能追加時はドキュメントも更新
+
+## 📄 ライセンス
+
+このプロジェクトはMITライセンスの下で公開されています。
+
+## 👥 チーム
+
+- 開発者: [Your Name]
+- プロジェクトマネージャー: [PM Name]
+- デザイナー: [Designer Name]
+
+## 📞 サポート
+
+問題や質問がある場合は、以下までお問い合わせください：
+
+- イシュー: GitHub Issues
+- メール: support@example.com
+- Slack: #member-develop-logs
+
+---
+
+**Member Develop Logs** - チームの成長を記録し、モチベーションを向上させる開発時間管理システム

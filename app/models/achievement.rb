@@ -3,6 +3,7 @@ class Achievement < ApplicationRecord
 
   validates :content, presence: true
   validates :category, presence: true
+  validates :points, numericality: { greater_than_or_equal_to: 0 }
 
   CATEGORIES = %w[
     bug_fix

@@ -1,17 +1,17 @@
 require "test_helper"
 
-class Admin::IndexTest < ActionView::TestCase
+class AdminIndexTest < ActionDispatch::IntegrationTest
+  def setup
+    @user = users(:one)
+  end
+
   test "renders admin index page" do
-    user = users(:one)
-    mentor_avatar = mentor_avatars(:one)
+    post set_user_path, params: { user_id: @user.id }
+    get admin_path
     
-    assign(:users, [user])
-    assign(:mentor_avatars, [mentor_avatar])
-    
-    render
-    
-    assert_includes rendered, "管理画面"
-    assert_includes rendered, "ユーザー管理"
-    assert_includes rendered, "メンター管理"
+    assert_response :success
+    assert_includes response.body, "管理画面"
+    assert_includes response.body, "ユーザー管理"
+    assert_includes response.body, "メンター管理"
   end
 end 
