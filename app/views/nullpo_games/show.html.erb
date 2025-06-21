@@ -1,0 +1,197 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>ぬるぽクリッカー</h1>
+        <div>
+          <%= link_to "ホームに戻る", root_path, class: "btn btn-outline-primary" %>
+          <%= button_to "リセット", reset_nullpo_game_path, 
+              method: :post, 
+              class: "btn btn-outline-danger",
+              data: { confirm: "本当にリセットしますか？" } %>
+        </div>
+      </div>
+
+      <!-- ゲーム統計 -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">ぬるぽ数</h5>
+              <h2 class="text-primary" id="nullpo-count"><%= @game.formatted_nullpo_count %></h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">総クリック数</h5>
+              <h2 class="text-success" id="total-clicks"><%= @game.total_clicks %></h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">クリック力</h5>
+              <h2 class="text-warning" id="click-power"><%= @game.click_power %></h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">自動クリック</h5>
+              <h2 class="text-info" id="auto-clicks"><%= @game.formatted_auto_clicks_per_second %></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- メインゲームエリア -->
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-body text-center">
+              <h3 class="card-title mb-4">ぬるぽをクリックしよう！</h3>
+              
+              <!-- ぬるぽボタン -->
+              <div class="mb-4">
+                <button id="nullpo-button" class="btn btn-lg btn-primary" style="font-size: 2rem; padding: 2rem 4rem;">
+                  🐾 ぬるぽ 🐾
+                </button>
+              </div>
+
+              <!-- ゲーム説明 -->
+              <div class="alert alert-info">
+                <h5>ゲームのルール</h5>
+                <ul class="text-start mb-0">
+                  <li><strong>クリック力</strong>: ユーザーのレベルに応じて増加</li>
+                  <li><strong>自動クリック</strong>: メンターアバターのレベルに応じて自動でぬるぽが増加</li>
+                  <li><strong>レベルアップ</strong>: 開発時間を記録してレベルアップすると、クリック力が上がります</li>
+                  <li><strong>メンター強化</strong>: メンターアバターをレベルアップすると、自動クリックが強化されます</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <!-- ユーザー情報 -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">プレイヤー情報</h5>
+              <p><strong>名前:</strong> <%= current_user.name %></p>
+              <p><strong>レベル:</strong> <span class="badge bg-primary"><%= current_user.level %></span></p>
+              <p><strong>総開発時間:</strong> <%= (current_user.total_development_time / 3600.0).round(2) %>時間</p>
+              <p><strong>達成数:</strong> <%= current_user.achievements.count %>個</p>
+            </div>
+          </div>
+
+          <!-- メンター情報 -->
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">メンター情報</h5>
+              <% if current_user.current_mentor_avatar %>
+                <div class="text-center mb-3">
+                  <% if current_user.current_mentor_avatar.image.attached? %>
+                    <%= image_tag current_user.current_mentor_avatar.image, 
+                        class: "img-fluid rounded", 
+                        style: "max-height: 100px;" %>
+                  <% else %>
+                    <div class="bg-light rounded d-flex align-items-center justify-content-center mx-auto" 
+                         style="height: 100px; width: 100px;">
+                      <small class="text-muted">No Image</small>
+                    </div>
+                  <% end %>
+                </div>
+                <p><strong>名前:</strong> <%= current_user.current_mentor_avatar.name %></p>
+                <p><strong>レベル:</strong> <span class="badge bg-success"><%= current_user.current_mentor_avatar.level %></span></p>
+                <p><strong>自動クリック力:</strong> <%= current_user.current_mentor_avatar.level * 2 %>/秒</p>
+              <% else %>
+                <p class="text-muted">メンターが設定されていません</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const nullpoButton = document.getElementById('nullpo-button');
+  const nullpoCount = document.getElementById('nullpo-count');
+  const totalClicks = document.getElementById('total-clicks');
+  const clickPower = document.getElementById('click-power');
+  const autoClicks = document.getElementById('auto-clicks');
+
+  console.log('ぬるぽゲーム初期化完了');
+  console.log('CSRFトークン:', document.querySelector('meta[name="csrf-token"]')?.content);
+  console.log('クリックURL:', '<%= click_nullpo_game_path %>');
+
+  // クリックイベント
+  nullpoButton.addEventListener('click', function() {
+    console.log('ぬるぽボタンがクリックされました');
+    
+    // ボタンを一時的に無効化
+    nullpoButton.disabled = true;
+    nullpoButton.textContent = '🐾 クリック中... 🐾';
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    if (!csrfToken) {
+      console.error('CSRFトークンが見つかりません');
+      alert('セキュリティトークンが見つかりません。ページを再読み込みしてください。');
+      nullpoButton.disabled = false;
+      nullpoButton.textContent = '🐾 ぬるぽ 🐾';
+      return;
+    }
+    
+    fetch('<%= click_nullpo_game_path %>', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-Token': csrfToken,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('レスポンス受信:', response.status, response.statusText);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('データ受信:', data);
+      if (data.success) {
+        nullpoCount.textContent = data.nullpo_count;
+        totalClicks.textContent = data.total_clicks;
+        clickPower.textContent = data.click_power;
+        autoClicks.textContent = data.auto_clicks_per_second;
+      } else {
+        throw new Error(data.error || '不明なエラーが発生しました');
+      }
+      
+      // ボタンを元に戻す
+      nullpoButton.disabled = false;
+      nullpoButton.textContent = '🐾 ぬるぽ 🐾';
+    })
+    .catch(error => {
+      console.error('エラーが発生しました:', error);
+      alert('クリックに失敗しました: ' + error.message);
+      
+      // ボタンを元に戻す
+      nullpoButton.disabled = false;
+      nullpoButton.textContent = '🐾 ぬるぽ 🐾';
+    });
+  });
+
+  // 自動更新（5秒ごと）
+  setInterval(function() {
+    console.log('自動更新実行');
+    location.reload();
+  }, 5000);
+});
+</script> 

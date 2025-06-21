@@ -30,6 +30,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :nullpo_game, only: [:show] do
+    member do
+      post :click
+      post :reset
+    end
+  end
+
   get "pages/home"
   namespace :api do
     namespace :v1 do

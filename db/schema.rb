@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_050000) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_060000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -107,6 +107,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_050000) do
     t.index ["user_id"], name: "index_mentor_avatars_on_user_id"
   end
 
+  create_table "nullpo_games", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "nullpo_count", default: 0, null: false
+    t.bigint "total_clicks", default: 0, null: false
+    t.bigint "auto_clicks_per_second", default: 0, null: false
+    t.bigint "click_power", default: 1, null: false
+    t.datetime "last_auto_click_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["auto_clicks_per_second"], name: "index_nullpo_games_on_auto_clicks_per_second"
+    t.index ["nullpo_count"], name: "index_nullpo_games_on_nullpo_count"
+    t.index ["user_id"], name: "index_nullpo_games_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -132,5 +146,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_050000) do
   add_foreign_key "avatar_transformations", "mentor_avatars"
   add_foreign_key "development_times", "users"
   add_foreign_key "mentor_avatars", "users"
+  add_foreign_key "nullpo_games", "users"
   add_foreign_key "work_logs", "members"
 end
