@@ -48,6 +48,28 @@ class User < ApplicationRecord
     MentorAvatar.where('level <= ?', level).order(:level)
   end
 
+  # 新しいメンターを獲得したかどうかを判定
+  def has_new_mentor?
+    new_mentor = MentorAvatar.find_by(level: level)
+    new_mentor.present?
+  end
+
+  # 新しく獲得したメンターを取得
+  def newly_acquired_mentor
+    MentorAvatar.find_by(level: level)
+  end
+
+  # 初めてメンターを獲得したかどうかを判定
+  def first_mentor_acquired?
+    # レベル1以上で、かつメンターが存在する場合
+    level >= 1 && MentorAvatar.where('level <= ?', level).exists?
+  end
+
+  # 初回メンターを取得
+  def first_mentor
+    MentorAvatar.where('level <= ?', level).order(:level).first
+  end
+
   # ぬるぽゲームを作成または取得
   def nullpo_game_or_create!
     nullpo_game || create_nullpo_game!

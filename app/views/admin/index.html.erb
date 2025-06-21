@@ -103,4 +103,177 @@
       </div>
     </div>
   </div>
-</div> 
+</div>
+
+<% if session[:bulk_new_mentors] %>
+  <!-- 一斉レベルアップ時の新しいメンター獲得モーダル -->
+  <div id="bulk-mentor-modal" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.8); z-index: 9999;">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="modal-body text-center p-5 text-white">
+          <!-- 一斉レベルアップ表示 -->
+          <div class="level-up-badge mb-4 animate__animated animate__bounceIn">
+            <div class="bg-warning text-dark px-4 py-2 rounded-pill d-inline-block">
+              <h3 class="mb-0">🎉 一斉レベルアップ完了！ 🎉</h3>
+            </div>
+          </div>
+          
+          <!-- 新しいメンター獲得者一覧 -->
+          <div class="new-mentors-container animate__animated animate__fadeInUp animate__delay-1s">
+            <h4 class="text-warning mb-4">新しいメンターを獲得したユーザー</h4>
+            <div class="row">
+              <% session[:bulk_new_mentors].each do |mentor_data| %>
+                <% user = User.find(mentor_data[:user_id]) %>
+                <% mentor = MentorAvatar.find_by(level: mentor_data[:mentor_level]) %>
+                <% if user && mentor %>
+                  <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card bg-dark text-white border-warning">
+                      <div class="card-body text-center">
+                        <!-- ユーザー情報 -->
+                        <h6 class="text-warning mb-2"><%= user.name %></h6>
+                        <small class="text-muted">レベル <%= user.level %></small>
+                        
+                        <hr class="my-3">
+                        
+                        <!-- メンター情報 -->
+                        <div class="mentor-info">
+                          <% if mentor.image.attached? %>
+                            <%= image_tag mentor.image, 
+                                class: "img-fluid rounded-circle mb-2", 
+                                style: "max-height: 80px; max-width: 80px;" %>
+                          <% else %>
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" 
+                                 style="height: 80px; width: 80px;">
+                              <span class="text-muted">👨‍💻</span>
+                            </div>
+                          <% end %>
+                          <h6 class="mb-1"><%= mentor.name %></h6>
+                          <small class="text-muted"><%= mentor.description %></small>
+                          <div class="mt-2">
+                            <span class="badge bg-success">レベル <%= mentor.level %></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- お祝いメッセージ -->
+          <div class="celebration-message mb-4 animate__animated animate__tada animate__delay-2s">
+            <h4 class="text-warning fw-bold">🎊 おめでとうございます！ 🎊</h4>
+            <p class="fs-5">新しいメンターを獲得したユーザーがいます！</p>
+          </div>
+          
+          <!-- エフェクト絵文字 -->
+          <div class="effects-container mb-4">
+            <span class="effect-emoji" style="font-size: 2rem; animation: bounce 1s infinite;">⭐</span>
+            <span class="effect-emoji" style="font-size: 2rem; animation: bounce 1s infinite 0.2s;">✨</span>
+            <span class="effect-emoji" style="font-size: 2rem; animation: bounce 1s infinite 0.4s;">🌟</span>
+            <span class="effect-emoji" style="font-size: 2rem; animation: bounce 1s infinite 0.6s;">💫</span>
+            <span class="effect-emoji" style="font-size: 2rem; animation: bounce 1s infinite 0.8s;">🔥</span>
+          </div>
+          
+          <!-- 閉じるボタン -->
+          <div class="modal-footer border-0 justify-content-center animate__animated animate__fadeInUp animate__delay-3s">
+            <button type="button" class="btn btn-warning btn-lg px-5" onclick="closeBulkMentorModal()">
+              <i class="fas fa-check me-2"></i>了解！
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- カスタムCSS -->
+  <style>
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+    
+    .effect-emoji {
+      display: inline-block;
+      margin: 0 5px;
+    }
+    
+    .modal-content {
+      border-radius: 20px;
+    }
+    
+    .level-up-badge {
+      transform: scale(0);
+      animation: scaleIn 0.5s ease-out forwards;
+    }
+    
+    @keyframes scaleIn {
+      to { transform: scale(1); }
+    }
+  </style>
+
+  <!-- JavaScript -->
+  <script>
+    // 効果音を再生
+    function playCelebrationSound() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // 複数の音階でお祝いの音を再生
+      const frequencies = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, C
+      let currentNote = 0;
+      
+      function playNote() {
+        if (currentNote < frequencies.length) {
+          oscillator.frequency.setValueAtTime(frequencies[currentNote], audioContext.currentTime);
+          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.3);
+          
+          currentNote++;
+          setTimeout(playNote, 300);
+        }
+      }
+      
+      playNote();
+    }
+    
+    // モーダルを閉じる
+    function closeBulkMentorModal() {
+      const modal = document.getElementById('bulk-mentor-modal');
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      
+      // セッションストレージに表示済みフラグを保存
+      sessionStorage.setItem('bulkMentorModalShown', 'true');
+      
+      // ページをリロードしてセッションをクリア
+      window.location.reload();
+    }
+    
+    // ページ読み込み時に効果音を再生
+    document.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('bulk-mentor-modal')) {
+        setTimeout(playCelebrationSound, 500);
+        
+        // 10秒後に自動で閉じる
+        setTimeout(closeBulkMentorModal, 10000);
+      }
+    });
+    
+    // ESCキーでモーダルを閉じる
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeBulkMentorModal();
+      }
+    });
+  </script>
+<% end %> 

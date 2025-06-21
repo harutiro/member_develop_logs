@@ -5,16 +5,28 @@ class AdminController < ApplicationController
   def index
     @users = User.all.includes(:development_times, :achievements)
     @mentor_avatars = MentorAvatar.order(:level)
+    
+    # 一斉レベルアップ時の新しいメンター獲得セッションをクリア
+    session.delete(:bulk_new_mentors) if session[:bulk_new_mentors]
   end
 
   def bulk_level_up
     setting = LevelUpSetting.current
     leveled_up_users = []
+    new_mentors_acquired = []
     
     User.find_each do |user|
       if setting.level_up_condition_met?(user)
         old_level = user.level
         user.update!(level: user.level + 1)
+        new_level = user.level
+        
+        # 新しいメンターを獲得したかチェック
+        new_mentor = MentorAvatar.find_by(level: new_level)
+        if new_mentor
+          new_mentors_acquired << { user: user, mentor: new_mentor }
+        end
+        
         leveled_up_users << { user: user, old_level: old_level, new_level: user.level }
       end
     end
@@ -24,6 +36,12 @@ class AdminController < ApplicationController
       leveled_up_users.each do |data|
         message += "・#{data[:user].name}: レベル#{data[:old_level]} → #{data[:new_level]}\n"
       end
+      
+      # 新しいメンターを獲得したユーザーがいる場合、セッションに保存
+      if new_mentors_acquired.any?
+        session[:bulk_new_mentors] = new_mentors_acquired.map { |nm| { user_id: nm[:user].id, mentor_level: nm[:mentor].level } }
+      end
+      
       redirect_to admin_path, notice: message
     else
       redirect_to admin_path, alert: "レベルアップ条件を満たしているユーザーがいません。"

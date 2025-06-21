@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :destroy, :level_up]
 
   def select
-    @users = User.all.includes(:mentor_avatar, :development_times, :achievements)
+    @users = User.all.includes(:development_times, :achievements)
   end
 
   def set
@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all.includes(:mentor_avatar, :development_times, :achievements)
+    @users = User.all.includes(:development_times, :achievements)
   end
 
   def new
@@ -53,10 +53,14 @@ class UsersController < ApplicationController
       old_level = @user.level
       @user.update!(level: @user.level + 1)
       new_level = @user.level
-      # 新しいメンターを獲得した場合はパラメータを付与
+      
+      # 新しいメンターを獲得したかチェック
       new_mentor = MentorAvatar.find_by(level: new_level)
       if new_mentor
-        redirect_to users_path(new_mentor_id: new_mentor.id), notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
+        # セッションに新しいメンター獲得フラグを保存
+        session[:new_mentor_acquired] = true
+        session[:new_mentor_level] = new_level
+        redirect_to root_path, notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
       else
         redirect_to users_path, notice: "#{@user.name}がレベルアップしました！（レベル#{old_level} → #{@user.level}）"
       end

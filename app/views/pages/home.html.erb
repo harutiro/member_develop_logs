@@ -231,3 +231,389 @@
     </div>
   </div>
 </div>
+
+<% if @first_mentor %>
+  <!-- 初回メンター獲得モーダル -->
+  <div id="first-mentor-modal" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.9); z-index: 9999;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 25%, #48dbfb 50%, #ff9ff3 75%, #54a0ff 100%);">
+        <!-- 盛大なパーティクルエフェクト -->
+        <div class="particles-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none;">
+          <div class="particle" style="position: absolute; width: 15px; height: 15px; background: gold; border-radius: 50%; animation: sparkle 1.5s infinite;"></div>
+          <div class="particle" style="position: absolute; width: 12px; height: 12px; background: #ff6b6b; border-radius: 50%; animation: sparkle 2s infinite 0.3s;"></div>
+          <div class="particle" style="position: absolute; width: 18px; height: 18px; background: #4ecdc4; border-radius: 50%; animation: sparkle 1.8s infinite 0.6s;"></div>
+          <div class="particle" style="position: absolute; width: 10px; height: 10px; background: #45b7d1; border-radius: 50%; animation: sparkle 2.2s infinite 0.9s;"></div>
+          <div class="particle" style="position: absolute; width: 20px; height: 20px; background: #96ceb4; border-radius: 50%; animation: sparkle 1.6s infinite 1.2s;"></div>
+          <div class="particle" style="position: absolute; width: 8px; height: 8px; background: #feca57; border-radius: 50%; animation: sparkle 2.5s infinite 1.5s;"></div>
+          <div class="particle" style="position: absolute; width: 16px; height: 16px; background: #ff9ff3; border-radius: 50%; animation: sparkle 1.9s infinite 1.8s;"></div>
+          <div class="particle" style="position: absolute; width: 14px; height: 14px; background: #54a0ff; border-radius: 50%; animation: sparkle 2.1s infinite 2.1s;"></div>
+        </div>
+        
+        <div class="modal-body text-center p-5 text-white">
+          <!-- 初回獲得の特別表示 -->
+          <div class="first-mentor-badge mb-4 animate__animated animate__bounceIn">
+            <div class="bg-warning text-dark px-5 py-3 rounded-pill d-inline-block shadow-lg">
+              <h2 class="mb-0">🎊 初回メンター獲得！ 🎊</h2>
+            </div>
+          </div>
+          
+          <!-- 特別なメッセージ -->
+          <div class="special-message mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+            <h3 class="text-white fw-bold mb-3">🌟 あなたの冒険が始まります！ 🌟</h3>
+            <p class="lead mb-4">最初のメンターを獲得しました！<br>これから一緒に成長していきましょう！</p>
+          </div>
+          
+          <!-- メンター画像（特別な演出） -->
+          <div class="mentor-image-container mb-4 animate__animated animate__zoomIn animate__delay-2s">
+            <% if @first_mentor.image.attached? %>
+              <%= image_tag @first_mentor.image, 
+                  class: "img-fluid rounded-circle shadow-lg border border-5 border-warning", 
+                  style: "max-height: 300px; max-width: 300px; animation: firstMentorPulse 3s infinite;" %>
+            <% else %>
+              <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto border border-5 border-warning shadow-lg" 
+                   style="height: 300px; width: 300px; animation: firstMentorPulse 3s infinite;">
+                <span class="text-muted" style="font-size: 4rem;">👨‍💻</span>
+              </div>
+            <% end %>
+          </div>
+          
+          <!-- メンター情報 -->
+          <div class="mentor-info animate__animated animate__fadeInUp animate__delay-3s">
+            <h2 class="fw-bold mb-3 text-warning" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);"><%= @first_mentor.name %></h2>
+            <p class="lead mb-4" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5);"><%= @first_mentor.description %></p>
+            
+            <!-- レベルバッジ -->
+            <div class="level-badge mb-4">
+              <span class="badge bg-success fs-4 px-5 py-3 shadow-lg">レベル <%= @first_mentor.level %></span>
+            </div>
+            
+            <!-- 特別なお祝いメッセージ -->
+            <div class="celebration-message mb-4 animate__animated animate__tada animate__delay-4s">
+              <h3 class="text-warning fw-bold mb-3">🎉 おめでとうございます！ 🎉</h3>
+              <p class="fs-5 mb-3">あなたの最初のメンターです！</p>
+              <p class="fs-6">これから開発時間を記録して、<br>もっと多くのメンターを集めましょう！</p>
+            </div>
+            
+            <!-- 盛大なエフェクト絵文字 -->
+            <div class="effects-container mb-4">
+              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite;">⭐</span>
+              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.2s;">✨</span>
+              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.4s;">🌟</span>
+              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.6s;">💫</span>
+              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 0.8s;">🔥</span>
+              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 1s;">🎊</span>
+              <span class="effect-emoji" style="font-size: 3.5rem; animation: firstBounce 1.2s infinite 1.2s;">🎉</span>
+            </div>
+            
+            <!-- 特別なメッセージ -->
+            <div class="special-encouragement mb-4 animate__animated animate__fadeInUp animate__delay-5s">
+              <div class="bg-white text-dark p-4 rounded-lg shadow-lg">
+                <h5 class="text-primary mb-2">🚀 次のステップ</h5>
+                <p class="mb-2">• 開発時間を記録してレベルアップ</p>
+                <p class="mb-2">• 達成を記録してメンターを強化</p>
+                <p class="mb-0">• 新しいメンターを集めてコレクションを完成</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 閉じるボタン -->
+          <div class="modal-footer border-0 justify-content-center animate__animated animate__fadeInUp animate__delay-6s">
+            <button type="button" class="btn btn-warning btn-lg px-5 py-3 shadow-lg" onclick="closeFirstMentorModal()">
+              <i class="fas fa-rocket me-2"></i>冒険を始める！
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- カスタムCSS -->
+  <style>
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1) rotate(180deg); }
+    }
+    
+    @keyframes firstMentorPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 193, 7, 0.5); }
+      50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 193, 7, 0.8); }
+    }
+    
+    @keyframes firstBounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
+      40% { transform: translateY(-25px) scale(1.1); }
+      60% { transform: translateY(-15px) scale(1.05); }
+    }
+    
+    .particle:nth-child(1) { top: 15%; left: 15%; }
+    .particle:nth-child(2) { top: 25%; right: 20%; }
+    .particle:nth-child(3) { bottom: 25%; left: 25%; }
+    .particle:nth-child(4) { bottom: 15%; right: 15%; }
+    .particle:nth-child(5) { top: 45%; left: 45%; }
+    .particle:nth-child(6) { top: 35%; right: 35%; }
+    .particle:nth-child(7) { bottom: 35%; left: 35%; }
+    .particle:nth-child(8) { bottom: 45%; right: 45%; }
+    
+    .effect-emoji {
+      display: inline-block;
+      margin: 0 8px;
+    }
+    
+    .modal-content {
+      border-radius: 25px;
+    }
+    
+    .first-mentor-badge {
+      transform: scale(0);
+      animation: scaleIn 0.8s ease-out forwards;
+    }
+    
+    @keyframes scaleIn {
+      to { transform: scale(1); }
+    }
+    
+    .special-encouragement {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+    }
+  </style>
+
+  <!-- JavaScript -->
+  <script>
+    // 特別な効果音を再生
+    function playFirstMentorSound() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // より盛大な音階でお祝いの音を再生
+      const frequencies = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98]; // C, E, G, C, E, G
+      let currentNote = 0;
+      
+      function playNote() {
+        if (currentNote < frequencies.length) {
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.frequency.setValueAtTime(frequencies[currentNote], audioContext.currentTime);
+          gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.4);
+          
+          currentNote++;
+          setTimeout(playNote, 400);
+        }
+      }
+      
+      playNote();
+    }
+    
+    // モーダルを閉じる
+    function closeFirstMentorModal() {
+      const modal = document.getElementById('first-mentor-modal');
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      
+      // セッションストレージに表示済みフラグを保存
+      sessionStorage.setItem('firstMentorModalShown', 'true');
+    }
+    
+    // ページ読み込み時に効果音を再生
+    document.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('first-mentor-modal')) {
+        setTimeout(playFirstMentorSound, 500);
+        
+        // 12秒後に自動で閉じる（初回は長めに）
+        setTimeout(closeFirstMentorModal, 12000);
+      }
+    });
+    
+    // ESCキーでモーダルを閉じる
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeFirstMentorModal();
+      }
+    });
+  </script>
+<% end %>
+
+<% if @new_mentor %>
+  <!-- 新しいメンター獲得モーダル -->
+  <div id="new-mentor-modal" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.8); z-index: 9999;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <!-- パーティクルエフェクト -->
+        <div class="particles-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none;">
+          <div class="particle" style="position: absolute; width: 10px; height: 10px; background: gold; border-radius: 50%; animation: sparkle 2s infinite;"></div>
+          <div class="particle" style="position: absolute; width: 8px; height: 8px; background: #ff6b6b; border-radius: 50%; animation: sparkle 2.5s infinite 0.5s;"></div>
+          <div class="particle" style="position: absolute; width: 12px; height: 12px; background: #4ecdc4; border-radius: 50%; animation: sparkle 1.8s infinite 1s;"></div>
+          <div class="particle" style="position: absolute; width: 6px; height: 6px; background: #45b7d1; border-radius: 50%; animation: sparkle 2.2s infinite 1.5s;"></div>
+          <div class="particle" style="position: absolute; width: 14px; height: 14px; background: #96ceb4; border-radius: 50%; animation: sparkle 1.6s infinite 0.8s;"></div>
+        </div>
+        
+        <div class="modal-body text-center p-5 text-white">
+          <!-- レベルアップ表示 -->
+          <div class="level-up-badge mb-4 animate__animated animate__bounceIn">
+            <div class="bg-warning text-dark px-4 py-2 rounded-pill d-inline-block">
+              <h4 class="mb-0">🎉 レベルアップ！ 🎉</h4>
+            </div>
+          </div>
+          
+          <!-- メンター画像 -->
+          <div class="mentor-image-container mb-4 animate__animated animate__zoomIn animate__delay-1s">
+            <% if @new_mentor.image.attached? %>
+              <%= image_tag @new_mentor.image, 
+                  class: "img-fluid rounded-circle shadow-lg border border-4 border-warning", 
+                  style: "max-height: 250px; max-width: 250px; animation: pulse 2s infinite;" %>
+            <% else %>
+              <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto border border-4 border-warning shadow-lg" 
+                   style="height: 250px; width: 250px; animation: pulse 2s infinite;">
+                <span class="text-muted fs-1">👨‍💻</span>
+              </div>
+            <% end %>
+          </div>
+          
+          <!-- メンター情報 -->
+          <div class="mentor-info animate__animated animate__fadeInUp animate__delay-2s">
+            <h2 class="fw-bold mb-3 text-warning"><%= @new_mentor.name %></h2>
+            <p class="lead mb-4"><%= @new_mentor.description %></p>
+            
+            <!-- レベルバッジ -->
+            <div class="level-badge mb-4">
+              <span class="badge bg-success fs-4 px-4 py-2">レベル <%= @new_mentor.level %></span>
+            </div>
+            
+            <!-- お祝いメッセージ -->
+            <div class="celebration-message mb-4 animate__animated animate__tada animate__delay-3s">
+              <h3 class="text-warning fw-bold">🎊 おめでとうございます！ 🎊</h3>
+              <p class="fs-5">新しいメンターを獲得しました！</p>
+            </div>
+            
+            <!-- エフェクト絵文字 -->
+            <div class="effects-container mb-4">
+              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite;">⭐</span>
+              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.2s;">✨</span>
+              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.4s;">🌟</span>
+              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.6s;">💫</span>
+              <span class="effect-emoji" style="font-size: 3rem; animation: bounce 1s infinite 0.8s;">🔥</span>
+            </div>
+          </div>
+          
+          <!-- 閉じるボタン -->
+          <div class="modal-footer border-0 justify-content-center animate__animated animate__fadeInUp animate__delay-4s">
+            <button type="button" class="btn btn-warning btn-lg px-5" onclick="closeNewMentorModal()">
+              <i class="fas fa-check me-2"></i>了解！
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- カスタムCSS -->
+  <style>
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1) rotate(180deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+    
+    .particle:nth-child(1) { top: 20%; left: 20%; }
+    .particle:nth-child(2) { top: 30%; right: 25%; }
+    .particle:nth-child(3) { bottom: 30%; left: 30%; }
+    .particle:nth-child(4) { bottom: 20%; right: 20%; }
+    .particle:nth-child(5) { top: 50%; left: 50%; }
+    
+    .effect-emoji {
+      display: inline-block;
+      margin: 0 10px;
+    }
+    
+    .modal-content {
+      border-radius: 20px;
+    }
+    
+    .level-up-badge {
+      transform: scale(0);
+      animation: scaleIn 0.5s ease-out forwards;
+    }
+    
+    @keyframes scaleIn {
+      to { transform: scale(1); }
+    }
+  </style>
+
+  <!-- JavaScript -->
+  <script>
+    // 効果音を再生
+    function playCelebrationSound() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // 複数の音階でお祝いの音を再生
+      const frequencies = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, C
+      let currentNote = 0;
+      
+      function playNote() {
+        if (currentNote < frequencies.length) {
+          oscillator.frequency.setValueAtTime(frequencies[currentNote], audioContext.currentTime);
+          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.3);
+          
+          currentNote++;
+          setTimeout(playNote, 300);
+        }
+      }
+      
+      playNote();
+    }
+    
+    // モーダルを閉じる
+    function closeNewMentorModal() {
+      const modal = document.getElementById('new-mentor-modal');
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      
+      // セッションストレージに表示済みフラグを保存
+      sessionStorage.setItem('mentorModalShown', 'true');
+    }
+    
+    // ページ読み込み時に効果音を再生
+    document.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('new-mentor-modal')) {
+        setTimeout(playCelebrationSound, 500);
+        
+        // 8秒後に自動で閉じる
+        setTimeout(closeNewMentorModal, 8000);
+      }
+    });
+    
+    // ESCキーでモーダルを閉じる
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeNewMentorModal();
+      }
+    });
+  </script>
+<% end %>
