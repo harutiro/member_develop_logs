@@ -11,8 +11,8 @@ help:
 	@echo "  test         - ローカルでテストを実行"
 	@echo "  test-docker  - Dockerでテストを実行"
 	@echo "  build        - Dockerイメージをビルド"
-	@echo "  run          - 開発環境を起動"
-	@echo "  stop         - 開発環境を停止"
+	@echo "  up          - 開発環境を起動"
+	@echo "  down         - 開発環境を停止"
 	@echo "  clean        - クリーンアップ"
 	@echo "  deploy       - 本番環境にデプロイ"
 	@echo "  deploy-prod  - 本番環境にデプロイ（高速ビルド）"
@@ -47,12 +47,12 @@ build:
 	docker compose build
 
 # 開発環境を起動
-run:
+up:
 	docker compose up -d
 	open http://localhost:3000
 
 # 開発環境を停止
-stop:
+down:
 	docker compose down
 
 # クリーンアップ
