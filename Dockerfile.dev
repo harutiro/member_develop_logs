@@ -27,5 +27,9 @@ RUN mkdir -p $BUNDLE_PATH && chown -R rails:rails $BUNDLE_PATH
 # Switch to rails user
 USER rails
 
+# Install gems (will be overridden by volume mount in development)
+COPY --chown=rails:rails Gemfile Gemfile.lock ./
+RUN bundle install
+
 # Start the server
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"] 
