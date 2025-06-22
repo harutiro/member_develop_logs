@@ -92,15 +92,15 @@ deploy-fast:
 
 # Dockerでデータベース関連
 db-setup-docker:
-	docker compose run --rm web bin/rails db:create
-	docker compose run --rm web bin/rails db:migrate
-	docker compose run --rm web bin/rails db:seed
+	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:create
+	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:migrate
+	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:seed
 
 db-reset-docker:
-	docker compose run --rm web bin/rails db:drop
-	docker compose run --rm web bin/rails db:create
-	docker compose run --rm web bin/rails db:migrate
-	docker compose run --rm web bin/rails db:seed
+	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:drop
+	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:create
+	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:migrate
+	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:seed
 
 # テスト用データベースリセット
 db-test-reset-docker:
