@@ -46,10 +46,10 @@ test-docker:
 	@echo "📦 開発環境を停止中..."
 	-docker compose down
 	@echo "🔧 テスト環境を準備中..."
-	docker compose run --rm -e RAILS_ENV=test web bin/rails db:environment:set RAILS_ENV=test
-	docker compose run --rm -e RAILS_ENV=test web bin/rails db:test:prepare
+	docker compose run --rm -T -e RAILS_ENV=test web bin/rails db:environment:set RAILS_ENV=test
+	docker compose run --rm -T -e RAILS_ENV=test web bin/rails db:test:prepare
 	@echo "🚀 テストを実行中..."
-	docker compose run --rm -e RAILS_ENV=test web bin/rails test
+	docker compose run --rm -T -e RAILS_ENV=test web bin/rails test
 	@echo "✅ テスト完了"
 	@echo "🔄 開発環境を再起動中..."
 	docker compose up -d
