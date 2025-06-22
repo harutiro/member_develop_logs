@@ -20,6 +20,8 @@ RUN apt-get update -qq && \
     build-essential \
     libpq-dev \
     postgresql-client \
+    sqlite3 \
+    libsqlite3-dev \
     curl \
     libvips && \
     apt-get clean && \

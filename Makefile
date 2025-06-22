@@ -10,6 +10,7 @@ help:
 	@echo "  install      - 依存関係をインストール"
 	@echo "  test         - ローカルでテストを実行"
 	@echo "  test-docker  - Dockerでテストを実行（DB自動作成）"
+	@echo "  test-prod    - 本番環境でテストを実行"
 	@echo "  build        - Dockerイメージをビルド"
 	@echo "  up          - 開発環境を起動"
 	@echo "  down         - 開発環境を停止"
@@ -23,6 +24,7 @@ help:
 	@echo "  pre-push     - push前のチェック（lint + test）"
 	@echo "  setup-hooks  - Git hooksをセットアップ"
 	@echo "  db-test-reset-docker - テスト用DBをリセット"
+	@echo "  db-restore-dev - 開発環境のデータベースを復旧"
 
 
 setup:
@@ -40,10 +42,18 @@ install:
 
 # Dockerでテスト実行
 test-docker:
+	@echo "🧪 テスト実行を開始します..."
+	@echo "📦 開発環境を停止中..."
+	-docker compose down
+	@echo "🔧 テスト環境を準備中..."
 	docker compose run --rm -e RAILS_ENV=test web bin/rails db:environment:set RAILS_ENV=test
-	-docker compose run --rm -e RAILS_ENV=test web bin/rails db:create RAILS_ENV=test
 	docker compose run --rm -e RAILS_ENV=test web bin/rails db:test:prepare
+	@echo "🚀 テストを実行中..."
 	docker compose run --rm -e RAILS_ENV=test web bin/rails test
+	@echo "✅ テスト完了"
+	@echo "🔄 開発環境を再起動中..."
+	docker compose up -d
+	@echo "🎉 完了！開発環境が利用可能です: http://localhost:3000"
 
 # Dockerイメージをビルド
 build:
@@ -98,8 +108,6 @@ db-reset-docker:
 # テスト用データベースリセット
 db-test-reset-docker:
 	docker compose run --rm -e RAILS_ENV=test web bin/rails db:environment:set RAILS_ENV=test
-	docker compose run --rm -e RAILS_ENV=test web bin/rails db:drop RAILS_ENV=test
-	docker compose run --rm -e RAILS_ENV=test web bin/rails db:create RAILS_ENV=test
 	docker compose run --rm -e RAILS_ENV=test web bin/rails db:test:prepare
 
 # ログ確認
@@ -153,3 +161,20 @@ test-system-docker:
 setup-hooks:
 	@echo "🔗 Git hooks をセットアップしています..."
 	@./scripts/setup-hooks.sh
+
+# 開発環境データベース復旧
+db-restore-dev:
+	@echo "🔄 開発環境のデータベースを復旧中..."
+	docker compose exec web bin/rails db:seed
+	@echo "✅ 開発環境のデータベース復旧完了"
+
+# 本番環境でテスト実行
+test-prod:
+	@echo "🧪 本番環境でテスト実行を開始します..."
+	@echo "🔧 テスト環境を準備中..."
+	docker compose -f docker-compose.prod.yml run --rm web-test bin/rails db:environment:set RAILS_ENV=test
+	docker compose -f docker-compose.prod.yml run --rm web-test bin/rails db:test:prepare
+	@echo "🚀 テストを実行中..."
+	docker compose -f docker-compose.prod.yml run --rm web-test bin/rails test
+	@echo "✅ テスト完了"
+	@echo "🎉 完了！"
