@@ -25,13 +25,17 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/* /var/tmp/*
 
-# Install application gems
-COPY Gemfile Gemfile.lock ./
+# Create rails user first
+RUN groupadd --system --gid 1000 rails && \
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
+
+# Install application gems as rails user
+COPY --chown=rails:rails Gemfile Gemfile.lock ./
 RUN bundle config set --local without 'development test' && \
     bundle install --jobs 4 --retry 3
 
 # Copy application code
-COPY . .
+COPY --chown=rails:rails . .
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
@@ -42,10 +46,7 @@ RUN if [ "$SKIP_ASSETS" != "true" ]; then \
         SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=production bundle exec rails assets:precompile || true; \
     fi
 
-# Run and own only the runtime files as a non-root user for security
-RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails /app
+# Switch to rails user
 USER rails
 
 # Start the server
