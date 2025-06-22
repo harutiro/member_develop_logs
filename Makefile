@@ -1,18 +1,17 @@
 # Member Develop Logs - Makefile
 # 開発・テスト・デプロイ用のコマンド集
 
-.PHONY: help install test test-docker build run stop clean deploy lint lint-fix lint-check pre-push setup-hooks
+.PHONY: help install test test-prod build up down clean deploy deploy-prod deploy-fast lint lint-fix lint-check pre-push setup-hooks db-setup db-reset db-test-reset logs logs-prod shell shell-prod security test-system setup-hooks db-restore-dev
 
 # デフォルトターゲット
 help:
 	@echo "利用可能なコマンド:"
 	@echo "  setup        - 開発環境をセットアップ"
 	@echo "  install      - 依存関係をインストール"
-	@echo "  test         - ローカルでテストを実行"
-	@echo "  test-docker  - Dockerでテストを実行（DB自動作成）"
+	@echo "  test         - Dockerでテストを実行（DB自動作成）"
 	@echo "  test-prod    - 本番環境でテストを実行"
 	@echo "  build        - Dockerイメージをビルド"
-	@echo "  up          - 開発環境を起動"
+	@echo "  up           - 開発環境を起動"
 	@echo "  down         - 開発環境を停止"
 	@echo "  clean        - クリーンアップ"
 	@echo "  deploy       - 本番環境にデプロイ"
@@ -23,7 +22,7 @@ help:
 	@echo "  lint-check   - lintチェック（変更があればエラー）"
 	@echo "  pre-push     - push前のチェック（lint + test）"
 	@echo "  setup-hooks  - Git hooksをセットアップ"
-	@echo "  db-test-reset-docker - テスト用DBをリセット"
+	@echo "  db-test-reset - テスト用DBをリセット"
 	@echo "  db-restore-dev - 開発環境のデータベースを復旧"
 
 
@@ -41,7 +40,7 @@ install:
 	docker compose run --rm web bundle install
 
 # Dockerでテスト実行
-test-docker:
+test:
 	@echo "🧪 テスト実行を開始します..."
 	@echo "📦 開発環境を停止中..."
 	-docker compose down
@@ -75,7 +74,7 @@ clean:
 	rm -rf tmp/cache
 	rm -rf log/*.log
 
-# 本番環境にデプロイ
+#本番環境にデプロイ
 deploy:
 	docker compose -f docker-compose.prod.yml build
 	docker compose -f docker-compose.prod.yml up -d
@@ -90,20 +89,20 @@ deploy-fast:
 	SKIP_ASSETS=true docker compose -f docker-compose.prod.yml build
 	docker compose -f docker-compose.prod.yml up -d
 
-# Dockerでデータベース関連
-db-setup-docker:
+# データベース関連
+db-setup:
 	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:create
 	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:migrate
 	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:seed
 
-db-reset-docker:
+db-reset:
 	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:drop
 	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:create
 	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:migrate
 	docker compose -f docker-compose.prod.yml run --rm web bin/rails db:seed
 
 # テスト用データベースリセット
-db-test-reset-docker:
+db-test-reset:
 	docker compose run --rm -e RAILS_ENV=test web bin/rails db:environment:set RAILS_ENV=test
 	docker compose run --rm -e RAILS_ENV=test web bin/rails db:test:prepare
 
@@ -125,16 +124,16 @@ shell-prod:
 security:
 	bundle exec brakeman
 
-# Dockerでコードスタイルチェック
-lint-docker:
+# コードスタイルチェック
+lint:
 	docker compose run --rm web bundle exec rubocop
 
-# Dockerでコードスタイル自動修正
-lint-fix-docker:
+# コードスタイル自動修正
+lint-fix:
 	docker compose run --rm web bundle exec rubocop -A
 
-# Dockerでlintチェック（変更があればエラー）
-lint-check-docker:
+# lintチェック（変更があればエラー）
+lint-check:
 	@echo "🔍 Docker環境でLintチェックを実行中..."
 	@if docker compose run --rm -T web bundle exec rubocop --format=quiet; then \
 		echo "✅ Lintチェック完了 - 問題なし"; \
@@ -147,11 +146,11 @@ lint-check-docker:
 	fi
 
 # push前のチェック（lint + test）
-pre-push: lint-check-docker test-docker
+pre-push: lint-check test
 	@echo "✅ 全てのチェックが完了しました。push可能です。"
 
-# Dockerでシステムテスト
-test-system-docker:
+# システムテスト
+test-system:
 	docker compose run --rm -e RAILS_ENV=test web bin/rails test:system
 
 # Git hooksセットアップ

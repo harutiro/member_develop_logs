@@ -60,7 +60,7 @@ cd member_develop_logs
 make setup
 
 # 開発サーバー起動
-make run
+make up
 
 # ブラウザでアクセス
 open http://localhost:3000
@@ -72,19 +72,14 @@ open http://localhost:3000
 make db-setup
 
 # Docker環境
-make db-setup-docker
+make db-setup
 ```
 
 ## 🧪 テスト
 
-### ローカルでテスト実行
+### テスト実行
 ```bash
 make test
-```
-
-### Dockerでテスト実行
-```bash
-make test-docker
 ```
 
 ### システムテスト
@@ -92,21 +87,16 @@ make test-docker
 make test-system
 ```
 
-### Dockerでシステムテスト
-```bash
-make test-system-docker
-```
-
 ## 🏗 開発
 
 ### 開発サーバー起動
 ```bash
-make run
+make up
 ```
 
 ### 開発サーバー停止
 ```bash
-make stop
+make down
 ```
 
 ### Railsコンソール
@@ -226,7 +216,7 @@ member_develop_logs/
 #### 1. データベース接続エラー
 ```bash
 # データベースリセット
-make db-reset-docker
+make db-reset
 ```
 
 #### 2. Dockerビルドエラー
@@ -239,7 +229,7 @@ make build
 #### 3. テストエラー
 ```bash
 # テスト環境のデータベース準備
-make test-docker
+make test
 ```
 
 #### 4. 権限エラー（本番環境）
@@ -369,10 +359,10 @@ make pre-push  # lint + testを実行
 
 ### Docker環境での開発
 ```bash
-# Dockerでlintチェック
-make lint-docker
-make lint-fix-docker
+# lintチェック
+make lint
+make lint-fix
 
-# Dockerでテスト
-make test-docker
+# テスト
+make test
 ```
