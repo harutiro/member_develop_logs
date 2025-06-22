@@ -26,6 +26,8 @@ services:
     environment:
       - RAILS_ENV=test
       - DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+    depends_on:
+      - db
 
   db:
     image: postgres:15
