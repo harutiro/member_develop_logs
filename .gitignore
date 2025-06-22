@@ -67,3 +67,4 @@ Thumbs.db
 
 # Keep hooks directory for Git synchronization
 !hooks/
+db/test.sqlite3

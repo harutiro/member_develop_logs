@@ -6,6 +6,7 @@
 # デフォルトターゲット
 help:
 	@echo "利用可能なコマンド:"
+	@echo "  setup        - 開発環境をセットアップ"
 	@echo "  install      - 依存関係をインストール"
 	@echo "  test         - ローカルでテストを実行"
 	@echo "  test-docker  - Dockerでテストを実行"
@@ -22,9 +23,19 @@ help:
 	@echo "  pre-push     - push前のチェック（lint + test）"
 	@echo "  setup-hooks  - Git hooksをセットアップ"
 
+
+setup:
+	docker compose build
+	docker compose run --rm web bundle install
+	docker compose run --rm web bin/rails db:create
+	docker compose run --rm web bin/rails db:migrate
+	docker compose run --rm web bin/rails db:seed
+	docker compose run --rm web bin/rails db:test:prepare
+	docker compose run --rm web bin/rails test
+
 # 依存関係のインストール
 install:
-	bundle install
+	docker compose run --rm web bundle install
 
 # Dockerでテスト実行
 test-docker:
@@ -38,6 +49,7 @@ build:
 # 開発環境を起動
 run:
 	docker compose up -d
+	open http://localhost:3000
 
 # 開発環境を停止
 stop:
