@@ -9,7 +9,7 @@ help:
 	@echo "  setup        - 開発環境をセットアップ"
 	@echo "  install      - 依存関係をインストール"
 	@echo "  test         - ローカルでテストを実行"
-	@echo "  test-docker  - Dockerでテストを実行"
+	@echo "  test-docker  - Dockerでテストを実行（DB自動作成）"
 	@echo "  build        - Dockerイメージをビルド"
 	@echo "  up          - 開発環境を起動"
 	@echo "  down         - 開発環境を停止"
@@ -22,6 +22,7 @@ help:
 	@echo "  lint-check   - lintチェック（変更があればエラー）"
 	@echo "  pre-push     - push前のチェック（lint + test）"
 	@echo "  setup-hooks  - Git hooksをセットアップ"
+	@echo "  db-test-reset-docker - テスト用DBをリセット"
 
 
 setup:
@@ -39,6 +40,8 @@ install:
 
 # Dockerでテスト実行
 test-docker:
+	docker compose run --rm -e RAILS_ENV=test web bin/rails db:environment:set RAILS_ENV=test
+	-docker compose run --rm -e RAILS_ENV=test web bin/rails db:create RAILS_ENV=test
 	docker compose run --rm -e RAILS_ENV=test web bin/rails db:test:prepare
 	docker compose run --rm -e RAILS_ENV=test web bin/rails test
 
@@ -88,6 +91,13 @@ db-reset-docker:
 	docker compose run --rm web bin/rails db:create
 	docker compose run --rm web bin/rails db:migrate
 	docker compose run --rm web bin/rails db:seed
+
+# テスト用データベースリセット
+db-test-reset-docker:
+	docker compose run --rm -e RAILS_ENV=test web bin/rails db:environment:set RAILS_ENV=test
+	docker compose run --rm -e RAILS_ENV=test web bin/rails db:drop RAILS_ENV=test
+	docker compose run --rm -e RAILS_ENV=test web bin/rails db:create RAILS_ENV=test
+	docker compose run --rm -e RAILS_ENV=test web bin/rails db:test:prepare
 
 # ログ確認
 logs:
