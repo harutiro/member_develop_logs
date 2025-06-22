@@ -79,19 +79,16 @@ clean:
 deploy:
 	docker compose -f docker-compose.prod.yml build
 	docker compose -f docker-compose.prod.yml up -d
-	make install
 
 # 本番環境にデプロイ（高速ビルド）
 deploy-prod:
 	docker compose -f docker-compose.prod.yml build --no-cache
 	docker compose -f docker-compose.prod.yml up -d
-	make install
 
 # 本番環境にデプロイ（アセットスキップ）
 deploy-fast:
 	SKIP_ASSETS=true docker compose -f docker-compose.prod.yml build
 	docker compose -f docker-compose.prod.yml up -d
-	make install
 
 # Dockerでデータベース関連
 db-setup-docker:

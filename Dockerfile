@@ -31,6 +31,10 @@ RUN apt-get update -qq && \
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
 
+# Set bundle path and permissions
+ENV BUNDLE_PATH=/usr/local/bundle
+RUN mkdir -p $BUNDLE_PATH && chown -R rails:rails $BUNDLE_PATH
+
 # Install application gems as rails user
 COPY --chown=rails:rails Gemfile Gemfile.lock ./
 RUN bundle config set --local without 'development test' && \
