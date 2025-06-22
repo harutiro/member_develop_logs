@@ -14,7 +14,7 @@ fi
 
 # Lintチェック
 echo "🔍 Lintチェックを実行中..."
-if ! make lint-check-docker; then
+if ! make lint-check; then
     echo "❌ Lintチェックが失敗しました。"
     echo "以下のコマンドで修正してください:"
     echo "  make lint-fix"
@@ -23,7 +23,7 @@ fi
 
 # テスト実行
 echo "🧪 テストを実行中..."
-if ! make test-docker; then
+if ! make test; then
     echo "❌ テストが失敗しました。"
     exit 1
 fi
