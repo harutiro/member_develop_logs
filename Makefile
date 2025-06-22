@@ -136,12 +136,12 @@ lint-fix-docker:
 # Dockerでlintチェック（変更があればエラー）
 lint-check-docker:
 	@echo "🔍 Docker環境でLintチェックを実行中..."
-	@if docker compose run --rm web bundle exec rubocop --format=quiet; then \
+	@if docker compose run --rm -T web bundle exec rubocop --format=quiet; then \
 		echo "✅ Lintチェック完了 - 問題なし"; \
 	else \
 		echo "❌ Lintエラーが検出されました"; \
 		echo "自動修正を実行します..."; \
-		docker compose run --rm web bundle exec rubocop -A; \
+		docker compose run --rm -T web bundle exec rubocop -A; \
 		echo "⚠️  ファイルが変更されました。再度lintチェックを実行してください"; \
 		exit 1; \
 	fi
