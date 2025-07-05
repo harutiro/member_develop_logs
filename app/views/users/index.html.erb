@@ -19,18 +19,18 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>名前</th>
-                    <th>メールアドレス</th>
-                    <th>レベル</th>
-                    <th>総開発時間</th>
+                    <th><%= sortable_link('id', 'ID', @current_sort, @current_order) %></th>
+                    <th><%= sortable_link('name', '名前', @current_sort, @current_order) %></th>
+                    <th><%= sortable_link('email', 'メールアドレス', @current_sort, @current_order) %></th>
+                    <th><%= sortable_link('level', 'レベル', @current_sort, @current_order) %></th>
+                    <th><%= sortable_link('total_development_time', '総開発時間', @current_sort, @current_order) %></th>
                     <th>メンター</th>
-                    <th>ぬるぽ数</th>
-                    <th>総クリック数</th>
-                    <th>クリック力</th>
-                    <th>自動クリック</th>
                     <th>次のレベルアップ</th>
-                    <th>登録日</th>
+                    <th><%= sortable_link('nullpo_count', 'ぬるぽ数', @current_sort, @current_order) %></th>
+                    <th><%= sortable_link('total_clicks', '総クリック数', @current_sort, @current_order) %></th>
+                    <th><%= sortable_link('click_power', 'クリック力', @current_sort, @current_order) %></th>
+                    <th><%= sortable_link('auto_clicks_per_second', '自動クリック', @current_sort, @current_order) %></th>
+                    <th><%= sortable_link('created_at', '登録日', @current_sort, @current_order) %></th>
                     <th>操作</th>
                   </tr>
                 </thead>
@@ -118,6 +118,37 @@
     </div>
   </div>
 </div>
+
+<style>
+  .sortable-link {
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .sortable-link:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  
+  .sortable-link.active {
+    color: #0d6efd !important;
+    font-weight: bold;
+  }
+  
+  .sortable-link.active:hover {
+    background-color: rgba(0, 123, 255, 0.2);
+  }
+  
+  th {
+    position: relative;
+    user-select: none;
+  }
+  
+  th:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+  }
+</style>
 
 <% if params[:new_mentor_id] %>
   <% new_mentor = MentorAvatar.find_by(id: params[:new_mentor_id]) %>
