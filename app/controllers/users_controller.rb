@@ -14,14 +14,14 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all.includes(:development_times, :achievements, :nullpo_game)
-    
+
     # 並び替えパラメータを取得
-    sort_by = params[:sort_by] || 'id'
-    order = params[:order] || 'asc'
-    
+    sort_by = params[:sort_by] || "id"
+    order = params[:order] || "asc"
+
     # 並び替え処理
     @users = sort_users(@users, sort_by, order)
-    
+
     # 現在の並び替え状態を保持
     @current_sort = sort_by
     @current_order = order
@@ -100,37 +100,37 @@ class UsersController < ApplicationController
 
   def sort_users(users, sort_by, order)
     # orderパラメータを検証
-    safe_order = order.to_s.downcase == 'desc' ? 'DESC' : 'ASC'
-    
+    safe_order = order.to_s.downcase == "desc" ? "DESC" : "ASC"
+
     case sort_by
-    when 'id'
+    when "id"
       users.order(id: safe_order.downcase)
-    when 'name'
+    when "name"
       users.order(name: safe_order.downcase)
-    when 'email'
+    when "email"
       users.order(email: safe_order.downcase)
-    when 'level'
+    when "level"
       users.order(level: safe_order.downcase)
-    when 'total_development_time'
+    when "total_development_time"
       # 開発時間の並び替え（development_timesの合計）
       users.left_joins(:development_times)
-           .group('users.id')
+           .group("users.id")
            .order(Arel.sql("SUM(COALESCE(development_times.duration, 0)) #{safe_order}"))
-    when 'created_at'
+    when "created_at"
       users.order(created_at: safe_order.downcase)
-    when 'nullpo_count'
+    when "nullpo_count"
       # ぬるぽ数の並び替え
       users.left_joins(:nullpo_game)
            .order(Arel.sql("COALESCE(nullpo_games.nullpo_count, 0) #{safe_order}"))
-    when 'total_clicks'
+    when "total_clicks"
       # 総クリック数の並び替え
       users.left_joins(:nullpo_game)
            .order(Arel.sql("COALESCE(nullpo_games.total_clicks, 0) #{safe_order}"))
-    when 'click_power'
+    when "click_power"
       # クリック力の並び替え
       users.left_joins(:nullpo_game)
            .order(Arel.sql("COALESCE(nullpo_games.click_power, 0) #{safe_order}"))
-    when 'auto_clicks_per_second'
+    when "auto_clicks_per_second"
       # 自動クリックの並び替え
       users.left_joins(:nullpo_game)
            .order(Arel.sql("COALESCE(nullpo_games.auto_clicks_per_second, 0) #{safe_order}"))
