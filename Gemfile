@@ -71,7 +71,7 @@ group :development, :test do
   gem "faker"
 
   # テスト環境用SQLite
-  gem "sqlite3", "~> 2.1"
+  gem "sqlite3", "~> 2.7"
 end
 
 group :development do
